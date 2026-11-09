@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shirley-claw.github.io/sitemap.xml

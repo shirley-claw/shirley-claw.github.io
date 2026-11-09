@@ -1,0 +1,25 @@
+:root{--bg:#fdf6e9;--ink:#1d1a16;--mut:#6d655a;--acc:#ff5a3c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit}
+header{text-align:center;padding:48px 16px 8px}
+.logo{font:800 clamp(34px,7vw,64px)/1 ui-rounded,system-ui,sans-serif;text-decoration:none;letter-spacing:-1px}
+.logo span{background:linear-gradient(transparent 62%,#ffd84d 62%)}
+.tag{color:var(--mut);margin:12px 0 18px;font-size:18px}
+nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+nav a{text-decoration:none;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:5px 16px;background:#fff;box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+nav a:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+main{max-width:1100px;margin:0 auto;padding:8px 20px 40px}
+section{margin-top:44px}
+h2{font:800 28px/1 ui-rounded,system-ui,sans-serif;margin:0;display:inline-block;border-bottom:4px solid var(--acc)}
+.blurb{color:var(--mut);margin:8px 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px}
+.card{display:block;text-decoration:none;background:#fff;border:2px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.card:hover{transform:translate(-3px,-3px) rotate(-.6deg);box-shadow:8px 8px 0 var(--ink)}
+.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top left;border-bottom:2px solid var(--ink);background:var(--c)}
+.card h3{margin:12px 14px 2px;font-size:20px}
+.card p{margin:0 14px 14px;color:var(--mut);font-size:14px}
+.card.empty{border-style:dashed;box-shadow:none;background:transparent;min-height:120px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.card.empty:hover{transform:none}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 16px 50px;border-top:2px dashed #e4d9c4;max-width:1100px;margin:0 auto}
+footer p{margin:4px}

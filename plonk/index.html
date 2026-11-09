@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- seo:start -->
+<title>Plonk — Free Online Floor Planner (No Sign-up)</title>
+<meta name="description" content="Plonk is a free online floor planner. Draw rooms and walls with exact dimensions, drag in beds, sofas, tables and kitchen units, and export your plan as PNG or SVG. Runs in your browser, no account needed.">
+<link rel="canonical" href="https://shirley-claw.github.io/plonk/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Shirley Claw">
+<meta property="og:title" content="Plonk — Free Online Floor Planner (No Sign-up)">
+<meta property="og:description" content="Plonk is a free online floor planner. Draw rooms and walls with exact dimensions, drag in beds, sofas, tables and kitchen units, and export your plan as PNG or SVG. Runs in your browser, no account needed.">
+<meta property="og:url" content="https://shirley-claw.github.io/plonk/">
+<meta property="og:image" content="https://shirley-claw.github.io/plonk/thumb.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="keywords" content="floor planner, room planner, furniture layout, floor plan maker, apartment planner">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Plonk", "url": "https://shirley-claw.github.io/plonk/", "description": "Plonk is a free online floor planner. Draw rooms and walls with exact dimensions, drag in beds, sofas, tables and kitchen units, and export your plan as PNG or SVG. Runs in your browser, no account needed.", "applicationCategory": "DesignApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "datePublished": "2026-11-09", "author": {"@type": "Organization", "name": "Shirley Claw", "url": "https://shirley-claw.github.io/"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Shirley Claw", "item": "https://shirley-claw.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Plonk", "item": "https://shirley-claw.github.io/plonk/"}]}</script>
+<!-- seo:end -->
+
+<style>
+:root{--bg:#f3f3f1;--panel:#fafaf8;--line:#d4d4d0;--fg:#222;--mut:#777;--acc:#1a73e8}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
+#app{display:grid;grid-template-columns:62px 1fr 250px;height:100%}
+#tools{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;padding:6px}
+button{background:#fff;color:var(--fg);border:1px solid var(--line);border-radius:5px;padding:6px;font:inherit;cursor:pointer}
+button:hover{border-color:#999}button.on{border-color:var(--acc);color:var(--acc);background:#eef4fe}
+button.big{background:var(--acc);color:#fff;border-color:var(--acc)}
+#tools button{height:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:10px}#tools button b{font-size:16px;font-weight:normal;line-height:1}
+.sec{grid-column:1/-1;font-size:10px;color:#a0a09a;text-transform:uppercase;letter-spacing:.6px;margin:6px 0 1px;padding-top:5px;border-top:1px solid #ebebe7}.sec:first-child{border-top:0;margin-top:0;padding-top:0}
+#dimEd{position:absolute;display:none;width:84px;z-index:5;border:1.5px solid var(--acc);text-align:center;font-size:13px;padding:3px}
+#tools .sp{flex:1}
+#side{background:var(--panel);border-left:1px solid var(--line);padding:8px 10px;overflow:auto}
+#side h3{margin:14px 0 6px;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px}
+#side h3:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px}.grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4px}
+#pal{display:grid;grid-template-columns:1fr 1fr;gap:3px}#pal button{font-size:12px;padding:4px 5px;text-align:left}
+label{display:block;color:var(--mut);font-size:11px;margin-top:5px}
+input,select{width:100%;background:#fff;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:4px;font:inherit}
+input[type=checkbox]{width:auto}
+.mut{color:var(--mut)}.note{font-size:11px;color:var(--mut);margin:4px 0}
+#custom{border:1px solid var(--line);background:#fff;border-radius:6px;padding:8px}
+#stage{position:relative;overflow:hidden;touch-action:none;cursor:crosshair;background:#fff}
+#svg{width:100%;height:100%;display:block}
+#svg text{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;user-select:none}
+#hint{position:absolute;pointer-events:none;background:#fff;border:1px solid #999;color:#222;padding:2px 6px;border-radius:4px;display:none;white-space:nowrap;box-shadow:0 1px 3px #0002}
+#status{position:absolute;left:8px;right:8px;bottom:6px;color:var(--mut);pointer-events:none;display:flex;justify-content:space-between;gap:12px;font-size:12px}
+@media(max-width:720px){#app{grid-template-columns:48px 1fr;grid-template-rows:1fr 38vh}#side{grid-column:1/3;border-left:0;border-top:1px solid var(--line)}#tools{grid-row:1}}
+</style></head><body>
+<div id="app">
+ <div id="tools">
+  <button data-tool="select" title="Select / move (V)"><b>↖</b>Select</button>
+  <button data-tool="rect" title="Rectangular room: drag, click, or type 4x3⏎ (R)"><b>▭</b>Room</button>
+  <button data-tool="poly" title="Walls or odd-shaped room: click corners, type lengths (W)"><b>⟋</b>Walls</button>
+  <button data-tool="text" title="Text label (T)"><b>T</b>Label</button>
+  <div class="sp"></div>
+  <button id="bDims" title="Show / hide room dimensions"><b>↔</b>Sizes</button>
+  <button id="bSnap" title="Grid snap 5 cm on/off"><b>#</b>Grid</button>
+  <button id="bFit" title="Fit plan to screen (F)"><b>⤢</b>Fit</button>
+  <button id="bUndo" title="Undo (Ctrl+Z)"><b>↶</b>Undo</button>
+  <button id="bRedo" title="Redo (Ctrl+Shift+Z)"><b>↷</b>Redo</button>
+ </div>
+ <div id="stage"><svg id="svg"></svg><div id="hint"></div><input id="dimEd" inputmode="decimal"><div id="status"><span id="stL"></span><span id="stR"></span></div></div>
+ <div id="side">
+  <h3>Selected</h3><div id="insp"></div>
+  <h3>Furniture</h3>
+  <p class="note" id="palNote"></p>
+  <div id="pal"></div>
+  <h3>Custom item</h3>
+  <div id="custom">
+   <div class="grid3"><div><label>Name</label><input id="cName" value="Custom"></div><div><label>W m</label><input id="cW" type="number" step="0.05" value="1"></div><div><label>D m</label><input id="cD" type="number" step="0.05" value="0.6"></div></div>
+   <div class="grid2" style="margin-top:6px"><button class="big" id="cRect">Add rectangle</button><button class="big" id="cDraw">Draw shape</button></div>
+   <p class="note">Draw shape: click corners, type a length + Enter for exact sides, click the first corner to close.</p>
+  </div>
+  <h3>File</h3>
+  <div class="grid2">
+   <button id="bPng">PNG</button><button id="bSvg">SVG</button>
+   <button id="bJson">Save .json</button><button id="bLoad">Open .json</button>
+   <button id="bClear" style="grid-column:span 2">New plan</button>
+  </div>
+  <input type="file" id="file" accept=".json,application/json" hidden>
+  <p class="note">Autosaves in this browser.</p>
+ </div>
+</div>
+<script>
+const $=s=>document.querySelector(s), svg=$('#svg'), stage=$('#stage'), hintEl=$('#hint');
+const GRID=0.05, PI=Math.PI, SG=[[-1,-1],[1,-1],[1,1],[-1,1]], INK='#222', SELC='#1a73e8';
+const PRESETS=[['Door',0.8,0.8,'door','Doors & windows'],['Window',1.2,0.12,'window','Doors & windows'],
+ ['Double bed',1.6,2,'bed2','Bedroom'],['Single bed',0.9,2,'bed1','Bedroom'],['Nightstand',0.45,0.4,'nightstand','Bedroom'],['Wardrobe',1.2,0.6,'wardrobe','Bedroom'],['Dresser',1,0.5,'counter','Bedroom'],
+ ['Sofa',2,0.9,'sofa','Living'],['Armchair',0.85,0.85,'armchair','Living'],['Coffee table',1.1,0.6,'table','Living'],['TV stand',1.6,0.4,'tv','Living'],['Shelf',0.8,0.3,'shelf','Living'],
+ ['Table',1.2,0.8,'table','Dining & work'],['Round table',1,1,'round','Dining & work'],['Chair',0.45,0.45,'chair','Dining & work'],['Desk',1.4,0.7,'desk','Dining & work'],
+ ['Counter',2.4,0.6,'counter','Kitchen'],['Fridge',0.6,0.65,'fridge','Kitchen'],['Stove',0.6,0.6,'stove','Kitchen'],['Sink',0.6,0.5,'sink','Kitchen'],['Dishwasher',0.6,0.6,'dishwasher','Kitchen'],
+ ['Bathtub',1.7,0.75,'bathtub','Bathroom'],['Shower',0.9,0.9,'shower','Bathroom'],['Toilet',0.4,0.65,'toilet','Bathroom'],['Washbasin',0.6,0.45,'sink','Bathroom'],['Washer',0.6,0.6,'washer','Bathroom']];
+const STYLE_BY_NAME=Object.fromEntries(PRESETS.map(p=>[p[0],p[3]]));
+const saved=(()=>{try{return JSON.parse(localStorage.plonk)}catch(e){return null}})()||{};
+let objs=saved.objs||[], view=saved.view||{x:220,y:160,s:60};
+let sel=null, tool='select', preset=null, snap=true, showDims=true, space=false, shift=false;
+let draft=null, draftKind='room', typed='', cursor={x:0,y:0}, scr={x:0,y:0}, hist=[], fut=[], drag=null, lastSel=undefined;
+const pointers=new Map();let lastDim={},warnMsg='',warnT=0;
+const uid=()=>Math.random().toString(36).slice(2,9);
+const get=id=>objs.find(o=>o.id===id);
+const clone=o=>JSON.parse(JSON.stringify(o));
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const r4=v=>Math.round(v*1e4)/1e4;
+const fmt=n=>`${+n.toFixed(2)} m`, fmtA=a=>`${+a.toFixed(2)} m²`;
+const snapv=v=>snap?r4(Math.round(v/GRID)*GRID):r4(v);
+const isRoom=o=>o&&o.kind==='room', isItem=o=>o&&o.kind!=='room'&&o.kind!=='wall';
+const styleOf=o=>o.style||STYLE_BY_NAME[o.name]||o.shape||'box';
+
+// ---------- geometry ----------
+function corners(o){const cx=o.x+o.w/2,cy=o.y+o.h/2,a=(o.rot||0)*PI/180,c=Math.cos(a),s=Math.sin(a);
+ return SG.map(([sx,sy])=>{const lx=sx*o.w/2,ly=sy*o.h/2;return[r4(cx+lx*c-ly*s),r4(cy+lx*s+ly*c)]})}
+const vertsOf=o=>o.t==='rect'?corners(o):o.t==='poly'?o.pts:[[o.x,o.y]];
+function area(P){let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1]}return a/2}
+function centroid(P){const A=area(P);if(Math.abs(A)<1e-9){let x=0,y=0;P.forEach(p=>{x+=p[0];y+=p[1]});return{x:x/P.length,y:y/P.length}}let x=0,y=0;
+ for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length],f=p[0]*q[1]-q[0]*p[1];x+=(p[0]+q[0])*f;y+=(p[1]+q[1])*f}return{x:x/(6*A),y:y/(6*A)}}
+const center=o=>o.t==='rect'?{x:o.x+o.w/2,y:o.y+o.h/2}:o.t==='poly'?centroid(o.pts):{x:o.x,y:o.y};
+const roomArea=o=>!isRoom(o)?0:o.t==='rect'?o.w*o.h:o.closed?Math.abs(area(o.pts)):0;
+const total=()=>objs.reduce((s,o)=>s+roomArea(o),0);
+function inside(q,p){if(q.t==='rect'){const c=center(q),a=-(q.rot||0)*PI/180,dx=p.x-c.x,dy=p.y-c.y,lx=dx*Math.cos(a)-dy*Math.sin(a),ly=dx*Math.sin(a)+dy*Math.cos(a);return Math.abs(lx)<=q.w/2&&Math.abs(ly)<=q.h/2}
+ if(q.t==='poly'&&q.closed){let c=false;const P=q.pts;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if((yi>p.y)!==(yj>p.y)&&p.x<(xj-xi)*(p.y-yi)/(yj-yi)+xi)c=!c}return c}return false}
+function roomAt(p){for(let i=objs.length-1;i>=0;i--){const q=objs[i];if(isRoom(q)&&inside(q,p))return q}return null}
+function distSeg(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],L2=dx*dx+dy*dy||1e-12,t=Math.max(0,Math.min(1,((p.x-a[0])*dx+(p.y-a[1])*dy)/L2));return Math.hypot(p.x-a[0]-t*dx,p.y-a[1]-t*dy)}
+function distRoom(q,p){const P=vertsOf(q);let d=1/0;for(let i=0;i<P.length;i++)d=Math.min(d,distSeg(p,P[i],P[(i+1)%P.length]));return d}
+function roomNear(p){const r=roomAt(p);if(r)return r;let best=null,bd=1/0;
+ for(const q of objs)if(isRoom(q)){const d=distRoom(q,p);if(d<(q.wall||0.1)+0.15&&d<bd){bd=d;best=q}}return best}
+const roomFor=o=>roomNear(center(o));
+function assignRoom(o){if(!isItem(o))return;const r=roomFor(o);o.room=r?r.id:null}
+function adopt(r){for(const o of objs)if(isItem(o)&&!get(o.room)&&roomFor(o)===r)o.room=r.id}
+const kidsOf=r=>objs.filter(o=>o.room===r.id&&isItem(o));
+const rotf=(cx,cy,deg)=>{const a=deg*PI/180,c=Math.cos(a),s=Math.sin(a);return(x,y)=>[r4(cx+(x-cx)*c-(y-cy)*s),r4(cy+(x-cx)*s+(y-cy)*c)]};
+const trf=(dx,dy)=>(x,y)=>[r4(x+dx),r4(y+dy)];
+function xform(q,O,f,dRot=0){if(q.t==='rect'){const c=f(O.x+O.w/2,O.y+O.h/2);q.x=r4(c[0]-O.w/2);q.y=r4(c[1]-O.h/2);q.rot=(((O.rot||0)+dRot)%360+360)%360}
+ else if(q.t==='poly')q.pts=O.pts.map(p=>f(p[0],p[1]));else[q.x,q.y]=f(O.x,O.y)}
+const snapKids=r=>kidsOf(r).map(q=>({q,O:clone(q)}));
+const applyKids=(K,f,dRot)=>K.forEach(({q,O})=>xform(q,O,f,dRot));
+
+let guides=[];
+const mkL=(x,y,deg)=>({x,y,dx:Math.cos(deg*PI/180),dy:Math.sin(deg*PI/180)});
+const lineDist=(p,l)=>Math.abs((p.x-l.x)*l.dy-(p.y-l.y)*l.dx);
+function isect(a,b){const den=a.dx*b.dy-a.dy*b.dx;if(Math.abs(den)<1e-6)return null;const t=((b.x-a.x)*b.dy-(b.y-a.y)*b.dx)/den;return{x:a.x+t*a.dx,y:a.y+t*a.dy}}
+const edgeAng=(a,b)=>Math.atan2(b[1]-a[1],b[0]-a[0])*180/PI;
+function allVerts(skip,skipV){const V=[];for(const o of objs){if(o.id===skip||o.t==='text')continue;vertsOf(o).forEach((v,j)=>{if(!(skipV&&skipV[0]===o.id&&skipV[1]===j))V.push(v)})}if(draft)draft.pts.forEach(v=>V.push(v));return V}
+const axisLines=V=>V.flatMap(([x,y])=>[mkL(x,y,0),mkL(x,y,90)]);
+function snapPt(p,opt={}){const th=10/view.s,V=allVerts(opt.skip,opt.skipV);guides=[];
+ let best=null,bd=th;for(const[x,y]of V){const d=Math.hypot(x-p.x,y-p.y);if(d<bd){bd=d;best={x,y,v:1}}}if(best)return best;
+ const nr=[...(opt.lines||[]),...axisLines(V)].map(l=>({l,d:lineDist(p,l)})).filter(o=>o.d<th).sort((a,b)=>a.d-b.d);
+ if(nr.length){const a=nr[0].l;
+  for(let k=1;k<nr.length;k++){const X=isect(a,nr[k].l);if(X&&Math.hypot(X.x-p.x,X.y-p.y)<th*1.5){guides=[[a.x,a.y,X.x,X.y],[nr[k].l.x,nr[k].l.y,X.x,X.y]];return{x:r4(X.x),y:r4(X.y),g:1}}}
+  const t=snapv((p.x-a.x)*a.dx+(p.y-a.y)*a.dy),q={x:r4(a.x+t*a.dx),y:r4(a.y+t*a.dy)};guides=[[a.x,a.y,q.x,q.y]];return{...q,g:1}}
+ return{x:snapv(p.x),y:snapv(p.y)}}
+// directions worth snapping to: 45° steps plus parallel / perpendicular to existing edges
+function dirSet(P,closed,skipI){const A=[0,45,90,135],n=P.length;for(let i=0;i<(closed?n:n-1);i++){const j=(i+1)%n;if(i===skipI||j===skipI)continue;const a=edgeAng(P[i],P[j]);A.push(a,a+90)}return A}
+function draftNext(p){const P=draft.pts,L=P[P.length-1],th=10/view.s;guides=[];
+ const V=allVerts().filter(v=>!(v[0]===L[0]&&v[1]===L[1]));
+ for(const[x,y]of V)if(Math.hypot(x-p.x,y-p.y)<th)return{x,y,v:1};
+ if(shift)return snapPt(p);
+ const dx=p.x-L[0],dy=p.y-L[1];if(Math.hypot(dx,dy)<1e-9)return{x:L[0],y:L[1]};
+ const cur=Math.atan2(dy,dx)*180/PI,D=dirSet(P,false);let ba=0,bd=1e9;
+ for(const a0 of D)for(const a of[a0,a0+180]){const d=Math.abs(((cur-a)%360+540)%360-180);if(d<bd){bd=d;ba=a}}
+ const ray=mkL(L[0],L[1],ba),t0=dx*ray.dx+dy*ray.dy,q0={x:L[0]+t0*ray.dx,y:L[1]+t0*ray.dy};
+ const lines=axisLines(V);if(P.length>=2)D.forEach(a=>lines.push(mkL(P[0][0],P[0][1],a)));
+ let hit=null,hd=th;for(const l of lines){const X=isect(ray,l);if(!X||(X.x-L[0])*ray.dx+(X.y-L[1])*ray.dy<=0)continue;const d=Math.hypot(X.x-q0.x,X.y-q0.y);if(d<hd){hd=d;hit=[X,l]}}
+ if(hit){guides=[[hit[1].x,hit[1].y,hit[0].x,hit[0].y]];return{x:r4(hit[0].x),y:r4(hit[0].y),g:1}}
+ const t=snapv(t0);return{x:r4(L[0]+t*ray.dx),y:r4(L[1]+t*ray.dy)}}
+function polyHandleSnap(o,i,p){const P=o.pts,n=P.length,nb=[];if(i>0||o.closed)nb.push(P[(i-1+n)%n]);if(i<n-1||o.closed)nb.push(P[(i+1)%n]);
+ const A=dirSet(P,o.closed,i),lines=[];for(const v of nb)for(const a of A)lines.push(mkL(v[0],v[1],a));
+ return snapPt(p,{skipV:[o.id,i],lines})}
+
+// pull an axis-aligned rect onto neighbouring edges (rooms share one wall, furniture hugs walls)
+function magnet(o){if(o.t!=='rect'||(o.rot||0)%90)return;const th=8/view.s;let bx=[th,0],by=[th,0];
+ const sw=(o.rot||0)%180!==0,ow=sw?o.h:o.w,oh=sw?o.w:o.h,ox=o.x+o.w/2-ow/2,oy=o.y+o.h/2-oh/2;
+ for(const q of objs){if(q===o||q.t!=='rect'||(q.rot||0)%180||q.room===o.id)continue;
+  const g=isRoom(o)&&isRoom(q)?Math.max(o.wall||0,q.wall||0):0;
+  const xs=[q.x,q.x+q.w,q.x-g,q.x+q.w+g],ys=[q.y,q.y+q.h,q.y-g,q.y+q.h+g];
+  if(styleOf(o)==='window'&&isRoom(q)){const t=q.wall||0;
+   if(!sw)for(const T of[q.y-t/2,q.y+q.h+t/2]){const d=T-(oy+oh/2);if(Math.abs(d)<by[0]+th)by=[Math.abs(d)-th,d]}
+   else for(const T of[q.x-t/2,q.x+q.w+t/2]){const d=T-(ox+ow/2);if(Math.abs(d)<bx[0]+th)bx=[Math.abs(d)-th,d]}}
+  for(const t of xs)for(const e of[ox,ox+ow]){const d=t-e;if(Math.abs(d)<bx[0])bx=[Math.abs(d),d]}
+  for(const t of ys)for(const e of[oy,oy+oh]){const d=t-e;if(Math.abs(d)<by[0])by=[Math.abs(d),d]}}
+ o.x=r4(o.x+bx[1]);o.y=r4(o.y+by[1])}
+
+function push(){hist.push(JSON.stringify(objs));if(hist.length>200)hist.shift();fut=[]}
+function undo(){if(!hist.length)return;fut.push(JSON.stringify(objs));objs=JSON.parse(hist.pop());if(!get(sel))sel=null;refresh()}
+function redo(){if(!fut.length)return;hist.push(JSON.stringify(objs));objs=JSON.parse(fut.pop());if(!get(sel))sel=null;refresh()}
+function add(o){o.id=o.id||uid();if(o.kind==='room'||o.kind==='wall'){const i=objs.findIndex(q=>isItem(q));i<0?objs.push(o):objs.splice(i,0,o)}else objs.push(o);sel=o.id;return o}
+const roomN=()=>objs.filter(isRoom).length+1;
+const newRoom=(x,y,w,h)=>add({t:'rect',kind:'room',x,y,w,h,rot:0,wall:0.1,name:`Room ${roomN()}`});
+
+// ---------- drawing ----------
+const NS='vector-effect="non-scaling-stroke"';
+const DEFS=`<defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="0.05" height="0.05" patternTransform="rotate(45)"><rect width="0.05" height="0.05" fill="#fff"/><path d="M0 0V0.05" stroke="#333" stroke-width="0.009"/></pattern></defs>`;
+function gridSvg(s,x0,y0,x1,y1){const minor=s>120?0.1:s>40?0.5:s>12?1:5,major=minor<1?1:minor*5;let a='',b='';
+ for(let x=Math.floor(x0/minor)*minor;x<=x1;x+=minor){const l=`M${x} ${y0}V${y1}`;Math.abs(x/major-Math.round(x/major))<1e-6?b+=l:a+=l}
+ for(let y=Math.floor(y0/minor)*minor;y<=y1;y+=minor){const l=`M${x0} ${y}H${x1}`;Math.abs(y/major-Math.round(y/major))<1e-6?b+=l:a+=l}
+ return`<path d="${a}" stroke="#f0f0ee" ${NS}/><path d="${b}" stroke="#e2e2de" ${NS}/>`}
+// thick wall: dark outline on both faces, parallel hatch inside
+function wallStroke(tag,attrs,t,s,open){const cap=open?'stroke-linecap="square"':'',lw=1.1/s;
+ if(t<3*lw)return`<${tag} ${attrs} fill="none" stroke="${INK}" stroke-width="${Math.max(t,lw)}" stroke-linejoin="miter" ${cap}/>`;
+ return`<${tag} ${attrs} fill="none" stroke="${INK}" stroke-width="${t}" stroke-linejoin="miter" ${cap}/><${tag} ${attrs} fill="none" stroke="url(#hatch)" stroke-width="${t-2*lw}" stroke-linejoin="miter" ${cap}/>`}
+function label(x,y,name,sub,s){const fs=12/s;return`<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" fill="${INK}"><tspan x="${x}" dy="-0.15em" font-weight="600">${esc(name)}</tspan><tspan x="${x}" dy="1.3em" fill="#777">${sub}</tspan></text>`}
+function dimText(x,y,ang,txt,s,key,locked){const fs=11/s,bw=txt.length*fs*0.62+8/s,bh=fs*1.8;
+ return`<g transform="translate(${x} ${y}) rotate(${ang})" ${key?`data-dim="${key}" style="cursor:text"`:''}>${key?`<rect x="${-bw/2}" y="${-bh/2}" width="${bw}" height="${bh}" fill="transparent"/>`:''}<text font-size="${fs}" text-anchor="middle" dominant-baseline="middle" fill="${locked?'#0b57d0':key?'#3d5f8f':'#666'}" ${locked?'font-weight="700"':''} stroke="#fff" stroke-width="${3/s}" paint-order="stroke">${locked?'⊢ ':''}${txt}${locked?' ⊣':''}</text></g>`}
+function edgeDims(P,closed,s,t,id,locks){const n=P.length,m=closed?n:n-1,sg=closed?(Math.sign(area(P))||1):1;let g='';
+ for(let i=0;i<m;i++){const a=P[i],b=P[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy);if(L<1e-6)continue;
+  const off=t/2+9/s,nx=dy/L*sg,ny=-dx/L*sg;let ang=Math.atan2(dy,dx)*180/PI;if(ang>90)ang-=180;if(ang<-90)ang+=180;
+  g+=dimText((a[0]+b[0])/2+nx*off,(a[1]+b[1])/2+ny*off,ang,fmt(L),s,id&&`${id}:e:${i}`,locks?.[i]!=null)}return g}
+const rotT=o=>`rotate(${o.rot||0} ${o.x+o.w/2} ${o.y+o.h/2})`;
+function outline(o,col,dash){const st=`fill="none" stroke="${col}" stroke-width="1.5" ${dash?'stroke-dasharray="5 4"':''} ${NS}`;
+ if(o.t==='rect')return`<rect transform="${rotT(o)}" x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" ${st}/>`;
+ if(o.t==='poly')return`<polygon points="${o.pts.map(p=>p.join(',')).join(' ')}" ${st}/>`;return''}
+function rectHandles(o,s,t){const{x,y,w,h}=o,cx=x+w/2,cy=y+h/2,hr=5.5/s,rx=x+w+t+20/s,ry=y-t-20/s;
+ let g=`<g transform="${rotT(o)}"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="${SELC}" stroke-dasharray="4 3" pointer-events="none" ${NS}/><path d="M${x+w} ${y}L${rx} ${ry}" stroke="${SELC}" pointer-events="none" ${NS}/><circle data-h="rot" cx="${rx}" cy="${ry}" r="${hr}" fill="#fff" stroke="${SELC}" stroke-width="1.5" ${NS}></circle>`;
+ SG.forEach(([sx,sy],i)=>g+=`<rect data-h="${i}" x="${cx+sx*w/2-hr}" y="${cy+sy*h/2-hr}" width="${2*hr}" height="${2*hr}" fill="#fff" stroke="${SELC}" stroke-width="1.5" ${NS}/>`);return g+'</g>'}
+const polyHandles=(o,s)=>o.pts.map((p,i)=>`<rect data-h="${i}" x="${p[0]-5/s}" y="${p[1]-5/s}" width="${10/s}" height="${10/s}" fill="#fff" stroke="${SELC}" stroke-width="1.5" ${NS}/>`).join('');
+
+// furniture line drawings in local box (x,y,w,h); "top" edge = back / head
+function detail(st,x,y,w,h){const D=`fill="none" stroke="${INK}" stroke-width="0.9" ${NS}`,F=`fill="#fff" stroke="${INK}" stroke-width="0.9" ${NS}`,cx=x+w/2,cy=y+h/2,m=Math.min(w,h);
+ const R=(a,b,c,d,rx=0,att=D)=>`<rect x="${a}" y="${b}" width="${Math.max(c,0)}" height="${Math.max(d,0)}" rx="${rx}" ${att}/>`,L=(a,b,c,d,att=D)=>`<path d="M${a} ${b}L${c} ${d}" ${att}/>`,C=(a,b,r,att=D)=>`<circle cx="${a}" cy="${b}" r="${r}" ${att}/>`;
+ switch(st){
+ case'bed2':case'bed1':{const g=Math.min(0.06,w*.05),ph=Math.min(0.32,h*.17),n=st==='bed2'?2:1,pw=(w-g*(n+1))/n,by=y+g*2+ph;let s='';
+  for(let i=0;i<n;i++)s+=R(x+g+i*(pw+g),y+g,pw,ph,ph*.35)+L(x+g+i*(pw+g)+pw*.2,y+g+ph*.5,x+g+i*(pw+g)+pw*.8,y+g+ph*.5,`fill="none" stroke="#888" stroke-width="0.6" ${NS}`);
+  return s+L(x,by,x+w,by)+`<path d="M${x+w*.55} ${by}L${x+w} ${by+w*.45}L${x+w} ${by}Z" ${F}/>`+L(x,by+0.06,x+w*.55-0.06,by+0.06,`fill="none" stroke="#888" stroke-width="0.6" ${NS}`)}
+ case'sofa':case'armchair':{const b=h*.25,a=Math.min(0.2,w*.12),n=st==='sofa'?Math.max(1,Math.round((w-2*a)/0.65)):1,cw=(w-2*a)/n;let s=R(x,y,w,b)+R(x,y,a,h,a*.3)+R(x+w-a,y,a,h,a*.3);
+  for(let i=1;i<n;i++)s+=L(x+a+i*cw,y+b,x+a+i*cw,y+h);for(let i=0;i<n;i++)s+=R(x+a+i*cw+0.03,y+b+0.03,cw-0.06,h-b-0.08,0.04,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);return s}
+ case'chair':return R(x,y,w,h*.18,0.02)+R(x+w*.12,y+h*.28,w*.76,h*.6,0.03,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);
+ case'desk':return L(x+0.04,y+0.04,x+w-0.04,y+0.04,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+R(x+w*.35,y+h*.62,w*.3,h*.6,0.04,`fill="#fff" stroke="#999" stroke-width="0.7" ${NS}`);
+ case'table':return R(x+0.05,y+0.05,w-0.1,h-0.1,0.02,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);
+ case'wardrobe':return L(x,y,x+w,y+h)+L(x+w,y,x,y+h)+L(x,cy,x+w,cy,`fill="none" stroke="#999" stroke-width="0.6" stroke-dasharray="3 2" ${NS}`);
+ case'shelf':{let s='';const n=Math.max(1,Math.round(w/0.4));for(let i=1;i<n;i++)s+=L(x+i*w/n,y,x+i*w/n,y+h);return s+L(x,y+h*.5,x+w,y+h*.5,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)}
+ case'counter':{let s=L(x,y+h-0.05,x+w,y+h-0.05);const n=Math.max(1,Math.round(w/0.6));for(let i=1;i<n;i++)s+=L(x+i*w/n,y+h-0.05,x+i*w/n,y+h,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);return s}
+ case'fridge':return L(x,y+h*.86,x+w,y+h*.86)+L(x+w*.15,y+h*.93,x+w*.4,y+h*.93)+`<text x="${cx}" y="${cy-h*.05}" font-size="${m*.22}" text-anchor="middle" dominant-baseline="middle" fill="#888">F</text>`;
+ case'stove':{const r=m*.15;return C(x+w*.28,y+h*.28,r)+C(x+w*.72,y+h*.28,r*.8)+C(x+w*.28,y+h*.72,r*.8)+C(x+w*.72,y+h*.72,r)+C(x+w*.28,y+h*.28,r*.45)+C(x+w*.72,y+h*.72,r*.45)}
+ case'sink':return R(x+w*.12,y+h*.18,w*.76,h*.66,m*.12)+C(cx,cy,m*.04)+L(cx,y+0.02,cx,y+h*.18);
+ case'bathtub':return R(x+0.07,y+0.07,w-0.14,h-0.14,Math.min(w,h)*.35)+C(x+0.25,cy,0.03);
+ case'shower':return L(x,y,x+w,y+h,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+L(x+w,y,x,y+h,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+C(cx,cy,m*.05,F);
+ case'toilet':return R(x,y,w,h*.28,0.03)+`<ellipse cx="${cx}" cy="${y+h*.28+h*.36}" rx="${w*.42}" ry="${h*.35}" ${F}/>`+`<ellipse cx="${cx}" cy="${y+h*.28+h*.38}" rx="${w*.27}" ry="${h*.23}" ${D}/>`;
+ case'nightstand':return C(cx,cy,m*.26)+C(cx,cy,m*.08,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);
+ case'tv':return R(x+w*.08,y+0.03,w*.84,Math.min(0.05,h*.2),0,`fill="#fff" stroke="${INK}" stroke-width="1.2" ${NS}`);
+ case'dishwasher':return L(x,y+h*.16,x+w,y+h*.16)+R(x+w*.18,y+h*.32,w*.64,h*.5,0.02,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+L(x+w*.3,y+h*.57,x+w*.7,y+h*.57,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`);
+ case'washer':return C(cx,cy+h*.06,m*.33)+C(cx,cy+h*.06,m*.22,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+L(x,y+h*.16,x+w,y+h*.16)+C(x+w*.8,y+h*.08,m*.035);
+ }return''}
+function itemSvg(o,s,isSel,kid){const dt=get(o.room)?.wall??0.1,{x,y,w,h}=o,cx=x+w/2,cy=y+h/2,st=styleOf(o),col=kid?SELC:INK,B=`stroke="${col}" stroke-width="1.4" ${NS}`;
+ let g=`<g data-id="${o.id}" transform="${rotT(o)}">`;
+ if(st==='door')g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent"/><path d="M${x} ${y+h}L${x} ${y}" ${B} fill="none"/><path d="M${x} ${y}A${w} ${h} 0 0 1 ${x+w} ${y+h}" fill="none" stroke="${col}" stroke-width="0.8" stroke-dasharray="4 3" ${NS}/><rect x="${x}" y="${y+h-0.004}" width="${w}" height="${dt+0.008}" fill="#fff"/><path d="M${x} ${y+h}v${dt}M${x+w} ${y+h}v${dt}" stroke="${col}" stroke-width="1.6" ${NS}/>`;
+ else if(st==='window')g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" ${B}/><path d="M${x} ${y+h/3}H${x+w}M${x} ${y+2*h/3}H${x+w}" stroke="${col}" stroke-width="0.8" ${NS}/>`;
+ else if(st==='round')g+=`<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="#fff" ${B}/><ellipse cx="${cx}" cy="${cy}" rx="${Math.max(w/2-0.05,0)}" ry="${Math.max(h/2-0.05,0)}" fill="none" stroke="#999" stroke-width="0.6" ${NS}/>`;
+ else g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(w,h)*.04}" fill="#fff" ${B}/>`+detail(st,x,y,w,h);
+ if(st==='box'&&o.name&&w*s>o.name.length*6.5&&h*s>14)g+=`<text x="${cx}" y="${cy}" font-size="${10/s}" text-anchor="middle" dominant-baseline="middle" fill="#555">${esc(o.name)}</text>`;
+ if(isSel){const off=9/s;g+=dimText(cx,y-off,0,fmt(w),s,`${o.id}:w`,o.locks?.w!=null)+dimText(x-off,cy,-90,fmt(h),s,`${o.id}:h`,o.locks?.h!=null)}
+ return g+'</g>'}
+function furnPolySvg(o,s,isSel,kid){const P=o.pts,c=centroid(P),pts=P.map(p=>p.join(',')).join(' ');
+ let g=`<g data-id="${o.id}"><polygon points="${pts}" fill="#fff" stroke="${kid?SELC:INK}" stroke-width="1.4" stroke-linejoin="round" ${NS}/>`;
+ if(o.name)g+=`<text x="${c.x}" y="${c.y}" font-size="${10/s}" text-anchor="middle" dominant-baseline="middle" fill="#555">${esc(o.name)}</text>`;
+ if(isSel)g+=edgeDims(P,true,s,0,o.id,o.locks);return g+'</g>'}
+function textSvg(o,s,isSel,kid){return`<text data-id="${o.id}" x="${o.x}" y="${o.y}" font-size="${o.size||0.25}" text-anchor="middle" dominant-baseline="middle" fill="${isSel||kid?SELC:INK}">${esc(o.name)}</text>`}
+function scene(s,exp){let fills='',walls='',items='',ov='';const S=exp?null:get(sel),selRoom=isRoom(S)?S.id:null;
+ for(const o of objs){const isSel=S===o,kid=selRoom&&o.room===selRoom;
+  if(o.kind==='room'){const t=o.wall||0;
+   if(o.t==='rect'){const{x,y,w,h}=o,cx=x+w/2,cy=y+h/2;
+    fills+=`<rect data-id="${o.id}" transform="${rotT(o)}" x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff"/>`;
+    walls+=`<g data-id="${o.id}" transform="${rotT(o)}">${wallStroke('rect',`x="${x-t/2}" y="${y-t/2}" width="${w+t}" height="${h+t}"`,t,s)}${label(cx,cy,o.name,fmtA(w*h),s)}${showDims||isSel?dimText(cx,y-t-9/s,0,fmt(w),s,!exp&&`${o.id}:w`,o.locks?.w!=null)+dimText(x-t-9/s,cy,-90,fmt(h),s,!exp&&`${o.id}:h`,o.locks?.h!=null):''}</g>`;
+    if(isSel)ov+=rectHandles(o,s,t)}
+   else{const pts=o.pts.map(p=>p.join(',')).join(' '),c=centroid(o.pts);
+    fills+=`<polygon data-id="${o.id}" points="${pts}" fill="#fff"/>`;
+    walls+=`<g data-id="${o.id}">${wallStroke('polygon',`points="${pts}"`,t,s)}${label(c.x,c.y,o.name,fmtA(Math.abs(area(o.pts))),s)}${showDims||isSel?edgeDims(o.pts,true,s,t,!exp&&o.id,o.locks):''}</g>`;
+    if(isSel)ov+=outline(o,SELC,true)+polyHandles(o,s)}}
+  else if(o.kind==='wall'){const pts=o.pts.map(p=>p.join(',')).join(' '),t=o.wall??0.1;
+   walls+=`<g data-id="${o.id}">${wallStroke('polyline',`points="${pts}"`,t,s,true)}${showDims||isSel?edgeDims(o.pts,false,s,t,!exp&&o.id,o.locks):''}</g>`;
+   if(isSel)ov+=polyHandles(o,s)}
+  else{items+=o.t==='rect'?itemSvg(o,s,isSel,kid):o.t==='poly'?furnPolySvg(o,s,isSel,kid):textSvg(o,s,isSel,kid);
+   if(isSel)ov+=o.t==='rect'?rectHandles(o,s,0):o.t==='poly'?polyHandles(o,s):''}}
+ if(!exp&&drag&&drag.mode==='move'&&isItem(drag.o)){const r=roomFor(drag.o);if(r)ov+=outline(r,SELC,true)}
+ return fills+walls+items+ov}
+function draftSvg(s){let g='';const hr=3.5/s;
+ if(tool==='poly'&&draft&&draft.pts.length){const P=draft.pts,n=draftNext(cursor),L=P[P.length-1];
+  g+=draftKind==='furn'?`<polyline points="${P.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${INK}" stroke-width="1.4" ${NS}/>`:wallStroke('polyline',`points="${P.map(p=>p.join(',')).join(' ')}"`,0.1,s,true);
+  g+=`<path d="M${L[0]} ${L[1]}L${n.x} ${n.y}" stroke="${SELC}" stroke-width="1.5" stroke-dasharray="6 4" ${NS}/>`;
+  g+=edgeDims([...P,[n.x,n.y]],false,s,draftKind==='furn'?0:0.1);P.forEach(p=>g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${hr}" fill="${SELC}"/>`)}
+ if(tool==='poly'||tool==='rect'){const q=tool==='poly'&&draft?draftNext(cursor):snapPt(cursor);g+=`<circle cx="${q.x}" cy="${q.y}" r="${hr*1.6}" fill="none" stroke="${q.v?'#0a0':SELC}" stroke-width="1.5" ${NS}/>`}
+ if(tool==='place'&&preset){const[,w,h]=preset,q=snapPt(cursor),r=roomNear(q);if(r)g+=outline(r,SELC,true);g+=`<rect x="${q.x-w/2}" y="${q.y-h/2}" width="${w}" height="${h}" fill="none" stroke="${SELC}" stroke-dasharray="4 3" ${NS}/>`}
+ return g}
+function render(){const W=stage.clientWidth,H=stage.clientHeight,s=view.s,x0=-view.x/s,y0=-view.y/s;
+ const showG=tool!=='select'||(drag&&(drag.mode==='handle'||drag.mode==='newrect'));
+ svg.innerHTML=`${DEFS}<g transform="translate(${view.x} ${view.y}) scale(${s})">${gridSvg(s,x0,y0,x0+W/s,y0+H/s)}${scene(s)}${draftSvg(s)}${showG?guides.map(g=>`<path d="M${g[0]} ${g[1]}L${g[2]} ${g[3]}" stroke="#e8710a" stroke-dasharray="4 3" ${NS}/><circle cx="${g[0]}" cy="${g[1]}" r="${2.5/s}" fill="#e8710a"/>`).join(''):''}</g>`;
+ hint();status();syncInsp();save()}
+function hint(){let t='';
+ if(tool==='poly'&&draft){const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);t=typed?`${typed} m ⏎`:fmt(Math.hypot(n.x-L[0],n.y-L[1]))}
+ else if(tool==='rect'&&typed)t=`${typed} ⏎`;
+ else if(drag&&drag.mode==='move'&&isItem(drag.o)){const r=roomFor(drag.o);t=r?`→ ${r.name}`:'→ no room'}
+ else if(tool==='place'){const r=roomNear(snapPt(cursor));t=r?`→ ${r.name}`:''}
+ hintEl.style.display=t?'block':'none';hintEl.textContent=t;hintEl.style.left=scr.x+16+'px';hintEl.style.top=scr.y+14+'px'}
+const HELP={select:'double-click a size to type it · drag = move (a room carries its furniture) · drag empty = pan · Q rotate · Del delete · Ctrl+D duplicate · Alt = no magnet',rect:'drag a room · click = 3×3 · or type 4x3 ⏎',poly:'click corners · type a length ⏎ · Shift = free angle · click start to close',text:'click to place a label'};
+function status(){if(warnMsg&&performance.now()<warnT){$('#stL').textContent='⚠ '+warnMsg;$('#stR').textContent='';return}$('#stL').textContent=tool==='place'?`click to place ${preset[0]} · Esc cancel`:tool==='poly'&&draftKind==='furn'?'drawing custom item · '+HELP.poly:HELP[tool];
+ $('#stR').textContent=`${cursor.x.toFixed(2)}, ${cursor.y.toFixed(2)} · rooms ${fmtA(total())}`}
+let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>localStorage.plonk=JSON.stringify({objs,view}),300)}
+function refresh(){render();inspector()}
+
+// ---------- inspector ----------
+function num(k,lab,v,step=0.05){return`<div><label>${lab}</label><input type="number" step="${step}" data-k="${k}" data-n value="${+(+v).toFixed(3)}"></div>`}
+function targetRoom(){const o=get(sel);return isRoom(o)?o:o&&get(o.room)||null}
+function palNote(){const r=targetRoom();$('#palNote').innerHTML=r?`Adds into <b>${esc(r.name)}</b>.`:'Click one, then click in the plan. Select a room first to drop it straight in.'}
+function inspector(){const o=get(sel),el=$('#insp');lastSel=sel;palNote();
+ if(!o){el.innerHTML=`<div class="mut">Nothing selected.<br>Rooms total: ${fmtA(total())}</div>`;return}
+ let h=`<label>Name</label><input data-k="name" value="${esc(o.name)}">`;
+ if(o.t==='rect'){h+=`<div class="grid2">${num('w','Width m',o.w)}${num('h','Depth m',o.h)}${num('rot','Rotation °',o.rot||0,15)}`;
+  h+=(isRoom(o)?num('wall','Wall m',o.wall||0,0.05):'')+'</div>'}
+ if(o.t==='poly'){h+=`<div class="grid2">${o.kind==='furn'?'':num('wall','Wall m',o.wall??0.1)+`<div><label>Closed room</label><input type="checkbox" data-k="closed" ${o.closed?'checked':''}></div>`}</div><label>Edges m</label><div class="grid2">`;
+  const n=o.pts.length,m=o.closed?n:n-1;for(let i=0;i<m;i++){const a=o.pts[i],b=o.pts[(i+1)%n];h+=`<input type="number" step="0.05" data-e="${i}" value="${+Math.hypot(b[0]-a[0],b[1]-a[1]).toFixed(3)}" title="edge ${i+1}">`}h+='</div>'}
+ if(o.t==='text')h+=num('size','Text size m',o.size||0.25,0.05);
+ if(isRoom(o))h+=`<p class="note">Contains ${kidsOf(o).length} item(s) — they move with the room.</p>`;
+ if(isItem(o))h+=`<label>In room</label><select data-k="room"><option value="">— none —</option>${objs.filter(isRoom).map(r=>`<option value="${r.id}" ${o.room===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select>`;
+ h+=`<p class="note">Double-click any size on the plan to type it. Typed sizes are fixed <b style="color:#0b57d0">⊢ bold ⊣</b> and hold while you change others; type nothing to unfix.</p>`;
+ if(hasLocks(o))h+=`<button data-a="unlock" style="width:100%">Unfix all sizes</button>`;
+ h+=`<div class="grid2" style="margin-top:8px"><button data-a="dup">Duplicate</button><button data-a="rot">Rotate 90°</button><button data-a="front">To front</button><button data-a="back">To back</button><button data-a="del" style="grid-column:span 2">Delete${isRoom(o)&&kidsOf(o).length?' (with contents)':''}</button></div>`;
+ el.innerHTML=h}
+function syncInsp(){if(sel!==lastSel)return inspector();const o=get(sel);if(!o)return;
+ document.querySelectorAll('#insp input[data-n]').forEach(i=>{if(i!==document.activeElement&&o[i.dataset.k]!=null)i.value=+(+o[i.dataset.k]).toFixed(3)})}
+const insp=$('#insp');
+insp.addEventListener('focusin',e=>{if(e.target.matches('input,select'))push()});
+insp.addEventListener('input',e=>{const o=get(sel),i=e.target;if(!o)return;
+ if(i.dataset.e!=null){const v=parseFloat(i.value);if(v>0)setLen(o,+i.dataset.e,v)}
+ else if(i.dataset.k==='closed'){o.closed=i.checked;o.kind=o.closed?'room':'wall';if(o.closed&&!o.name.startsWith('Room'))o.name=`Room ${roomN()}`;if(o.closed)adopt(o)}
+ else if(i.dataset.k==='room')o.room=i.value||null;
+ else if(i.dataset.n!=null){const v=parseFloat(i.value);if(isNaN(v))return;const k=i.dataset.k;
+  if(k==='w'||k==='h'){if(v<=0)return;const cx=o.x+o.w/2,cy=o.y+o.h/2;o[k]=v;(o.locks??={})[k]=v;if(o.rot%360){o.x=cx-o.w/2;o.y=cy-o.h/2}}
+  else if(k==='rot'&&isRoom(o)){const K=snapKids(o),c=center(o),d=v-(o.rot||0);o.rot=v;applyKids(K,rotf(c.x,c.y,d),d)}
+  else o[k]=v}
+ else o[i.dataset.k]=i.value;render();if(i.dataset.k==='name')palNote()});
+insp.addEventListener('click',e=>{const a=e.target.dataset.a;if(a)act(a)});
+function setEdge(o,i,len){const P=o.pts,n=P.length,j=(i+1)%n,dx=P[j][0]-P[i][0],dy=P[j][1]-P[i][1],L=Math.hypot(dx,dy);if(L<1e-9)return;
+ const ddx=dx/L*(len-L),ddy=dy/L*(len-L);if(j===0){P[i]=[r4(P[i][0]-ddx),r4(P[i][1]-ddy)];return}
+ for(let k=j;k<n;k++)P[k]=[r4(P[k][0]+ddx),r4(P[k][1]+ddy)]}
+function act(a){const o=get(sel);if(!o)return;push();const i=objs.indexOf(o);
+ if(a==='del'){const kill=new Set([o.id,...(isRoom(o)?kidsOf(o).map(k=>k.id):[])]);objs=objs.filter(q=>!kill.has(q.id));sel=null}
+ if(a==='dup'){const off=trf(.3,.3),dupOne=(q,room)=>{const c=clone(q);c.id=uid();xform(c,q,off);if(room!==undefined)c.room=room;return c};
+  const c=dupOne(o);if(isRoom(o))c.name+=' copy';objs.splice(i+1,0,c);if(isRoom(o))kidsOf(o).forEach(k=>objs.push(dupOne(k,c.id)));sel=c.id}
+ if(a==='rot'){const c=center(o),f=rotf(c.x,c.y,90),K=isRoom(o)?snapKids(o):[];
+  if(o.t==='rect')o.rot=((o.rot||0)+90)%360;else if(o.t==='poly')o.pts=o.pts.map(p=>f(p[0],p[1]));applyKids(K,f,90)}
+ if(a==='unlock')delete o.locks;
+ if(a==='front'){objs.splice(i,1);objs.push(o)}
+ if(a==='back'){objs.splice(i,1);objs.unshift(o)}
+ refresh()}
+
+// ---------- adding ----------
+function placeItem(o,at){const r=targetRoom();
+ const st=styleOf(o);
+ if(!at&&r&&r.t==='rect'&&(st==='door'||st==='window')){const t=r.wall||0,lx=r.x+r.w/2-o.w/2,ly=st==='window'?r.y-t/2-o.h/2:r.y+r.h-o.h,c=center(r),nc=rotf(c.x,c.y,r.rot||0)(lx+o.w/2,ly+o.h/2);
+  o.x=r4(nc[0]-o.w/2);o.y=r4(nc[1]-o.h/2);o.rot=r.rot||0}
+ else if(!at&&r){const c=center(r);o.x=snapv(c.x-o.w/2);o.y=snapv(c.y-o.h/2);if(r.t==='rect')o.rot=r.rot||0}
+ else{const c=at||world({x:stage.clientWidth/2,y:stage.clientHeight/2});o.x=snapv(c.x-o.w/2);o.y=snapv(c.y-o.h/2)}
+ push();add(o);if(!at&&r)o.room=r.id;else{magnet(o);assignRoom(o)}setTool('select');inspector()}
+const presetItem=p=>({t:'rect',kind:'furn',w:p[1],h:p[2],rot:0,name:p[0],style:p[3]});
+$('#pal').innerHTML=[...new Set(PRESETS.map(p=>p[4]))].map(sec=>`<div class="sec">${sec}</div>`+PRESETS.map((p,i)=>p[4]===sec?`<button data-p="${i}" title="${p[1]} × ${p[2]} m">${p[0]}</button>`:'').join('')).join('');
+$('#pal').onclick=e=>{const i=e.target.dataset.p;if(i==null)return;const p=PRESETS[+i];targetRoom()?placeItem(presetItem(p)):setTool('place',p)};
+$('#cRect').onclick=()=>{const w=parseFloat($('#cW').value),h=parseFloat($('#cD').value);if(!(w>0&&h>0))return;placeItem({t:'rect',kind:'furn',w,h,rot:0,name:$('#cName').value||'Custom',style:'box'})};
+$('#cDraw').onclick=()=>{setTool('poly');draftKind='furn';render()};
+
+// ---------- input ----------
+const rel=e=>{const b=stage.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};
+const world=q=>({x:(q.x-view.x)/view.s,y:(q.y-view.y)/view.s});
+function setTool(t,p){tool=t;preset=p||null;typed='';if(t!=='poly'){draft=null;draftKind='room'}
+ document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===t&&!(t==='poly'&&draftKind==='furn')));
+ document.querySelectorAll('#pal button').forEach(b=>b.classList.toggle('on',t==='place'&&b.textContent===p?.[0]));render()}
+function finishDraft(close){const P=draft?.pts||[];
+ if(draftKind==='furn'){if(P.length>=3){push();const o=add({t:'poly',kind:'furn',pts:P,closed:true,name:$('#cName').value||'Custom'});assignRoom(o)}}
+ else if(P.length>=2){push();
+  if(close){const o=add({t:'poly',kind:'room',pts:P,closed:true,wall:0.1,name:`Room ${roomN()}`});adopt(o)}
+  else add({t:'poly',kind:'wall',pts:P,closed:false,wall:0.1,name:'Wall'})}
+ draft=null;setTool('select');inspector()}
+function addDraftPoint(p){if(!draft){const q=snapPt(p);draft={pts:[[q.x,q.y]]};return}
+ const q=draftNext(p),P=draft.pts,F=P[0],L=P[P.length-1];
+ if(P.length>=3&&Math.hypot(q.x-F[0],q.y-F[1])<1e-6)return finishDraft(true);
+ if(Math.hypot(q.x-L[0],q.y-L[1])<1e-6)return finishDraft(false);
+ P.push([q.x,q.y])}
+function enterTyped(){
+ if(tool==='rect'){const m=typed.match(/^([\d.]+)\s*[x*×]\s*([\d.]+)$/i);typed='';
+  if(m){push();const q=snapPt(cursor),o=newRoom(q.x,q.y,+m[1],+m[2]);adopt(o);setTool('select');inspector()}else render();return}
+ if(tool==='poly'&&draft){if(!typed)return finishDraft(false);const len=parseFloat(typed);typed='';if(!(len>0))return render();
+  const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);let a=Math.atan2(n.y-L[1],n.x-L[0]);if(n.x===L[0]&&n.y===L[1])a=0;
+  draft.pts.push([r4(L[0]+Math.cos(a)*len),r4(L[1]+Math.sin(a)*len)]);render()}}
+
+stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);const q=rel(e);pointers.set(e.pointerId,q);
+ if(pointers.size===2){const[a,b]=[...pointers.values()];drag={mode:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),m0:{x:(a.x+b.x)/2,y:(a.y+b.y)/2},v0:{...view}};return}
+ const p=world(q);cursor=p;scr=q;
+ if(e.button===1||space){drag={mode:'pan',q0:q,v0:{...view}};return}
+ if(e.button!==0)return;
+ const before=JSON.stringify(objs);
+ const dimEl=e.target.closest?.('[data-dim]');
+ if(dimEl&&tool==='select'){const k=dimEl.dataset.dim,now=performance.now();if(lastDim.k===k&&now-lastDim.t<500){lastDim={};e.preventDefault();openDimEdit(k,q);return}lastDim={k,t:now}}
+ if(tool==='select'){const h=e.target.dataset?.h,o=get(sel);
+  if(h!=null&&o){drag={mode:h==='rot'?'rot':'handle',h,o,orig:clone(o),kids:isRoom(o)?snapKids(o):[],before};return}
+  const id=e.target.closest?.('[data-id]')?.dataset.id;
+  if(id){sel=id;const o=get(id);drag={mode:'move',p0:p,o,orig:clone(o),kids:isRoom(o)?snapKids(o):[],before};render();return}
+  sel=null;drag={mode:'pan',q0:q,v0:{...view}};refresh();return}
+ if(tool==='rect'){const s=snapPt(p);const o=newRoom(s.x,s.y,0,0);drag={mode:'newrect',x0:s.x,y0:s.y,o,before};render();return}
+ if(tool==='poly'){addDraftPoint(p);render();return}
+ if(tool==='text'){const t=prompt('Label text');if(t){push();const s=snapPt(p),o=add({t:'text',kind:'text',x:s.x,y:s.y,size:0.25,name:t});assignRoom(o)}setTool('select');inspector();return}
+ if(tool==='place'){const s=snapPt(p),o=add(presetItem(preset));o.x=snapv(s.x-o.w/2);o.y=snapv(s.y-o.h/2);magnet(o);assignRoom(o);
+  setTool('select');drag={mode:'move',p0:p,o,orig:clone(o),kids:[],before};inspector()}});
+stage.addEventListener('pointermove',e=>{const q=rel(e);if(pointers.has(e.pointerId))pointers.set(e.pointerId,q);
+ const p=world(q);cursor=p;scr=q;
+ if(!drag){if(tool!=='select')render();else status();return}
+ const d=drag;
+ if(d.mode==='pinch'){if(pointers.size<2)return;const[a,b]=[...pointers.values()],s=Math.min(600,Math.max(5,d.v0.s*Math.hypot(a.x-b.x,a.y-b.y)/d.d0)),m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+  const wx=(d.m0.x-d.v0.x)/d.v0.s,wy=(d.m0.y-d.v0.y)/d.v0.s;view={x:m.x-wx*s,y:m.y-wy*s,s}}
+ else if(d.mode==='pan'){view.x=d.v0.x+q.x-d.q0.x;view.y=d.v0.y+q.y-d.q0.y}
+ else if(d.mode==='move'){const o=d.o,O=d.orig,dx=p.x-d.p0.x,dy=p.y-d.p0.y;let mx,my;
+  if(o.t==='poly'){mx=snapv(dx);my=snapv(dy);o.pts=O.pts.map(([x,y])=>[r4(x+mx),r4(y+my)])}
+  else{o.x=snapv(O.x+dx);o.y=snapv(O.y+dy);if(!e.altKey)magnet(o);mx=o.x-O.x;my=o.y-O.y}
+  applyKids(d.kids,trf(mx,my),0)}
+ else if(d.mode==='newrect'){const s=snapPt(p,{skip:d.o.id}),o=d.o;o.x=Math.min(d.x0,s.x);o.y=Math.min(d.y0,s.y);o.w=r4(Math.abs(s.x-d.x0));o.h=r4(Math.abs(s.y-d.y0))}
+ else if(d.mode==='handle'){const o=d.o;if(o.t==='poly'){const s=polyHandleSnap(o,+d.h,p);o.pts[+d.h]=[s.x,s.y];if(hasLocks(o))solveWarn(solvePoly(o,{[d.h]:[s.x,s.y]},d.orig.pts))}else resizeRect(o,d.orig,+d.h,snapPt(p,{skip:o.id}))}
+ else if(d.mode==='rot'){const o=d.o,c=center(d.orig);let a=Math.atan2(p.y-c.y,p.x-c.x)*180/PI+90;if(!e.shiftKey)a=Math.round(a/15)*15;o.rot=((Math.round(a)%360)+360)%360;
+  const da=o.rot-(d.orig.rot||0);applyKids(d.kids,rotf(c.x,c.y,da),da)}
+ render()});
+function resizeRect(o,O,i,p){const[sx,sy]=SG[i],a=(O.rot||0)*PI/180,c=Math.cos(a),s=Math.sin(a),cx=O.x+O.w/2,cy=O.y+O.h/2;
+ const ox=cx-sx*O.w/2*c+sy*O.h/2*s,oy=cy-sx*O.w/2*s-sy*O.h/2*c,dx=p.x-ox,dy=p.y-oy,lx=dx*c+dy*s,ly=-dx*s+dy*c;
+ const w=O.locks?.w!=null?O.w:Math.max(GRID,snapv(sx*lx)),h=O.locks?.h!=null?O.h:Math.max(GRID,snapv(sy*ly)),ncx=ox+sx*w/2*c-sy*h/2*s,ncy=oy+sx*w/2*s+sy*h/2*c;
+ o.w=w;o.h=h;o.x=r4(ncx-w/2);o.y=r4(ncy-h/2)}
+function up(e){pointers.delete(e.pointerId);const d=drag;if(!d)return;if(d.mode==='pinch'&&pointers.size)return;drag=null;guides=[];
+ if(d.mode==='newrect'){if(d.o.w<0.2&&d.o.h<0.2){d.o.w=3;d.o.h=3}adopt(d.o);setTool('select')}
+ if(d.mode==='move'&&isItem(d.o)&&JSON.stringify(d.o)!==JSON.stringify(d.orig))assignRoom(d.o);
+ if(d.mode==='handle'&&isRoom(d.o))adopt(d.o);
+ if(d.before!=null&&JSON.stringify(objs)!==d.before){hist.push(d.before);fut=[]}
+ refresh()}
+stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
+stage.addEventListener('dblclick',e=>{if(ed.style.display==='block'||e.target.closest?.('[data-dim]'))return;if(tool==='select'&&sel)setTimeout(()=>{const i=$('#insp input[data-k=name]');i&&(i.focus(),i.select())})});
+stage.addEventListener('wheel',e=>{e.preventDefault();const q=rel(e),f=Math.exp(-e.deltaY*(e.ctrlKey?0.01:0.0015)),s=Math.min(600,Math.max(5,view.s*f));
+ view.x=q.x-(q.x-view.x)*s/view.s;view.y=q.y-(q.y-view.y)*s/view.s;view.s=s;render()},{passive:false});
+addEventListener('keyup',e=>{if(e.key===' ')space=false;if(e.key==='Shift'){shift=false;render()}});
+addEventListener('keydown',e=>{if(e.key==='Shift'){shift=true;if(draft)render()}
+ if(e.target.matches('input,select,textarea'))return;const k=e.key,L=k.toLowerCase(),ctrl=e.ctrlKey||e.metaKey;
+ if(ctrl&&L==='z'){e.preventDefault();e.shiftKey?redo():undo();return}
+ if(ctrl&&L==='y'){e.preventDefault();redo();return}
+ if(ctrl&&L==='d'){e.preventDefault();act('dup');return}
+ if(ctrl)return;
+ if((tool==='poly'&&draft)||tool==='rect'){
+  if(/^[0-9.,]$/.test(k)||(tool==='rect'&&typed&&/^[x*×]$/i.test(k))){typed+=k===','?'.':k;render();e.preventDefault();return}
+  if(k==='Backspace'&&typed){typed=typed.slice(0,-1);render();return}
+  if(k==='Enter'){enterTyped();return}}
+ if(k==='Escape'){if(draft)finishDraft(false);else{typed='';sel=null;setTool('select');inspector()}return}
+ if(k===' '){space=true;e.preventDefault();return}
+ if(L==='v')setTool('select');else if(L==='r')setTool('rect');else if(L==='w'){draftKind='room';setTool('poly')}else if(L==='t')setTool('text');else if(L==='f')fit();
+ else if(L==='q')act('rot');
+ else if((k==='Delete'||k==='Backspace')&&sel)act('del');
+ else if(k.startsWith('Arrow')&&sel){e.preventDefault();const o=get(sel),st=e.shiftKey?0.5:GRID,dx=k==='ArrowLeft'?-st:k==='ArrowRight'?st:0,dy=k==='ArrowUp'?-st:k==='ArrowDown'?st:0;
+  push();const K=isRoom(o)?snapKids(o):[];xform(o,clone(o),trf(dx,dy),0);applyKids(K,trf(dx,dy),0);if(isItem(o))assignRoom(o);render()}});
+
+// ---------- dimension constraints ----------
+// Same idea as CAD sketch solvers (SolveSpace, FreeCAD planegcs): every corner is a variable, every
+// requirement a residual, and Levenberg-Marquardt least squares finds the closest shape that satisfies them.
+// Fixed sizes are near-hard; edge directions are kept firmly; unfixed lengths are cheap, so they give way first.
+const hasLocks=o=>o.locks&&Object.keys(o.locks).length>0;
+function lsolve(A,b){const n=b.length;for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;
+ [A[c],A[p]]=[A[p],A[c]];[b[c],b[p]]=[b[p],b[c]];const d=A[c][c]||1e-12;
+ for(let r=c+1;r<n;r++){const f=A[r][c]/d;if(!f)continue;for(let k=c;k<n;k++)A[r][k]-=f*A[c][k];b[r]-=f*b[c]}}
+ const x=new Array(n).fill(0);for(let r=n-1;r>=0;r--){let t=b[r];for(let k=r+1;k<n;k++)t-=A[r][k]*x[k];x[r]=t/(A[r][r]||1e-12)}return x}
+// Unfixed lengths use iteratively reweighted least squares (log / sparse penalty), so the change is absorbed
+// by as few edges as possible; ties go to edges farther from the one being edited.
+function solvePoly(o,fixed={},base,editI){const n=o.pts.length,m=o.closed?n:n-1,B=(base||o.pts).map(p=>[...p]),locks=o.locks||{};
+ const dir0=[],len0=[];for(let i=0;i<m;i++){const a=B[i],b=B[(i+1)%n],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1e-9;dir0.push([(b[0]-a[0])/L,(b[1]-a[1])/L]);len0.push(L)}
+ const ref=editI??(+Object.keys(fixed)[0]||0),bias=i=>{const k=Math.min((i-ref+m)%m,(ref-i+m)%m);return 1+0.15*(m-k)/m};
+ let wl=Array.from({length:m},(_,i)=>0.05*bias(i)),x=o.pts.flatMap(p=>[...p]);for(const k in fixed){x[2*k]=fixed[k][0];x[2*k+1]=fixed[k][1]}
+ for(let outer=0;outer<10;outer++){x=lmSolve(x,B,n,m,dir0,len0,locks,fixed,editI,wl);
+  wl=wl.map((_,i)=>{const j=(i+1)%n,L=Math.hypot(x[2*j]-x[2*i],x[2*j+1]-x[2*i+1]);return 0.05*bias(i)*1e-3/(Math.abs(L-len0[i])+1e-3)})}
+ o.pts=Array.from({length:n},(_,i)=>[r4(x[2*i]),r4(x[2*i+1])]);
+ let bad=0;for(const i in locks){const j=(+i+1)%n;bad=Math.max(bad,Math.abs(Math.hypot(o.pts[j][0]-o.pts[i][0],o.pts[j][1]-o.pts[i][1])-locks[i]))}return bad}
+function lmSolve(x,B,n,m,dir0,len0,locks,fixed,editI,wl){
+ const res=x=>{const r=[];for(let i=0;i<m;i++){const j=(i+1)%n,dx=x[2*j]-x[2*i],dy=x[2*j+1]-x[2*i+1],L=Math.hypot(dx,dy);
+   r.push(locks[i]!=null?(i===editI?3000:1000)*(L-locks[i]):wl[i]*(L-len0[i]),30*(dir0[i][0]*dy-dir0[i][1]*dx))}
+  for(const k in fixed)r.push(3000*(x[2*k]-fixed[k][0]),3000*(x[2*k+1]-fixed[k][1]));
+  for(let i=0;i<2*n;i++)r.push(1e-4*(x[i]-B[i>>1][i&1]));return r};
+ const sq=r=>r.reduce((t,v)=>t+v*v,0);
+ let r=res(x),f=sq(r),lam=1e-3;const N=x.length;
+ for(let it=0;it<100&&f>1e-18;it++){const J=[];for(let c=0;c<N;c++){const xp=x.slice();xp[c]+=1e-7;J.push(res(xp).map((v,k)=>(v-r[k])/1e-7))}
+  const A=J.map(a=>J.map(b=>{let t=0;for(let k=0;k<r.length;k++)t+=a[k]*b[k];return t})),g=J.map(a=>{let t=0;for(let k=0;k<r.length;k++)t-=a[k]*r[k];return t});
+  let moved=false;
+  for(let tries=0;tries<10;tries++){const dx=lsolve(A.map((row,a)=>row.map((v,b)=>a===b?v*(1+lam)+1e-12:v)),g.slice()),xn=x.map((v,i)=>v+dx[i]),rn=res(xn),fn=sq(rn);
+   if(fn<f){moved=Math.max(...dx.map(Math.abs))>1e-9;x=xn;r=rn;f=fn;lam=Math.max(lam/4,1e-12);break}lam*=10}
+  if(!moved)break}
+ return x}
+function solveWarn(bad){if(bad>0.002){warnMsg=`Fixed sizes conflict (off by ${+bad.toFixed(3)} m) — unfix one`;warnT=performance.now()+4000}}
+function setLen(o,i,v){(o.locks??={})[i]=v;solveWarn(solvePoly(o,{[i]:[...o.pts[i]]},null,i))}
+
+// ---------- inline dimension editor ----------
+const ed=$('#dimEd');
+const edgeLen=(o,i)=>{const P=o.pts,b=P[(i+1)%P.length];return Math.hypot(b[0]-P[i][0],b[1]-P[i][1])};
+function openDimEdit(key,q){const[id,k,i]=key.split(':'),o=get(id);if(!o)return;if(sel!==id){sel=id;refresh()}
+ ed.value=+(k==='e'?edgeLen(o,+i):o[k]).toFixed(3);ed.dataset.key=key;ed.style.left=q.x-42+'px';ed.style.top=q.y-15+'px';ed.style.display='block';setTimeout(()=>{ed.focus();ed.select()},0)}
+function closeDimEdit(apply){if(ed.style.display==='none')return;ed.style.display='none';if(!apply)return;
+ const raw=String(ed.value).replace(/,/g,'.').replace(/m/g,'').trim();let v=NaN;if(/^[\d.+\-*/() ]+$/.test(raw))try{v=Function(`return(${raw})`)()}catch(e){}
+ const[id,k,i]=ed.dataset.key.split(':'),o=get(id);if(!o)return;
+ if(raw===''){if(o.locks){push();delete o.locks[k==='e'?i:k];refresh()}return}
+ if(!(v>0))return;push();
+ if(k==='e')setLen(o,+i,v);else{o[k]=r4(v);(o.locks??={})[k]=o[k]}if(isRoom(o))adopt(o);refresh()}
+ed.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')closeDimEdit(true);else if(e.key==='Escape')closeDimEdit(false)});
+ed.addEventListener('blur',()=>closeDimEdit(true));
+
+// ---------- file ----------
+function bounds(){let a=[1/0,1/0,-1/0,-1/0];for(const o of objs)for(const[x,y]of vertsOf(o)){a=[Math.min(a[0],x),Math.min(a[1],y),Math.max(a[2],x),Math.max(a[3],y)]}return a}
+function fit(){if(!objs.length)return;const[x0,y0,x1,y1]=bounds(),W=stage.clientWidth,H=stage.clientHeight,s=Math.min(600,Math.min(W/(x1-x0+2),H/(y1-y0+2)));view={s,x:W/2-(x0+x1)/2*s,y:H/2-(y0+y1)/2*s};render()}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function svgString(){const[x0,y0,x1,y1]=bounds(),m=1,s=100,bx=x0-m,by=y0-m,bw=x1-x0+2*m,bh=y1-y0+2*m;
+ return{s,bw,bh,str:`<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(bw*s)}" height="${Math.round(bh*s)}" viewBox="${bx} ${by} ${bw} ${bh}"><style>text{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}</style>${DEFS}<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="#fff"/>${scene(s,true)}<text x="${bx+bw-0.15}" y="${by+bh-0.15}" font-size="0.14" text-anchor="end" fill="#777">rooms ${fmtA(total())}</text></svg>`}}
+$('#bSvg').onclick=()=>{if(objs.length)dl(new Blob([svgString().str],{type:'image/svg+xml'}),'floorplan.svg')};
+$('#bPng').onclick=()=>{if(!objs.length)return;const{s,bw,bh,str}=svgString(),img=new Image();
+ img.onload=()=>{const c=document.createElement('canvas');c.width=Math.round(bw*s);c.height=Math.round(bh*s);c.getContext('2d').drawImage(img,0,0);c.toBlob(b=>dl(b,'floorplan.png'))};
+ img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(str)};
+$('#bJson').onclick=()=>dl(new Blob([JSON.stringify({plonk:2,objs},null,1)],{type:'application/json'}),'floorplan.json');
+$('#bLoad').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());push();objs=d.objs||[];sel=null;fit();inspector()}catch(err){alert('Not a Plonk file')}e.target.value=''};
+$('#bClear').onclick=()=>{if(objs.length&&!confirm('Start a new empty plan? (Undo still works)'))return;push();objs=[];sel=null;refresh()};
+$('#bUndo').onclick=undo;$('#bRedo').onclick=redo;$('#bFit').onclick=fit;
+$('#bDims').onclick=()=>{showDims=!showDims;$('#bDims').classList.toggle('on',showDims);render()};
+$('#bSnap').onclick=()=>{snap=!snap;$('#bSnap').classList.toggle('on',snap);render()};
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{draftKind='room';setTool(b.dataset.tool)});
+addEventListener('resize',render);
+// old saves: give loose furniture a room
+objs.forEach(o=>{if(isItem(o)&&o.room===undefined)assignRoom(o)});
+$('#bDims').classList.add('on');$('#bSnap').classList.add('on');
+setTool('select');inspector();
+</script>
+<!-- badge:start -->
+<a href="/" id="shirley-badge" title="More tools &amp; toys by Shirley Claw">🦀 more toys</a>
+<style>#shirley-badge{position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:9999;font:600 11px system-ui,sans-serif;color:#222;background:#ffd84d;border:2px solid #222;border-radius:999px;padding:3px 9px;text-decoration:none;box-shadow:2px 2px 0 #222;opacity:.85}#shirley-badge:hover{opacity:1}</style>
+<!-- badge:end -->
+</body></html>
