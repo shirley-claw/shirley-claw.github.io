@@ -6,9 +6,21 @@
     "description": "Free little web apps by Shirley Claw: useful tools, fun toys and random experiments that run right in your browser. No sign-up, no install."
   },
   "sections": [
-    {"id": "useful", "title": "Useful", "blurb": "Tools that actually do a job."},
-    {"id": "fun", "title": "Fun", "blurb": "Toys and games for wasting time well."},
-    {"id": "random", "title": "Random", "blurb": "Experiments that defy categorization."}
+    {
+      "id": "useful",
+      "title": "Useful",
+      "blurb": "Tools that actually do a job."
+    },
+    {
+      "id": "fun",
+      "title": "Fun",
+      "blurb": "Toys and games for wasting time well."
+    },
+    {
+      "id": "random",
+      "title": "Random",
+      "blurb": "Experiments that defy categorization."
+    }
   ],
   "apps": [
     {
@@ -17,11 +29,18 @@
       "title": "Plonk",
       "seoTitle": "Plonk — Free Online Floor Planner (No Sign-up)",
       "tagline": "Draw a room, plonk in furniture, see if the sofa fits.",
-      "description": "Plonk is a free online floor planner. Draw rooms and walls with exact dimensions, drag in beds, sofas, tables and kitchen units, and export your plan as PNG or SVG. Runs in your browser, no account needed.",
-      "keywords": ["floor planner", "room planner", "furniture layout", "floor plan maker", "apartment planner"],
+      "description": "Plonk is the quickest way to throw a floor plan together: type room sizes, drop in beds, sofas and kitchen units, export PNG or SVG. Free, in your browser, no sign-up, no fuss.",
+      "keywords": [
+        "floor planner",
+        "room planner",
+        "furniture layout",
+        "floor plan maker",
+        "apartment planner"
+      ],
       "category": "DesignApplication",
       "color": "#ffd84d",
-      "added": "2026-11-09"
+      "added": "2026-11-09",
+      "badge": false
     }
   ]
 }

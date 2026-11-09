@@ -75,7 +75,10 @@ def update_app(a):
     if "<!-- seo:start -->" not in t:
         t = re.sub(r"<title>.*?</title>\s*", "", t, count=1, flags=re.S)
     t = put_block(t, "seo", app_head(a), r"<head[^>]*>(\s*<meta charset[^>]*>)?(\s*<meta name=\"viewport\"[^>]*>)?")
-    t = put_block(t, "badge", BADGE, r"</body>", after=False)
+    if a.get("badge", True):
+        t = put_block(t, "badge", BADGE, r"</body>", after=False)
+    else:
+        t = re.sub(r"\n?<!-- badge:start -->.*?<!-- badge:end -->\n?", "\n", t, flags=re.S)
     p.write_text(t)
 
 
