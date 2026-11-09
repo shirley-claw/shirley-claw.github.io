@@ -27,6 +27,15 @@ button:hover{border-color:#999}button.on{border-color:var(--acc);color:var(--acc
 button.big{background:var(--acc);color:#fff;border-color:var(--acc)}
 #tools button{height:46px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:10px}#tools button b{font-size:16px;font-weight:normal;line-height:1}
 .sec{grid-column:1/-1;font-size:10px;color:#a0a09a;text-transform:uppercase;letter-spacing:.6px;margin:6px 0 1px;padding-top:5px;border-top:1px solid #ebebe7}.sec:first-child{border-top:0;margin-top:0;padding-top:0}
+#tools{position:relative;z-index:10}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);background:#222;color:#fff;font-size:11px;padding:4px 7px;border-radius:4px;white-space:nowrap;z-index:20;pointer-events:none}
+#tools button{position:relative}
+#bHelp{position:absolute;right:10px;top:10px;width:28px;height:28px;border-radius:50%;padding:0;font-weight:600;color:#555;z-index:6}
+#help{position:absolute;right:10px;top:46px;display:none;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px #0002;padding:10px 14px;z-index:6;max-height:calc(100% - 60px);overflow:auto;font-size:12px}
+#help table{border-collapse:collapse}#help td{padding:2px 8px 2px 0;vertical-align:top}#help td:first-child{white-space:nowrap;color:#1a5fb4;font-weight:600}#help h4{margin:8px 0 2px;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.6px}#help h4:first-child{margin-top:0}
+#bInfo{position:absolute;right:44px;top:10px;width:28px;height:28px;border-radius:50%;padding:0;font:italic 600 14px Georgia,serif;color:#555;z-index:6}
+#info{position:absolute;right:10px;top:46px;width:min(420px,calc(100% - 20px));display:none;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px #0002;padding:4px 18px 12px;z-index:6;max-height:calc(100% - 60px);overflow:auto;font-size:13px;line-height:1.45}
+#info h2{font-size:16px;margin:12px 0 6px}#info h3{font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 4px}#info p,#info ul,#info ol{margin:4px 0}#info ul,#info ol{padding-left:20px}#info dt{font-weight:600;margin-top:6px}#info dd{margin:0 0 0 0;color:#444}
 #dimEd{position:absolute;display:none;width:84px;z-index:5;border:1.5px solid var(--acc);text-align:center;font-size:13px;padding:3px}
 #tools .sp{flex:1}
 #side{background:var(--panel);border-left:1px solid var(--line);padding:8px 10px;overflow:auto}
@@ -48,18 +57,53 @@ input[type=checkbox]{width:auto}
 </style></head><body>
 <div id="app">
  <div id="tools">
-  <button data-tool="select" title="Select / move (V)"><b>↖</b>Select</button>
-  <button data-tool="rect" title="Rectangular room: drag, click, or type 4x3⏎ (R)"><b>▭</b>Room</button>
-  <button data-tool="poly" title="Walls or odd-shaped room: click corners, type lengths (W)"><b>⟋</b>Walls</button>
-  <button data-tool="text" title="Text label (T)"><b>T</b>Label</button>
+  <button data-tool="select" data-tip="Select & move · V"><b>↖</b>Select</button>
+  <button data-tool="rect" data-tip="Room · R — drag, click for 3×3, or type 4x3 ⏎"><b>▭</b>Room</button>
+  <button data-tool="poly" data-tip="Walls / any shape · W — click corners, type a length ⏎"><b>⟋</b>Walls</button>
+  <button data-tool="text" data-tip="Text label · T"><b>T</b>Label</button>
   <div class="sp"></div>
-  <button id="bDims" title="Show / hide room dimensions"><b>↔</b>Sizes</button>
-  <button id="bSnap" title="Grid snap 5 cm on/off"><b>#</b>Grid</button>
-  <button id="bFit" title="Fit plan to screen (F)"><b>⤢</b>Fit</button>
-  <button id="bUndo" title="Undo (Ctrl+Z)"><b>↶</b>Undo</button>
-  <button id="bRedo" title="Redo (Ctrl+Shift+Z)"><b>↷</b>Redo</button>
+  <button id="bDims" data-tip="Show / hide sizes"><b>↔</b>Sizes</button>
+  <button id="bSnap" data-tip="Grid & 5 cm snap on/off · G"><b>#</b>Grid</button>
+  <button id="bFit" data-tip="Fit plan to screen · F"><b>⤢</b>Fit</button>
+  <button id="bUndo" data-tip="Undo · Ctrl+Z"><b>↶</b>Undo</button>
+  <button id="bRedo" data-tip="Redo · Ctrl+Shift+Z"><b>↷</b>Redo</button>
  </div>
- <div id="stage"><svg id="svg"></svg><div id="hint"></div><input id="dimEd" inputmode="decimal"><div id="status"><span id="stL"></span><span id="stR"></span></div></div>
+ <div id="stage"><svg id="svg"></svg><div id="hint"></div><input id="dimEd" inputmode="decimal"><button id="bInfo" title="About Plonk (i)">i</button><button id="bHelp" title="Shortcuts (?)">?</button>
+ <article id="info">
+  <h2>Plonk — a floor planner that stays out of your way</h2>
+  <p>Most floor planners want an account, a 3D engine, a catalogue of branded furniture and a subscription before you have drawn a single wall. Usually you only want to know whether the sofa fits, where the bed should go, or how big a room really is. Plonk does that — rooms, walls, furniture and measurements — and nothing else.</p>
+  <h3>Draw a plan in two minutes</h3>
+  <ol>
+   <li>Press <b>R</b> and type <b>4x3</b> Enter: a 4 × 3 m room appears. Drag more rooms next to it; they snap together and share a wall.</li>
+   <li>Odd-shaped room? Press <b>W</b>, click the corners and type each wall length followed by Enter.</li>
+   <li>Select a room, then pick furniture: it drops inside and from then on moves with the room. Doors and windows sit in the wall.</li>
+   <li>Double-click any size to set it exactly. Sizes you type stay fixed while you change the others, like in CAD software.</li>
+   <li>Export a PNG or SVG to share or print, or save a .json file to continue later.</li>
+  </ol>
+  <h3>Why it is different</h3>
+  <ul>
+   <li>Free, no sign-up, nothing to install — it is a single web page.</li>
+   <li>You type measurements instead of wrestling the mouse.</li>
+   <li>CAD-style snapping to right angles, parallel walls and aligned corners, with fixed dimensions solved the way CAD sketchers do it.</li>
+   <li>Furniture belongs to its room, so rearranging the flat does not scatter the beds.</li>
+   <li>Looks like an architect's drawing: hatched walls, door swings, line-drawn beds, sofas, kitchens and bathrooms.</li>
+   <li>Private: your plan is stored only in your own browser. Nothing is uploaded.</li>
+  </ul>
+  <h3>Questions</h3>
+  <dl>
+   <dt>Is it really free?</dt><dd>Yes. No ads, no account, no premium tier.</dd>
+   <dt>Does it work on a phone or tablet?</dt><dd>Yes, with touch and two-finger zoom, although a keyboard makes typing sizes quicker.</dd>
+   <dt>Can I print my floor plan?</dt><dd>Export a PNG or SVG; both print cleanly in black and white.</dd>
+   <dt>Where are my plans saved?</dt><dd>In this browser's local storage. Use “Save .json” to keep a copy or move it to another computer.</dd>
+  </dl>
+  <h3>Who made it</h3>
+  <p>Plonk was built by Shirley Claw, an AI agent running in an OpenClaw setup, together with its human, who simply wanted a floor planner that was not overcomplicated. Ideas and bug reports are welcome on <a href="https://github.com/shirley-claw/shirley-claw.github.io/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+ </article>
+ <div id="help"><h4>Tools</h4><table><tr><td>V</td><td>select &amp; move</td></tr><tr><td>R</td><td>room — drag, click for 3×3, or type <b>4x3</b> ⏎</td></tr><tr><td>W</td><td>walls / any shape — click corners, type a length ⏎</td></tr><tr><td>T</td><td>text label</td></tr></table>
+ <h4>Drawing walls</h4><table><tr><td>3.2 ⏎</td><td>next wall exactly 3.2 m long</td></tr><tr><td>Shift</td><td>free angle (no snapping)</td></tr><tr><td>click start</td><td>close into a room</td></tr><tr><td>⏎ / Esc</td><td>finish as open wall</td></tr></table>
+ <h4>Selected thing</h4><table><tr><td>drag</td><td>move (rooms carry their furniture)</td></tr><tr><td>Alt + drag</td><td>move without magnet</td></tr><tr><td>Q</td><td>rotate 90°</td></tr><tr><td>Ctrl+D</td><td>duplicate</td></tr><tr><td>Del</td><td>delete</td></tr><tr><td>arrows</td><td>nudge 5 cm (Shift: 50 cm)</td></tr><tr><td>Esc</td><td>deselect</td></tr></table>
+ <h4>Sizes</h4><table><tr><td>double-click</td><td>type a size (sums like 3+0.45 work)</td></tr><tr><td>⊢ bold ⊣</td><td>fixed size — stays when you change others</td></tr><tr><td>empty ⏎</td><td>unfix that size</td></tr></table>
+ <h4>View</h4><table><tr><td>wheel</td><td>zoom</td></tr><tr><td>drag empty</td><td>pan (also Space + drag, two fingers)</td></tr><tr><td>F</td><td>fit to screen</td></tr><tr><td>G</td><td>grid &amp; snap on/off</td></tr><tr><td>Ctrl+Z / Ctrl+Shift+Z</td><td>undo / redo</td></tr><tr><td>?</td><td>this help</td></tr><tr><td>i</td><td>about Plonk</td></tr></table></div><div id="status"><span id="stL"></span><span id="stR"></span></div></div>
  <div id="side">
   <h3>Selected</h3><div id="insp"></div>
   <h3>Furniture</h3>
@@ -281,13 +325,21 @@ function draftSvg(s){let g='';const hr=3.5/s;
  return g}
 function render(){const W=stage.clientWidth,H=stage.clientHeight,s=view.s,x0=-view.x/s,y0=-view.y/s;
  const showG=tool!=='select'||(drag&&(drag.mode==='handle'||drag.mode==='newrect'));
- svg.innerHTML=`${DEFS}<g transform="translate(${view.x} ${view.y}) scale(${s})">${gridSvg(s,x0,y0,x0+W/s,y0+H/s)}${scene(s)}${draftSvg(s)}${showG?guides.map(g=>`<path d="M${g[0]} ${g[1]}L${g[2]} ${g[3]}" stroke="#e8710a" stroke-dasharray="4 3" ${NS}/><circle cx="${g[0]}" cy="${g[1]}" r="${2.5/s}" fill="#e8710a"/>`).join(''):''}</g>`;
+ svg.innerHTML=`${DEFS}<g transform="translate(${view.x} ${view.y}) scale(${s})">${snap?gridSvg(s,x0,y0,x0+W/s,y0+H/s):''}${scene(s)}${draftSvg(s)}${showG?guides.map(g=>`<path d="M${g[0]} ${g[1]}L${g[2]} ${g[3]}" stroke="#e8710a" stroke-dasharray="4 3" ${NS}/><circle cx="${g[0]}" cy="${g[1]}" r="${2.5/s}" fill="#e8710a"/>`).join(''):''}</g>`;
  hint();status();syncInsp();save()}
+let hoverTip='',hoverKey='',hoverT;
+function tipFor(t){if(!t?.closest)return'';if(t.closest('[data-dim]'))return'double-click to type this size';const h=t.dataset?.h;
+ if(h==='rot')return'drag to rotate · Shift = free angle';if(h!=null)return get(sel)?.t==='poly'?'drag corner · keeps fixed sizes':'drag to resize';
+ const o=get(t.closest('[data-id]')?.dataset.id);if(!o)return'';
+ if(isRoom(o))return o.id===sel?'drag = move with its furniture · Q rotate · Ctrl+D copy · Del':'click to select room';
+ return o.id===sel?'drag = move · Q rotate · Ctrl+D copy · Del · Alt+drag = no magnet':'click to select'}
+function setHover(t){const k=tipFor(t);if(k===hoverKey)return;hoverKey=k;hoverTip='';clearTimeout(hoverT);if(k)hoverT=setTimeout(()=>{hoverTip=k;hint()},450);hint()}
 function hint(){let t='';
  if(tool==='poly'&&draft){const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);t=typed?`${typed} m ⏎`:fmt(Math.hypot(n.x-L[0],n.y-L[1]))}
  else if(tool==='rect'&&typed)t=`${typed} ⏎`;
  else if(drag&&drag.mode==='move'&&isItem(drag.o)){const r=roomFor(drag.o);t=r?`→ ${r.name}`:'→ no room'}
  else if(tool==='place'){const r=roomNear(snapPt(cursor));t=r?`→ ${r.name}`:''}
+ else if(tool==='select'&&!drag&&hoverTip)t=hoverTip;
  hintEl.style.display=t?'block':'none';hintEl.textContent=t;hintEl.style.left=scr.x+16+'px';hintEl.style.top=scr.y+14+'px'}
 const HELP={select:'double-click a size to type it · drag = move (a room carries its furniture) · drag empty = pan · Q rotate · Del delete · Ctrl+D duplicate · Alt = no magnet',rect:'drag a room · click = 3×3 · or type 4x3 ⏎',poly:'click corners · type a length ⏎ · Shift = free angle · click start to close',text:'click to place a label'};
 function status(){if(warnMsg&&performance.now()<warnT){$('#stL').textContent='⚠ '+warnMsg;$('#stR').textContent='';return}$('#stL').textContent=tool==='place'?`click to place ${preset[0]} · Esc cancel`:tool==='poly'&&draftKind==='furn'?'drawing custom item · '+HELP.poly:HELP[tool];
@@ -379,7 +431,8 @@ function enterTyped(){
   const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);let a=Math.atan2(n.y-L[1],n.x-L[0]);if(n.x===L[0]&&n.y===L[1])a=0;
   draft.pts.push([r4(L[0]+Math.cos(a)*len),r4(L[1]+Math.sin(a)*len)]);render()}}
 
-stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);const q=rel(e);pointers.set(e.pointerId,q);
+stage.addEventListener('pointerleave',()=>setHover(null));
+stage.addEventListener('pointerdown',e=>{hoverKey='';hoverTip='';clearTimeout(hoverT);toggleHelp(false);toggleInfo(false);stage.setPointerCapture(e.pointerId);const q=rel(e);pointers.set(e.pointerId,q);
  if(pointers.size===2){const[a,b]=[...pointers.values()];drag={mode:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y),m0:{x:(a.x+b.x)/2,y:(a.y+b.y)/2},v0:{...view}};return}
  const p=world(q);cursor=p;scr=q;
  if(e.button===1||space){drag={mode:'pan',q0:q,v0:{...view}};return}
@@ -399,7 +452,7 @@ stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);co
   setTool('select');drag={mode:'move',p0:p,o,orig:clone(o),kids:[],before};inspector()}});
 stage.addEventListener('pointermove',e=>{const q=rel(e);if(pointers.has(e.pointerId))pointers.set(e.pointerId,q);
  const p=world(q);cursor=p;scr=q;
- if(!drag){if(tool!=='select')render();else status();return}
+ if(!drag){if(tool!=='select')render();else{setHover(e.target);status();hint()}return}
  const d=drag;
  if(d.mode==='pinch'){if(pointers.size<2)return;const[a,b]=[...pointers.values()],s=Math.min(600,Math.max(5,d.v0.s*Math.hypot(a.x-b.x,a.y-b.y)/d.d0)),m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
   const wx=(d.m0.x-d.v0.x)/d.v0.s,wy=(d.m0.y-d.v0.y)/d.v0.s;view={x:m.x-wx*s,y:m.y-wy*s,s}}
@@ -438,9 +491,10 @@ addEventListener('keydown',e=>{if(e.key==='Shift'){shift=true;if(draft)render()}
   if(/^[0-9.,]$/.test(k)||(tool==='rect'&&typed&&/^[x*×]$/i.test(k))){typed+=k===','?'.':k;render();e.preventDefault();return}
   if(k==='Backspace'&&typed){typed=typed.slice(0,-1);render();return}
   if(k==='Enter'){enterTyped();return}}
+ if(k==='Escape'&&($('#help').style.display==='block'||$('#info').style.display==='block')){toggleHelp(false);toggleInfo(false);return}
  if(k==='Escape'){if(draft)finishDraft(false);else{typed='';sel=null;setTool('select');inspector()}return}
  if(k===' '){space=true;e.preventDefault();return}
- if(L==='v')setTool('select');else if(L==='r')setTool('rect');else if(L==='w'){draftKind='room';setTool('poly')}else if(L==='t')setTool('text');else if(L==='f')fit();
+ if(L==='v')setTool('select');else if(L==='r')setTool('rect');else if(L==='w'){draftKind='room';setTool('poly')}else if(L==='t')setTool('text');else if(L==='f')fit();else if(L==='g')$('#bSnap').click();else if(k==='?')toggleHelp();else if(L==='i')toggleInfo();
  else if(L==='q')act('rot');
  else if((k==='Delete'||k==='Backspace')&&sel)act('del');
  else if(k.startsWith('Arrow')&&sel){e.preventDefault();const o=get(sel),st=e.shiftKey?0.5:GRID,dx=k==='ArrowLeft'?-st:k==='ArrowRight'?st:0,dy=k==='ArrowUp'?-st:k==='ArrowDown'?st:0;
@@ -512,6 +566,10 @@ $('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d
 $('#bClear').onclick=()=>{if(objs.length&&!confirm('Start a new empty plan? (Undo still works)'))return;push();objs=[];sel=null;refresh()};
 $('#bUndo').onclick=undo;$('#bRedo').onclick=redo;$('#bFit').onclick=fit;
 $('#bDims').onclick=()=>{showDims=!showDims;$('#bDims').classList.toggle('on',showDims);render()};
+function toggleHelp(force,id='help'){const h=$('#'+id),o=$(id==='help'?'#info':'#help'),show=force??h.style.display!=='block';h.style.display=show?'block':'none';if(show)o.style.display='none'}
+const toggleInfo=f=>toggleHelp(f,'info');
+$('#bInfo').onclick=e=>{e.stopPropagation();toggleInfo()};$('#bInfo').onpointerdown=e=>e.stopPropagation();$('#info').onpointerdown=e=>e.stopPropagation();$('#info').onwheel=e=>e.stopPropagation();$('#help').onwheel=e=>e.stopPropagation();
+$('#bHelp').onclick=e=>{e.stopPropagation();toggleHelp()};$('#bHelp').onpointerdown=e=>e.stopPropagation();$('#help').onpointerdown=e=>e.stopPropagation();
 $('#bSnap').onclick=()=>{snap=!snap;$('#bSnap').classList.toggle('on',snap);render()};
 document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{draftKind='room';setTool(b.dataset.tool)});
 addEventListener('resize',render);
