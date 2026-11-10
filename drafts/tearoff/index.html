@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head>
+<meta name="robots" content="noindex">
+<title>tearoff (draft)</title><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+:root{--bg:#f3f3f1;--panel:#fafaf8;--line:#d4d4d0;--fg:#222;--mut:#777;--acc:#d84315}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}h1 span{color:var(--acc)}
+.sub{color:var(--mut);margin:0 0 20px}
+.cols{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start}
+@media(max-width:800px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 14px}
+label{display:block;font-weight:600;margin:10px 0 4px}label:first-child{margin-top:0}
+.hint{color:var(--mut);font-size:13px;font-weight:400}
+textarea,input,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff}
+textarea{min-height:120px;resize:vertical;font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400;margin:6px 0}.chk input{width:auto}
+button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer;width:100%;margin-top:12px}
+#out{display:flex;flex-direction:column;gap:14px}
+.page{background:#fff;border:1px solid var(--line);box-shadow:0 1px 4px #0001;aspect-ratio:210/297;padding:5%;display:flex;flex-direction:column;width:100%;max-width:640px;margin:0 auto;container-type:inline-size}
+.page.land{aspect-ratio:297/210;max-width:860px}
+.page h2{margin:0 0 3cqw;font-size:7cqw;font-weight:800;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:baseline}
+.page h2 small{font-size:3.5cqw;color:var(--acc);font-weight:700}
+.page.land h2{font-size:5cqw}
+.grid{flex:1;display:grid;grid-template-columns:var(--gc);grid-auto-rows:1fr;border-top:2px solid #222;border-left:1px solid #bbb}
+.grid>div{border-right:1px solid #bbb;border-bottom:1px solid #bbb;padding:.8cqw 1cqw;font-size:2.4cqw;overflow:hidden;min-height:0}
+.grid>.hd{font-weight:700;text-transform:uppercase;font-size:2cqw;padding:1cqw;color:#555;border-bottom:2px solid #222}
+.grid>.wk{color:#aaa;font-size:1.8cqw;text-align:center}
+.grid>.d b{display:block;font-size:3cqw}
+.grid>.d.we b{color:var(--acc)}
+.grid>.d.off{background:#f7f7f7}.grid>.d.off b{color:#ccc}
+.grid>.d.hol{background:#fff3ee}
+.grid>.d i{display:block;font-style:normal;line-height:1.2;color:#333}
+.grid.nohead{border-top:1px solid #bbb}
+.year{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3cqw}
+.page.land .year{grid-template-columns:repeat(4,1fr)}
+.mini h3{margin:0 0 1cqw;font-size:2.6cqw}
+.mini table{width:100%;border-collapse:collapse;font-size:1.9cqw;text-align:center}
+.mini th{color:#888;font-weight:600}.mini td{padding:.3cqw 0}
+.mini td.we{color:var(--acc)}.mini td.hol{background:#ffe0d4;border-radius:2px}
+.notes{margin-top:3cqw;border-top:1px solid #bbb;min-height:12%;font-size:2cqw;color:#aaa;padding-top:1cqw}
+@media print{
+  @page{size:A4 var(--orient,portrait);margin:0}
+  body{background:#fff}main{padding:0;max-width:none}.noprint{display:none!important}.cols{display:block}
+  #out{gap:0}.page{border:0;box-shadow:none;max-width:none;width:100vw;height:100vh;aspect-ratio:auto;break-after:page}
+  .page:last-child{break-after:auto}
+}
+</style>
+</head><body><main>
+<h1>Tear<span>off</span></h1>
+<p class="sub noprint">Pick months, add birthdays and holidays, print a clean A4 calendar. Nothing to install, nothing to sign up for.</p>
+<div class="cols">
+<div class="noprint card">
+  <div class="two">
+    <div><label>From</label><input type="month" id="from"></div>
+    <div><label>Months</label><input type="number" id="count" min="1" max="24" value="12"></div>
+  </div>
+  <label>Layout</label>
+  <select id="layout"><option value="month">One month per page</option><option value="year">Whole year on one page</option></select>
+  <div class="two">
+    <div><label>Paper</label><select id="orient"><option value="portrait">A4 portrait</option><option value="landscape">A4 landscape</option></select></div>
+    <div><label>Week starts</label><select id="wstart"><option value="1">Monday</option><option value="0">Sunday</option></select></div>
+  </div>
+  <label>Language</label>
+  <select id="lang"></select>
+  <label class="chk"><input type="checkbox" id="wknum"> Week numbers</label>
+  <label class="chk"><input type="checkbox" id="notes" checked> Notes strip (month pages)</label>
+  <label class="chk"><input type="checkbox" id="spill" checked> Show neighbour-month days</label>
+  <label>Dates <span class="hint">one per line: <b>12-24 Christmas Eve</b> repeats yearly, <b>2027-03-14 Dentist</b> once</span></label>
+  <textarea id="ev" placeholder="01-01 New Year&#10;03-08 Mum's birthday&#10;2027-02-14 Pay rent early"></textarea>
+  <button id="print">Print / save PDF</button>
+</div>
+<div id="out"></div>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const LANGS=[['en','English'],['de','Deutsch'],['fr','Français'],['es','Español'],['it','Italiano'],['pt','Português'],['nl','Nederlands'],['pl','Polski'],['cs','Čeština'],['sk','Slovenčina'],['hu','Magyar'],['sv','Svenska'],['da','Dansk'],['nb','Norsk'],['fi','Suomi'],['uk','Українська'],['ru','Русский'],['tr','Türkçe'],['ja','日本語'],['zh','中文']];
+const nav=(navigator.language||'en').slice(0,2);
+$('lang').innerHTML=LANGS.map(([c,n])=>`<option value="${c}"${c===nav?' selected':''}>${n}</option>`).join('');
+const now=new Date();
+const ids=['from','count','layout','orient','wstart','lang','wknum','notes','spill','ev'];
+const saved=JSON.parse(localStorage.getItem('tearoff')||'{}');
+if(!saved.from){saved.from=`${now.getFullYear()+(now.getMonth()>=10?1:0)}-${now.getMonth()>=10?'01':String(now.getMonth()+1).padStart(2,'0')}`;if(nav==='en'&&/US|CA/.test(navigator.language))saved.wstart='0'}
+ids.forEach(k=>{const e=$(k);if(saved[k]!==undefined){e.type==='checkbox'?e.checked=saved[k]:e.value=saved[k]}e.addEventListener('input',draw)});
+$('print').onclick=()=>window.print();
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)}
+function parseEv(txt){const yearly={},once={};for(const raw of txt.split('\n')){const l=raw.trim();let m;
+  if(m=l.match(/^(\d{4})-(\d{1,2})-(\d{1,2})\s+(.+)/)){const k=`${+m[1]}-${+m[2]}-${+m[3]}`;(once[k]=once[k]||[]).push(m[4])}
+  else if(m=l.match(/^(\d{1,2})[-./](\d{1,2})\s+(.+)/)){const k=`${+m[1]}-${+m[2]}`;(yearly[k]=yearly[k]||[]).push(m[3])}}
+  return d=>[...(yearly[`${d.getMonth()+1}-${d.getDate()}`]||[]),...(once[`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`]||[])]}
+function draw(){
+  const o={};ids.forEach(k=>{const e=$(k);o[k]=e.type==='checkbox'?e.checked:e.value});localStorage.setItem('tearoff',JSON.stringify(o));
+  const lang=o.lang,ws=+o.wstart,land=o.orient==='landscape';
+  document.documentElement.style.setProperty('--orient',o.orient);
+  let st=document.getElementById('pg');if(!st){st=document.createElement('style');st.id='pg';document.head.append(st)}
+  st.textContent=`@media print{@page{size:A4 ${o.orient};margin:0}}`;
+  const [fy,fm]=(o.from||`${now.getFullYear()}-01`).split('-').map(Number);
+  const n=Math.max(1,Math.min(24,+o.count||12));
+  const ev=parseEv(o.ev);
+  const mName=new Intl.DateTimeFormat(lang,{month:'long'}),dName=new Intl.DateTimeFormat(lang,{weekday:'short'}),dNarrow=new Intl.DateTimeFormat(lang,{weekday:'narrow'});
+  const cap=s=>s.charAt(0).toLocaleUpperCase(lang)+s.slice(1);
+  const wdays=[...Array(7)].map((_,i)=>new Date(2024,0,7+((i+ws)%7)));
+  const months=[...Array(n)].map((_,i)=>new Date(fy,fm-1+i,1));
+  const weeksOf=m=>{const first=new Date(m);first.setDate(1-((m.getDay()-ws+7)%7));const rows=[];let d=new Date(first);
+    do{const r=[];for(let i=0;i<7;i++){r.push(new Date(d));d.setDate(d.getDate()+1)}rows.push(r)}while(d.getMonth()===m.getMonth());return rows};
+  const we=d=>d.getDay()===0||d.getDay()===6;
+  let html='';
+  if(o.layout==='year'){
+    for(let p=0;p<n;p+=12){const chunk=months.slice(p,p+12);
+      const y1=chunk[0].getFullYear(),y2=chunk.at(-1).getFullYear();
+      html+=`<div class="page${land?' land':''}"><h2>${y1===y2?y1:y1+' – '+y2}</h2><div class="year">`+chunk.map(m=>{
+        const rows=weeksOf(m);
+        return `<div class="mini"><h3>${cap(mName.format(m))}${chunk[0].getMonth()&&m.getMonth()===0?' '+m.getFullYear():''}</h3><table><tr>${o.wknum?'<th></th>':''}${wdays.map(w=>`<th>${esc(dNarrow.format(w))}</th>`).join('')}</tr>`+
+        rows.map(r=>`<tr>${o.wknum?`<td style="color:#bbb">${isoWeek(r[(11-ws)%7])}</td>`:''}${r.map(d=>{if(d.getMonth()!==m.getMonth())return'<td></td>';const e=ev(d);return`<td class="${we(d)?'we ':''}${e.length?'hol':''}"${e.length?` title="${esc(e.join(', '))}"`:''}>${d.getDate()}</td>`}).join('')}</tr>`).join('')+'</table></div>'}).join('')+'</div></div>'}
+  }else{
+    const gc=(o.wknum?'5% ':'')+'repeat(7,1fr)';
+    for(const m of months){
+      const rows=weeksOf(m);
+      html+=`<div class="page${land?' land':''}"><h2>${cap(mName.format(m))}<small>${m.getFullYear()}</small></h2><div class="grid" style="--gc:${gc}">`+
+      (o.wknum?'<div class="hd"></div>':'')+wdays.map(w=>`<div class="hd">${esc(dName.format(w))}</div>`).join('')+
+      rows.map(r=>(o.wknum?`<div class="wk">${isoWeek(r[(11-ws)%7])}</div>`:'')+r.map(d=>{
+        const off=d.getMonth()!==m.getMonth();if(off&&!o.spill)return'<div class="d off"></div>';
+        const e=off?[]:ev(d);
+        return `<div class="d${we(d)?' we':''}${off?' off':''}${e.length?' hol':''}"><b>${d.getDate()}</b>${e.map(x=>`<i>${esc(x)}</i>`).join('')}</div>`}).join('')).join('')+
+      `</div>${o.notes?'<div class="notes">&nbsp;</div>':''}</div>`}
+  }
+  $('out').innerHTML=html;
+}
+draw();
+</script>
+</body></html>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en"><head>
+<meta name="robots" content="noindex">
+<title>elbowroom (draft)</title><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+:root{--bg:#f3f3f1;--panel:#fafaf8;--line:#d4d4d0;--fg:#222;--mut:#777;--acc:#6a1b9a;--bad:#c62828;--ok:#2e7d32}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:26px;margin:0 0 4px}h1 span{color:var(--acc)}
+.sub{color:var(--mut);margin:0 0 20px}
+.cols{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:14px;align-items:start}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 14px}
+label{display:block;font-weight:600;margin:0 0 6px}
+.hint{color:var(--mut);font-size:13px;font-weight:400}
+textarea,input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:#fff}
+textarea{min-height:130px;resize:vertical}
+input[type=number]{width:80px}
+button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer}
+button.ghost{background:#fff;color:var(--fg);border:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.err{color:var(--bad);margin:8px 0 0;font-size:14px}
+.stat{color:var(--mut);font-size:14px;margin:0 0 10px}
+.stat b.ok{color:var(--ok)}.stat b.bad{color:var(--bad)}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.t{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.t h3{margin:0 0 6px;font-size:15px;display:flex;justify-content:space-between}
+.t h3 small{color:var(--mut);font-weight:400}
+.t ol{margin:0;padding-left:20px}
+.t li{padding:2px 4px;border-radius:4px;cursor:pointer}
+.t li:hover{background:#f1e6f6}
+.t li.sel{background:var(--acc);color:#fff}
+.t li.warn{color:var(--bad)}
+.t li.empty{color:#bbb;cursor:default;font-style:italic}
+@media print{.noprint{display:none!important}.cols{display:block}.t{break-inside:avoid}body{background:#fff}main{max-width:none}}
+</style>
+</head><body><main>
+<h1>Elbow<span>room</span></h1>
+<p class="sub">Type your guests, say who sits together and who must not, get a seating chart. Click two names to swap them.</p>
+<div class="cols">
+<div class="noprint">
+  <div class="card">
+    <label>Guests <span class="hint">one per line · <b>Anna, Ben</b> on one line = keep together</span></label>
+    <textarea id="guests" placeholder="Anna, Ben&#10;Grandma Rose&#10;Carl, Dana, little Eve&#10;Uncle Frank&#10;Gina"></textarea>
+  </div>
+  <div class="card">
+    <label>Keep apart <span class="hint">one pair per line, e.g. <b>Frank / Gina</b></span></label>
+    <textarea id="apart" style="min-height:70px" placeholder="Uncle Frank / Gina"></textarea>
+  </div>
+  <div class="card row">
+    <label style="margin:0">Tables</label><input id="tables" type="number" min="1" value="4">
+    <label style="margin:0">Seats each</label><input id="seats" type="number" min="1" value="8">
+  </div>
+  <div class="row"><button id="go">Seat them</button><button class="ghost" id="print">Print</button><button class="ghost" id="copy">Copy text</button></div>
+  <p class="err" id="err"></p>
+</div>
+<div>
+  <p class="stat" id="stat"></p>
+  <div class="tables" id="out"></div>
+</div>
+</div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const key=s=>s.trim().toLowerCase();
+let plan=null, sel=null;
+
+function read(){
+  const groups=[], who=new Map();
+  for(const line of $('#guests').value.split('\n')){
+    const g=line.split(',').map(s=>s.trim()).filter(Boolean);
+    if(!g.length)continue;
+    const gi=groups.length;groups.push(g);
+    for(const n of g){if(who.has(key(n)))throw `"${n}" appears twice`;who.set(key(n),gi)}
+  }
+  const apart=[];
+  for(const line of $('#apart').value.split('\n')){
+    const p=line.split(/\s*[\/;|]\s*|\s+vs\.?\s+/i).map(s=>s.trim()).filter(Boolean);
+    if(!p.length)continue;
+    if(p.length!==2)throw `Couldn't read "${line.trim()}" as a pair`;
+    for(const n of p)if(!who.has(key(n)))throw `"${n}" in keep-apart isn't a guest`;
+    apart.push(p.map(key));
+  }
+  const T=Math.max(1,+$('#tables').value|0), S=Math.max(1,+$('#seats').value|0);
+  const total=groups.reduce((a,g)=>a+g.length,0);
+  if(!total)throw 'Add some guests first';
+  if(total>T*S)throw `${total} guests but only ${T*S} seats`;
+  const big=groups.find(g=>g.length>S);
+  if(big)throw `"${big.join(', ')}" is bigger than a table`;
+  return {groups,apart,T,S,who};
+}
+
+// Score: overflow and keep-apart clashes are heavy; uneven tables are light.
+function cost(a,{groups,apart,T,S,who}){
+  const load=Array(T).fill(0);groups.forEach((g,i)=>load[a[i]]+=g.length);
+  let c=0;for(const l of load)if(l>S)c+=1000*(l-S);
+  for(const[x,y]of apart)if(a[who.get(x)]===a[who.get(y)])c+=100;
+  const avg=groups.reduce((s,g)=>s+g.length,0)/T;
+  for(const l of load)c+=(l-avg)*(l-avg)*.1;
+  return c;
+}
+
+// Annealing over group→table moves; groups never split.
+function solve(m){
+  const n=m.groups.length;let a=Array.from({length:n},(_,i)=>i%m.T);
+  // largest groups first, into the emptiest table
+  const load=Array(m.T).fill(0);
+  [...m.groups.keys()].sort((x,y)=>m.groups[y].length-m.groups[x].length).forEach(i=>{
+    let t=load.indexOf(Math.min(...load));a[i]=t;load[t]+=m.groups[i].length});
+  let c=cost(a,m),best=a.slice(),bc=c;
+  for(let it=0,temp=50;it<40000&&bc>0.5;it++,temp*=.9997){
+    const b=a.slice(),i=Math.random()*n|0;
+    if(Math.random()<.5)b[i]=Math.random()*m.T|0;
+    else{const j=Math.random()*n|0;[b[i],b[j]]=[b[j],b[i]]}
+    const d=cost(b,m);
+    if(d<=c||Math.random()<Math.exp((c-d)/temp)){a=b;c=d;if(c<bc){bc=c;best=a.slice()}}
+  }
+  const tables=Array.from({length:m.T},()=>[]);
+  best.forEach((t,i)=>tables[t].push(...m.groups[i]));
+  return tables;
+}
+
+function clashes(tables,apart){
+  const bad=new Set();
+  for(const t of tables){const ks=new Set(t.map(key));
+    for(const[x,y]of apart)if(ks.has(x)&&ks.has(y)){bad.add(x);bad.add(y)}}
+  return bad;
+}
+
+function render(){
+  if(!plan){$('#out').innerHTML='';$('#stat').textContent='';return}
+  const {tables,S,apart}=plan, bad=clashes(tables,apart);
+  $('#stat').innerHTML=`${tables.flat().length} guests at ${tables.length} tables · `+
+    (bad.size?`<b class="bad">${bad.size} people sit next to someone they shouldn't</b>`:'<b class="ok">no clashes</b>');
+  $('#out').innerHTML=tables.map((t,ti)=>`<div class="t"><h3>Table ${ti+1}<small>${t.length}/${S}</small></h3><ol>`+
+    t.map((n,si)=>`<li data-t="${ti}" data-s="${si}" class="${bad.has(key(n))?'warn':''}${sel&&sel[0]===ti&&sel[1]===si?' sel':''}">${esc(n)}</li>`).join('')+
+    Array(Math.max(0,S-t.length)).fill(0).map((_,k)=>`<li data-t="${ti}" data-s="${t.length+k}" class="empty${sel&&sel[0]===ti&&sel[1]===t.length+k?' sel':''}">empty</li>`).join('')+
+    '</ol></div>').join('');
+}
+
+$('#out').addEventListener('click',e=>{
+  const li=e.target.closest('li');if(!li)return;
+  const p=[+li.dataset.t,+li.dataset.s];
+  if(!sel){if(!li.classList.contains('empty'))sel=p;render();return}
+  if(sel[0]!==p[0]||sel[1]!==p[1]){
+    const T=plan.tables,a=T[sel[0]][sel[1]],b=T[p[0]][p[1]];
+    if(b===undefined){T[sel[0]].splice(sel[1],1);T[p[0]].push(a)}
+    else{T[sel[0]][sel[1]]=b;T[p[0]][p[1]]=a}
+  }
+  sel=null;render();save();
+});
+
+$('#go').onclick=()=>{
+  $('#err').textContent='';
+  try{const m=read();plan={tables:solve(m),S:m.S,apart:m.apart};sel=null;render();save()}
+  catch(e){$('#err').textContent=typeof e==='string'?e:'Something broke: '+e.message}
+};
+$('#print').onclick=()=>print();
+$('#copy').onclick=()=>{
+  if(!plan)return;
+  navigator.clipboard.writeText(plan.tables.map((t,i)=>`Table ${i+1}\n`+t.map(n=>'  '+n).join('\n')).join('\n\n'))
+    .then(()=>{$('#copy').textContent='Copied';setTimeout(()=>$('#copy').textContent='Copy text',1200)});
+};
+
+const LS='elbowroom';
+function save(){localStorage.setItem(LS,JSON.stringify({g:$('#guests').value,a:$('#apart').value,t:$('#tables').value,s:$('#seats').value,plan}))}
+try{const d=JSON.parse(localStorage.getItem(LS));if(d){$('#guests').value=d.g;$('#apart').value=d.a;$('#tables').value=d.t;$('#seats').value=d.s;plan=d.plan;render()}}catch{}
+for(const id of['guests','apart','tables','seats'])$('#'+id).addEventListener('input',save);
+</script>
+</body></html>
