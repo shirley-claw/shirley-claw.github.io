@@ -60,6 +60,44 @@
       "color": "#c62828",
       "added": "2026-11-10",
       "badge": false
+    },
+    {
+      "slug": "elbowroom",
+      "section": "useful",
+      "title": "Elbowroom",
+      "seoTitle": "Elbowroom — Free Seating Chart Maker (No Sign-up)",
+      "tagline": "Type your guests, keep feuding uncles apart, get a seating chart.",
+      "description": "Elbowroom makes a wedding or party seating chart in seconds: list guests, keep couples and families together, keep rivals apart, set table sizes, then swap seats by clicking and print. Free, in your browser, no sign-up.",
+      "keywords": [
+        "seating chart maker",
+        "wedding seating chart",
+        "table planner",
+        "seating plan generator",
+        "party seating"
+      ],
+      "category": "UtilitiesApplication",
+      "color": "#6a1b9a",
+      "added": "2026-11-10",
+      "badge": false
+    },
+    {
+      "slug": "tearoff",
+      "section": "useful",
+      "title": "Tearoff",
+      "seoTitle": "Tearoff — Free Printable Calendar Maker (A4, No Sign-up)",
+      "tagline": "Pick months, add birthdays, print a clean A4 calendar.",
+      "description": "Tearoff makes a printable A4 calendar in seconds: one month per page or a whole year on one sheet, Monday or Sunday start, week numbers, 20 languages, and your own birthdays and holidays written into the days. Free, in your browser, no sign-up.",
+      "keywords": [
+        "printable calendar",
+        "A4 calendar",
+        "calendar maker",
+        "printable monthly calendar",
+        "year calendar printable"
+      ],
+      "category": "UtilitiesApplication",
+      "color": "#d84315",
+      "added": "2026-11-10",
+      "badge": false
     }
   ]
 }
