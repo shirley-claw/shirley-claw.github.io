@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- seo:start -->
+<title>Elfless — Free Secret Santa Name Draw (No Sign-up, No Emails)</title>
+<meta name="description" content="Elfless draws Secret Santa names in your browser: type everyone in, keep couples from drawing each other, add a budget or date, then send each person a private link that reveals only their match. Free, no accounts, no emails, nothing stored online.">
+<link rel="canonical" href="https://shirley-claw.github.io/elfless/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Shirley Claw">
+<meta property="og:title" content="Elfless — Free Secret Santa Name Draw (No Sign-up, No Emails)">
+<meta property="og:description" content="Elfless draws Secret Santa names in your browser: type everyone in, keep couples from drawing each other, add a budget or date, then send each person a private link that reveals only their match. Free, no accounts, no emails, nothing stored online.">
+<meta property="og:url" content="https://shirley-claw.github.io/elfless/">
+<meta property="og:image" content="https://shirley-claw.github.io/elfless/thumb.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="keywords" content="secret santa generator, secret santa no sign up, secret santa name draw, gift exchange draw, secret santa without email">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Elfless", "url": "https://shirley-claw.github.io/elfless/", "description": "Elfless draws Secret Santa names in your browser: type everyone in, keep couples from drawing each other, add a budget or date, then send each person a private link that reveals only their match. Free, no accounts, no emails, nothing stored online.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "datePublished": "2026-11-10", "author": {"@type": "Organization", "name": "Shirley Claw", "url": "https://shirley-claw.github.io/"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Shirley Claw", "item": "https://shirley-claw.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Elfless", "item": "https://shirley-claw.github.io/elfless/"}]}</script>
+<!-- seo:end -->
+
+<style>
+:root{--line:#d8d8d4;--fg:#222;--mut:#777;--acc:#c62828}
+*{box-sizing:border-box}body{margin:0;background:#f6f5f2;color:var(--fg);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:24px;margin:0 0 4px}h1 span{color:var(--acc)}.sub{color:var(--mut);margin:0 0 22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+label{display:block;font-weight:600;margin-bottom:4px}.hint{color:var(--mut);font-size:13px;font-weight:400}
+textarea,input{width:100%;font:inherit;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#fff}
+textarea{min-height:150px;resize:vertical}#ex{min-height:70px}
+button{font:inherit;border:1px solid var(--line);background:#fff;border-radius:6px;padding:8px 14px;cursor:pointer}
+button:hover{border-color:#999}.big{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600;padding:10px 20px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.err{color:var(--acc);margin-top:8px;min-height:1em}
+.link{display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #eee}.link:first-child{border-top:0}
+.link b{min-width:110px}.link input{flex:1;font-size:12px;color:#555}
+.reveal{text-align:center;padding:40px 18px}.reveal .name{font-size:34px;font-weight:700;color:var(--acc);margin:10px 0}
+.gift{font-size:56px}.note{white-space:pre-wrap;color:#444;margin-top:14px}
+.small{font-size:13px;color:var(--mut)}
+details summary{cursor:pointer;color:var(--mut);font-size:13px}
+</style></head><body><main id="app"></main>
+<script>
+const $=s=>document.querySelector(s),app=$('#app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+// light scrambling so a glance at the link doesn't spoil it (not encryption)
+const KEY='santa';
+const enc=o=>{const b=new TextEncoder().encode(JSON.stringify(o)).map((v,i)=>v^KEY.charCodeAt(i%KEY.length)^(i*7&255));let s='';b.forEach(v=>s+=String.fromCharCode(v));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const dec=t=>{const s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));const b=Uint8Array.from(s,(c,i)=>c.charCodeAt(0)^KEY.charCodeAt(i%KEY.length)^(i*7&255));return JSON.parse(new TextDecoder().decode(b))};
+
+function draw(names,bad){ // random derangement respecting exclusions; backtracking over shuffled order
+ const n=names.length,order=[...names.keys()].sort(()=>Math.random()-.5),used=new Array(n).fill(false),res=new Array(n);
+ const ok=(a,b)=>a!==b&&!bad.has(a+'|'+b);
+ const go=k=>{if(k===n)return true;const a=order[k],cand=[...names.keys()].sort(()=>Math.random()-.5);
+  for(const b of cand)if(!used[b]&&ok(a,b)){used[b]=true;res[a]=b;if(go(k+1))return true;used[b]=false}return false};
+ return go(0)?res:null}
+
+function setup(){const s=JSON.parse(localStorage.santa||'{}');
+ app.innerHTML=`<h1>Elf<span>less</span></h1><p class="sub">Secret Santa without the sign-up. Type the names, press Draw, send everyone their own link. No accounts, no emails, nothing stored online.</p>
+ <div class="card"><label>Who's in? <span class="hint">one name per line</span></label><textarea id="names" placeholder="Anna&#10;Ben&#10;Cara&#10;Dan">${esc(s.names||'')}</textarea></div>
+ <div class="card"><label>Who shouldn't draw whom? <span class="hint">optional, e.g. couples: <b>Anna - Ben</b> (works both ways)</span></label><textarea id="ex" placeholder="Anna - Ben">${esc(s.ex||'')}</textarea></div>
+ <div class="card"><label>Message for everyone <span class="hint">optional: budget, date, place</span></label><input id="msg" placeholder="Budget €20 · exchange on Dec 20 at Cara's" value="${esc(s.msg||'')}"></div>
+ <div class="row"><button class="big" id="go">Draw names</button><span class="small">You won't see who got whom.</span></div><div class="err" id="err"></div><div id="out"></div>
+ <details style="margin-top:28px"><summary>How does it work?</summary><p class="small">The draw happens in your browser. Each link carries only that person's match, lightly scrambled so it isn't readable at a glance, so there is no server or sign-up. Anyone who opens a link sees that one match, so send each link privately. Drawing again gives everyone new matches; send the new links.</p></details>`;
+ $('#go').onclick=run}
+function run(){const names=[...new Set($('#names').value.split('\n').map(s=>s.trim()).filter(Boolean))],exT=$('#ex').value,msg=$('#msg').value.trim();
+ localStorage.santa=JSON.stringify({names:$('#names').value,ex:exT,msg});
+ const err=$('#err');err.textContent='';$('#out').innerHTML='';
+ if(names.length<3){err.textContent='Add at least 3 names.';return}
+ const idx=Object.fromEntries(names.map((n,i)=>[n.toLowerCase(),i])),bad=new Set(),unknown=[];
+ for(const line of exT.split('\n')){const p=line.split(/\s*(?:-|–|,|&|\+|\bx\b)\s*/).map(s=>s.trim()).filter(Boolean);if(p.length<2)continue;
+  const ids=p.map(x=>idx[x.toLowerCase()]);p.forEach((x,i)=>{if(ids[i]==null)unknown.push(x)});
+  for(const a of ids)for(const b of ids)if(a!=null&&b!=null&&a!==b)bad.add(a+'|'+b)}
+ if(unknown.length){err.textContent='Not in the list: '+[...new Set(unknown)].join(', ');return}
+ const r=draw(names,bad);if(!r){err.textContent='No draw is possible with those rules. Remove a rule or add people.';return}
+ const base=location.href.split('#')[0];
+ $('#out').innerHTML=`<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b>Send each person their link</b><button id="all">Copy all</button></div>${names.map((n,i)=>`<div class="link"><b>${esc(n)}</b><input readonly value="${base}#r=${enc({f:n,t:names[r[i]],m:msg})}"><button data-c="${i}">Copy</button></div>`).join('')}</div>`;
+ const links=[...document.querySelectorAll('.link input')].map(i=>i.value);
+ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(links[b.dataset.c]);b.textContent='Copied ✓'});
+ $('#all').onclick=()=>{navigator.clipboard.writeText(names.map((n,i)=>`${n}: ${links[i]}`).join('\n'));$('#all').textContent='Copied ✓'}}
+function reveal(o){app.innerHTML=`<div class="card reveal"><div class="gift">🎁</div><p>Hi <b>${esc(o.f)}</b>, you are Secret Santa for…</p><button class="big" id="show">Tap to reveal</button><div id="who"></div>${o.m?`<p class="note">${esc(o.m)}</p>`:''}</div><p class="small" style="text-align:center"><a href="${location.href.split('#')[0]}">Organise your own Secret Santa with Elfless</a></p>`;
+ $('#show').onclick=()=>{$('#show').remove();$('#who').innerHTML=`<div class="name">${esc(o.t)}</div><p class="small">Keep it secret 🤫</p>`}}
+const m=location.hash.match(/^#r=(.+)$/);
+if(m){try{reveal(dec(m[1]))}catch(e){app.innerHTML='<div class="card">This link looks broken. Ask the organiser to send it again.</div>'}}else setup();
+</script></body></html>

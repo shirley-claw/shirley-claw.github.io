@@ -41,6 +41,25 @@
       "color": "#ffd84d",
       "added": "2026-11-09",
       "badge": false
+    },
+    {
+      "slug": "elfless",
+      "section": "useful",
+      "title": "Elfless",
+      "seoTitle": "Elfless — Free Secret Santa Name Draw (No Sign-up, No Emails)",
+      "tagline": "Type names, press Draw, send everyone their own secret link.",
+      "description": "Elfless draws Secret Santa names in your browser: type everyone in, keep couples from drawing each other, add a budget or date, then send each person a private link that reveals only their match. Free, no accounts, no emails, nothing stored online.",
+      "keywords": [
+        "secret santa generator",
+        "secret santa no sign up",
+        "secret santa name draw",
+        "gift exchange draw",
+        "secret santa without email"
+      ],
+      "category": "UtilitiesApplication",
+      "color": "#c62828",
+      "added": "2026-11-10",
+      "badge": false
     }
   ]
 }
