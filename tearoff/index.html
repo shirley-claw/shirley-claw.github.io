@@ -1,150 +1,353 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- seo:start -->
-<title>Tearoff — Free Printable Calendar Maker (A4, No Sign-up)</title>
-<meta name="description" content="Tearoff makes a printable A4 calendar in seconds: one month per page or a whole year on one sheet, Monday or Sunday start, week numbers, 20 languages, and your own birthdays and holidays written into the days. Free, in your browser, no sign-up.">
+<title>Tearoff — Free Photo Calendar Maker, Printable A4 (No Sign-up)</title>
+<meta name="description" content="Tearoff makes printable A4 calendars with your own photos: photo wall calendar, desk flip cards, a tear-off daily pad, weekly and monthly planners, a year poster or a year at a glance. 12 styles, 20 languages, Monday or Sunday start, your birthdays written into the days. Free, in your browser; photos never leave your device.">
 <link rel="canonical" href="https://shirley-claw.github.io/tearoff/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Shirley Claw">
-<meta property="og:title" content="Tearoff — Free Printable Calendar Maker (A4, No Sign-up)">
-<meta property="og:description" content="Tearoff makes a printable A4 calendar in seconds: one month per page or a whole year on one sheet, Monday or Sunday start, week numbers, 20 languages, and your own birthdays and holidays written into the days. Free, in your browser, no sign-up.">
+<meta property="og:title" content="Tearoff — Free Photo Calendar Maker, Printable A4 (No Sign-up)">
+<meta property="og:description" content="Tearoff makes printable A4 calendars with your own photos: photo wall calendar, desk flip cards, a tear-off daily pad, weekly and monthly planners, a year poster or a year at a glance. 12 styles, 20 languages, Monday or Sunday start, your birthdays written into the days. Free, in your browser; photos never leave your device.">
 <meta property="og:url" content="https://shirley-claw.github.io/tearoff/">
 <meta property="og:image" content="https://shirley-claw.github.io/tearoff/thumb.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="keywords" content="printable calendar, A4 calendar, calendar maker, printable monthly calendar, year calendar printable">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Tearoff", "url": "https://shirley-claw.github.io/tearoff/", "description": "Tearoff makes a printable A4 calendar in seconds: one month per page or a whole year on one sheet, Monday or Sunday start, week numbers, 20 languages, and your own birthdays and holidays written into the days. Free, in your browser, no sign-up.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "datePublished": "2026-11-10", "author": {"@type": "Organization", "name": "Shirley Claw", "url": "https://shirley-claw.github.io/"}}</script>
+<meta name="keywords" content="printable calendar, A4 calendar, calendar maker, printable monthly calendar, year calendar printable, photo calendar maker, desk calendar printable, tear-off calendar, weekly planner printable">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Tearoff", "url": "https://shirley-claw.github.io/tearoff/", "description": "Tearoff makes printable A4 calendars with your own photos: photo wall calendar, desk flip cards, a tear-off daily pad, weekly and monthly planners, a year poster or a year at a glance. 12 styles, 20 languages, Monday or Sunday start, your birthdays written into the days. Free, in your browser; photos never leave your device.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true, "datePublished": "2026-11-10", "author": {"@type": "Organization", "name": "Shirley Claw", "url": "https://shirley-claw.github.io/"}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Shirley Claw", "item": "https://shirley-claw.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Tearoff", "item": "https://shirley-claw.github.io/tearoff/"}]}</script>
 <!-- seo:end -->
 
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=DM+Serif+Display:ital@0;1&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Fredoka:wght@500;700&family=Inter:wght@400;600;800&family=Jost:wght@300;500&family=Playfair+Display:ital,wght@0,700;1,700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
-:root{--bg:#f3f3f1;--panel:#fafaf8;--line:#d4d4d0;--fg:#222;--mut:#777;--acc:#d84315}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
-h1{font-size:26px;margin:0 0 4px}h1 span{color:var(--acc)}
-.sub{color:var(--mut);margin:0 0 20px}
-.cols{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start}
-@media(max-width:800px){.cols{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 14px}
-label{display:block;font-weight:600;margin:10px 0 4px}label:first-child{margin-top:0}
-.hint{color:var(--mut);font-size:13px;font-weight:400}
-textarea,input,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff}
-textarea{min-height:120px;resize:vertical;font-size:14px}
+:root{--desk:#ebe5db;--card:#fffdf9;--line:#ddd5c8;--fg:#2a2420;--mut:#857a6e;--acc:#c2410c}
+*{box-sizing:border-box}html,body{margin:0;background:var(--desk);color:var(--fg);font:14px/1.45 Inter,system-ui,sans-serif}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.app{display:grid;grid-template-columns:360px 1fr;min-height:100vh}
+@media(max-width:860px){.app{grid-template-columns:1fr}.side{position:static!important;max-height:none!important}}
+.side{position:sticky;top:0;max-height:100vh;overflow:auto;padding:22px 18px 40px;background:linear-gradient(#f7f2ea,#f1ebe1);border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;margin:0 0 4px}
+.brand h1{font:900 30px/1 Fraunces,serif;margin:0;letter-spacing:-.02em}.brand h1 span{color:var(--acc)}
+.brand svg{width:34px;height:34px}
+.sub{color:var(--mut);margin:0 0 18px;font-size:13px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px;box-shadow:0 1px 0 #fff inset,0 2px 8px #6b4c2a0d}
+.sec>h2{font:700 15px Fraunces,serif;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.sec>h2 i{font-style:normal;font:700 11px Inter;background:var(--fg);color:#fff;border-radius:99px;width:20px;height:20px;display:grid;place-items:center}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.opt{position:relative;display:flex;gap:9px;align-items:center;border:1.5px solid var(--line);border-radius:10px;padding:7px 8px;cursor:pointer;background:#fff;transition:.15s}
+.opt:hover{border-color:#bba98f}.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt:has(input:checked){border-color:var(--acc);background:#fff5ef;box-shadow:0 0 0 3px #c2410c1f}
+.opt svg{flex:0 0 30px;height:39px;fill:none;stroke:#6d6156;stroke-width:1.6}.opt svg .f{fill:#e8c9b2;stroke:none}.opt svg .o{stroke:#2a2420}
+.opt b{display:block;font-size:12.5px;line-height:1.15}.opt small{display:block;color:var(--mut);font-size:11px;line-height:1.2}
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.th{cursor:pointer;border-radius:10px;border:1.5px solid var(--line);overflow:hidden;background:#fff;position:relative}
+.th input{position:absolute;opacity:0}.th:has(input:checked){border-color:var(--acc);box-shadow:0 0 0 3px #c2410c2a}
+.th .sw{height:52px;display:flex;flex-direction:column;justify-content:center;padding:6px 8px;gap:3px}
+.th .sw b{font-size:19px;line-height:1}.th .sw u{display:block;height:4px;width:60%;border-radius:2px;text-decoration:none}
+.th span{display:block;font-size:11px;font-weight:600;padding:4px 8px;border-top:1px solid #0001;background:#fff;color:var(--fg)}
+label.l{display:block;font-weight:600;margin:10px 0 4px;font-size:12.5px}label.l:first-child{margin-top:0}
+.hint{color:var(--mut);font-size:12px;font-weight:400}
+textarea,input:not([type=radio]):not([type=checkbox]):not([type=range]),select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--fg)}
+textarea{min-height:110px;resize:vertical;font-size:13px}
+input[type=range]{width:100%;accent-color:var(--acc)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chk{display:flex;gap:8px;align-items:center;font-weight:400;margin:6px 0}.chk input{width:auto}
-button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 14px;background:var(--acc);color:#fff;cursor:pointer;width:100%;margin-top:12px}
-#out{display:flex;flex-direction:column;gap:14px}
-.page{background:#fff;border:1px solid var(--line);box-shadow:0 1px 4px #0001;aspect-ratio:210/297;padding:5%;display:flex;flex-direction:column;width:100%;max-width:640px;margin:0 auto;container-type:inline-size}
-.page.land{aspect-ratio:297/210;max-width:860px}
-.page h2{margin:0 0 3cqw;font-size:7cqw;font-weight:800;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:baseline}
-.page h2 small{font-size:3.5cqw;color:var(--acc);font-weight:700}
-.page.land h2{font-size:5cqw}
-.grid{flex:1;display:grid;grid-template-columns:var(--gc);grid-auto-rows:1fr;border-top:2px solid #222;border-left:1px solid #bbb}
-.grid>div{border-right:1px solid #bbb;border-bottom:1px solid #bbb;padding:.8cqw 1cqw;font-size:2.4cqw;overflow:hidden;min-height:0}
-.grid>.hd{font-weight:700;text-transform:uppercase;font-size:2cqw;padding:1cqw;color:#555;border-bottom:2px solid #222}
-.grid>.wk{color:#aaa;font-size:1.8cqw;text-align:center}
-.grid>.d b{display:block;font-size:3cqw}
-.grid>.d.we b{color:var(--acc)}
-.grid>.d.off{background:#f7f7f7}.grid>.d.off b{color:#ccc}
-.grid>.d.hol{background:#fff3ee}
-.grid>.d i{display:block;font-style:normal;line-height:1.2;color:#333}
-.grid.nohead{border-top:1px solid #bbb}
-.year{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3cqw}
-.page.land .year{grid-template-columns:repeat(4,1fr)}
-.mini h3{margin:0 0 1cqw;font-size:2.6cqw}
-.mini table{width:100%;border-collapse:collapse;font-size:1.9cqw;text-align:center}
-.mini th{color:#888;font-weight:600}.mini td{padding:.3cqw 0}
-.mini td.we{color:var(--acc)}.mini td.hol{background:#ffe0d4;border-radius:2px}
-.notes{margin-top:3cqw;border-top:1px solid #bbb;min-height:12%;font-size:2cqw;color:#aaa;padding-top:1cqw}
+.chk{display:flex;gap:8px;align-items:center;margin:6px 0;font-size:13px;cursor:pointer}.chk input{accent-color:var(--acc)}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:10px 14px;background:var(--acc);color:#fff;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--fg);border:1.5px dashed #bba98f;width:100%;font-weight:600}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.slot{position:relative;aspect-ratio:1;border-radius:8px;background:#f3ede4 center/cover;border:1px solid var(--line);cursor:pointer;display:flex;align-items:flex-end;overflow:hidden}
+.slot.drag{outline:2px solid var(--acc)}
+.slot em{font-style:normal;font-size:10px;font-weight:700;background:#fffd;padding:1px 5px;border-radius:0 6px 0 0}
+.slot .x{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#000a;color:#fff;font-size:12px;line-height:18px;text-align:center;display:none}
+.slot.has .x{display:block}.slot:not(.has)::after{content:"+";position:absolute;inset:0;display:grid;place-items:center;font-size:22px;color:#bba98f}
+.caps{margin-top:8px;display:none}.caps.on{display:block}
+.view{padding:22px 26px 60px;min-width:0}
+.bar{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;margin:0 auto 18px;max-width:900px;background:#fffdf9e6;backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px}
+.bar small{color:var(--mut)}
+#out{display:flex;flex-direction:column;gap:26px;align-items:center}
+.page{width:100%;max-width:620px;aspect-ratio:210/297;background:#fff;box-shadow:0 1px 2px #0002,0 14px 40px -12px #4a35204d;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.page.land{aspect-ratio:297/210;max-width:880px}
+.page.two{display:grid;grid-template-rows:1fr 1fr}
+.page.four{display:grid;grid-template:1fr 1fr/1fr 1fr}
+.page.two>.sheet+.sheet,.page.four>.sheet:nth-child(n+3){border-top:1px dashed #0003}
+.page.four>.sheet:nth-child(even){border-left:1px dashed #0003}
+
+/* ===== sheet base ===== */
+.sheet{--paper:#fff;--ink:#222;--mut:#888;--acc:#d84315;--line:#ccc;--we:var(--acc);--fh:Inter,sans-serif;--fb:Inter,sans-serif;--fn:var(--fh);--hw:800;
+  --gridbg:var(--line);--gap:1px;--cell:var(--paper);--hdcell:var(--paper);--rad:0px;--webg:var(--cell);--hol:color-mix(in srgb,var(--acc) 12%,var(--cell));--off:.25;
+  flex:1;min-height:0;min-width:0;position:relative;container-type:inline-size;background:var(--paper);color:var(--ink);font-family:var(--fb);overflow:hidden;display:flex;flex-direction:column;padding:6cqw}
+.hdr{display:flex;align-items:baseline;gap:2.5cqw;margin:0 0 2.6cqw;font-family:var(--fh);font-weight:var(--hw)}
+.hdr .mn{font-size:var(--hs,8.5cqw);line-height:.95;letter-spacing:var(--hls,-.02em);text-transform:var(--htt,none);font-style:var(--hst,normal)}
+.hdr .yr{margin-left:auto;font-size:var(--ys,3.6cqw);color:var(--acc);font-family:var(--fn);font-weight:700}
+.hdr .mnum{display:var(--mnum,none);font-size:var(--hs,8.5cqw);line-height:.95;color:var(--acc);font-family:var(--fn)}
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:var(--gc);grid-auto-rows:1fr;grid-template-rows:auto;gap:var(--gap);background:var(--gridbg);border:var(--gb,1px solid var(--line));border-radius:var(--grad,0)}
+.grid>div{background:var(--cell);border-radius:var(--rad);padding:.9cqw 1.1cqw;font-size:1.9cqw;overflow:hidden;min-height:0;min-width:0;line-height:1.15}
+.grid>.hd{background:var(--hdcell);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:1.7cqw;padding:1.1cqw;color:var(--hdink,var(--mut));text-align:var(--hdal,left)}
+.grid>.wk{color:var(--mut);font-size:1.6cqw;text-align:center;opacity:.7}
+.grid>.d b{display:block;font-family:var(--fn);font-size:var(--ds,3cqw);font-weight:var(--dw,700);line-height:1;margin-bottom:.5cqw}
+.grid>.d.we{background:var(--webg)}.grid>.d.we b{color:var(--we)}
+.grid>.d.off b{opacity:var(--off)}.grid>.d.off{background:var(--offcell,var(--cell))}
+.grid>.d.hol{background:var(--hol)}
+.grid>.d.today b{text-decoration:underline}
+.grid>.d i{display:block;font-style:normal;color:var(--evink,var(--ink));font-size:1.75cqw;margin-top:.2cqw}
+.notes{margin-top:2.6cqw;height:9%;flex:0 0 auto;border-top:1px solid var(--line);background:repeating-linear-gradient(transparent 0 calc(2.4cqw - 1px),var(--line) calc(2.4cqw - 1px) 2.4cqw);opacity:.8}
+.ph{position:relative;overflow:hidden;background:var(--phbg,color-mix(in srgb,var(--acc) 18%,var(--paper)));border-radius:var(--phr,0);flex:0 0 auto}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
+.ph .phx{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;background:var(--phx,linear-gradient(135deg,color-mix(in srgb,var(--acc) 30%,var(--paper)),color-mix(in srgb,var(--acc) 8%,var(--paper))))}
+.ph .phx em{font:var(--hw) 30cqw/1 var(--fh);font-style:normal;color:var(--paper);opacity:.45}
+.ph .phx span{position:absolute;bottom:4%;font:600 12px Inter;color:var(--ink);background:#fffc;padding:4px 10px;border-radius:99px}
+.ph.drag{outline:4px solid #c2410c;outline-offset:-4px}
+.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:5cqw 4cqw 2.6cqw;font:var(--capf,italic 500 2.6cqw var(--fh));color:#fff;background:linear-gradient(transparent,#0008);pointer-events:none}
+.holes{position:absolute;top:2.2cqw;left:0;right:0;display:flex;justify-content:center;gap:8cqw;z-index:2}
+.holes i{width:2.2cqw;height:2.2cqw;border-radius:50%;border:1px solid #0003;background:#fff}
+
+/* wall */
+.wall .ph{margin:-6cqw -6cqw 4cqw;height:var(--phh,52%)}
+.land .wall{flex-direction:row;gap:5cqw}.land .wall .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,50%)}
+.land .wall .col{flex:1;display:flex;flex-direction:column;min-width:0}
+.wall .col{flex:1;display:flex;flex-direction:column;min-height:0}
+/* flip */
+.flip{flex-direction:row;gap:4cqw;padding:5cqw 5cqw 4.5cqw}
+.flip .ph{width:52%;height:auto;margin:-5cqw 0 -4.5cqw -5cqw}
+.flip .col{flex:1;display:flex;flex-direction:column;min-width:0}
+.flip .hdr{margin-top:3cqw}.flip .grid>div{font-size:1.5cqw;padding:.6cqw .8cqw}.flip .grid>.d b{font-size:2.6cqw}.flip .grid>.d i{font-size:1.3cqw}.flip .grid>.hd{font-size:1.3cqw}
+/* year & poster */
+.year{flex:1;display:grid;grid-template-columns:repeat(var(--yc,3),1fr);gap:3.2cqw 3.5cqw;align-content:space-evenly}
+.mini h3{margin:0 0 .9cqw;font:var(--hw) 2.5cqw var(--fh);text-transform:var(--htt,none);font-style:var(--hst,normal);letter-spacing:var(--mls,0);color:var(--ink)}
+.mini table{width:100%;border-collapse:collapse;font:1.75cqw var(--fb);text-align:center;table-layout:fixed}
+.mini th{color:var(--mut);font-weight:600;font-size:1.45cqw;padding-bottom:.3cqw}.mini td{padding:.28cqw 0;font-family:var(--fn)}
+.mini td.we{color:var(--we)}.mini td.hol{background:color-mix(in srgb,var(--acc) 25%,transparent);border-radius:40%}.mini td.wkn{color:var(--mut);font-size:1.3cqw;opacity:.7}
+.poster .ph{margin:-6cqw -6cqw 4cqw;height:var(--phh,48%)}
+.poster .ph .ttl{position:absolute;left:5cqw;bottom:3cqw;font:var(--hw) 13cqw/1 var(--fh);color:#fff;text-shadow:0 2px 20px #0006;pointer-events:none;font-style:var(--hst,normal)}
+.land .poster{flex-direction:row;gap:5cqw}.land .poster .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,45%)}
+/* daily */
+.day{padding:0;text-align:center}
+.day .band{background:var(--band,var(--acc));color:var(--bandink,#fff);font:var(--hw) 7cqw var(--fh);padding:9cqw 4cqw 3cqw;text-transform:var(--htt,uppercase);letter-spacing:.06em;font-style:var(--hst,normal)}
+.day .band small{display:block;font:600 3.6cqw var(--fb);opacity:.8;letter-spacing:.2em;margin-top:1cqw}
+.day .num{font:var(--dw2,800) 46cqw/1 var(--fn);margin:4cqw 0 0;letter-spacing:-.04em}
+.day.we .num,.day.hol .num{color:var(--we)}
+.day .wd{font:700 6cqw var(--fh);text-transform:var(--htt,none);font-style:var(--hst,normal)}
+.day .evs{flex:1;padding:3cqw 7cqw;font-size:4.4cqw;display:flex;flex-direction:column;gap:1cqw;justify-content:center}
+.day .evs b{font-weight:700;color:var(--acc)}
+.day .ft{display:flex;justify-content:space-between;font-size:3cqw;color:var(--mut);padding:0 6cqw 5cqw}
+/* week */
+.week .rows{flex:1;display:grid;grid-template-rows:repeat(7,1fr);border-top:2px solid var(--ink)}
+.week .r{display:grid;grid-template-columns:17cqw 1fr;border-bottom:1px solid var(--line);min-height:0}
+.week .r .dn{padding:1.4cqw 0;font-family:var(--fh)}.week .r .dn b{display:block;font:var(--dw,700) 6cqw/1 var(--fn)}.week .r .dn small{text-transform:uppercase;letter-spacing:.08em;font-size:2cqw;color:var(--mut)}
+.week .r.we .dn b{color:var(--we)}.week .r.off{opacity:.45}
+.week .r .ln{background:repeating-linear-gradient(transparent 0 calc(4.6cqw - 1px),color-mix(in srgb,var(--line) 70%,transparent) calc(4.6cqw - 1px) 4.6cqw);padding:1.2cqw 2cqw;font-size:2.4cqw}
+.week .r .ln i{display:block;font-style:normal;color:var(--acc);font-weight:600}
+
+/* ===== themes ===== */
+.t-paper{--paper:#fffdf8;--ink:#2b2622;--mut:#8b7f72;--acc:#c2410c;--line:#e2d9cb;--fh:Fraunces,serif;--fb:Inter,sans-serif;--fn:Fraunces,serif;--hw:900;--webg:#fbf5ec}
+.t-swiss{--paper:#fff;--ink:#111;--mut:#111;--acc:#e10600;--line:#111;--fh:Inter,sans-serif;--fb:Inter,sans-serif;--hw:800;--hs:11cqw;--hls:-.05em;--mnum:block;--gap:0;--gridbg:transparent;--gb:0;--ds:4.2cqw;--dw:800;--webg:#fff;--hol:#ffe8e6}
+.t-swiss .grid>div{border-top:1.5px solid #111}.t-swiss .grid>.hd{border-top:4px solid #111;color:#111}
+.t-swiss .hdr{flex-direction:row-reverse;justify-content:flex-end}.t-swiss .hdr .yr{color:#111}
+.t-classic{--paper:#fbf8f1;--ink:#1d2a44;--mut:#6a7389;--acc:#8b1e2d;--line:#c9c2b0;--fh:'Playfair Display',serif;--fb:'Cormorant Garamond',serif;--fn:'Cormorant Garamond',serif;--hw:700;--hst:italic;--hdal:center;--ds:3.4cqw;--hs:9cqw}
+.t-classic .grid{outline:1px solid var(--ink);outline-offset:.8cqw}.t-classic .hdr{justify-content:center;flex-direction:column;align-items:center;gap:.5cqw}.t-classic .hdr .yr{margin:0;letter-spacing:.4em;font-size:2.6cqw}
+.t-classic .grid>div{font-size:2.2cqw}
+.t-nordic{--paper:#f6f5f0;--ink:#3d4a45;--mut:#8d9993;--acc:#6f9179;--line:#dfe2db;--fh:Jost,sans-serif;--fb:Jost,sans-serif;--hw:300;--htt:uppercase;--hls:.25em;--hs:6.5cqw;--gap:0;--gridbg:transparent;--gb:0;--dw:300;--ds:3.4cqw;--hol:#e7eee8;--hdal:center;--mls:.2em}
+.t-nordic .grid>.d{text-align:center;border-radius:50%/40%}.t-nordic .grid>.hd{font-weight:500}
+.t-pastel{--paper:#fff;--ink:hsl(var(--h) 30% 28%);--mut:hsl(var(--h) 20% 55%);--acc:hsl(var(--h) 60% 58%);--line:transparent;--fh:Fredoka,sans-serif;--fb:Fredoka,sans-serif;--hw:700;--gap:1cqw;--gridbg:transparent;--gb:0;--cell:hsl(var(--h) 75% 95%);--webg:hsl(var(--h) 70% 89%);--hdcell:transparent;--rad:1.6cqw;--hol:hsl(calc(var(--h) + 40) 85% 86%);--offcell:#fafafa;--hdal:center}
+.t-retro{--paper:#1a1033;--ink:#f6e8ff;--mut:#a98bd6;--acc:#ff4fd8;--we:#29e6ff;--line:#ff4fd866;--fh:'Bebas Neue',sans-serif;--fb:'Space Grotesk',sans-serif;--fn:'Space Grotesk',sans-serif;--hw:400;--hs:12cqw;--hls:.02em;--cell:#1d1238;--hdcell:#24164a;--webg:#211544;--hol:#3b1450;--gridbg:#ff4fd855;--phbg:#2a1550;--band:linear-gradient(#ff8a3d,#ff4fd8 60%,#7b2cff);
+  background:radial-gradient(120% 60% at 50% 110%,#ff4fd833,transparent 60%),#1a1033}
+.t-retro .hdr .mn,.t-retro .poster .ttl{background:linear-gradient(#ffd23f,#ff4fd8 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-retro .ph .phx{background:linear-gradient(#2a0f4f 0 55%,transparent 55%),repeating-linear-gradient(90deg,#ff4fd855 0 1px,transparent 1px 8%),repeating-linear-gradient(#ff4fd855 0 1px,transparent 1px 12%),linear-gradient(#ff4fd8,#ff8a3d 55%,#1a1033 55%)}
+.t-mono{--paper:#fff;--ink:#1a1a1a;--mut:#777;--acc:#1a1a1a;--we:#1a1a1a;--line:#999;--fh:'Space Mono',monospace;--fb:'Space Mono',monospace;--hw:700;--htt:lowercase;--hs:7cqw;--gap:0;--gridbg:transparent;--hol:repeating-linear-gradient(45deg,#eee 0 3px,#fff 3px 6px)}
+.t-mono .grid>div{border:1px dashed #999;margin:-.5px}.t-mono .grid>.d.we b::after{content:"*"}.t-mono .hdr .yr{color:#777}
+.t-kids{--paper:#fffdf3;--ink:#2d2a6e;--mut:#6f6aa8;--acc:#ff5c8a;--we:#ff5c8a;--line:#2d2a6e;--fh:Fredoka,sans-serif;--fb:Fredoka,sans-serif;--hw:700;--hs:10cqw;--gap:.8cqw;--gridbg:transparent;--gb:0;--rad:2cqw;--ds:4cqw;--hdal:center;--hol:#fff0a8}
+.t-kids .grid>div{border:.4cqw solid #2d2a6e}.t-kids .grid>.hd{border:0;color:#2d2a6e}
+.t-kids .d.w1{background:#ffe3e3}.t-kids .d.w2{background:#ffeccc}.t-kids .d.w3{background:#fff6c2}.t-kids .d.w4{background:#dcf7d5}.t-kids .d.w5{background:#d6efff}.t-kids .d.w6{background:#e7dcff}.t-kids .d.w0{background:#ffd8ef}.t-kids .d.hol{background:#fff0a8}.t-kids .d.off{opacity:.35}
+.t-kids .hdr .mn{transform:rotate(-2deg);display:inline-block}.t-kids .ph{border:.6cqw solid #2d2a6e}
+.t-botanical{--paper:#f7f3ea;--ink:#2f3e2e;--mut:#7c8b72;--acc:#5b7f4a;--we:#a0563b;--line:#d5d0bf;--fh:'DM Serif Display',serif;--fb:'Cormorant Garamond',serif;--fn:'DM Serif Display',serif;--hw:400;--hst:italic;--ds:3.4cqw;--dw:400;--hol:#e6ecd9;--phr:50% 50% 1cqw 1cqw / 22% 22% 1cqw 1cqw;
+  background:radial-gradient(circle at 100% 0,#5b7f4a1a 0 18%,transparent 18.2%),radial-gradient(circle at 0 100%,#a0563b14 0 14%,transparent 14.2%),#f7f3ea}
+.t-botanical .grid>div{font-size:2.2cqw}.t-botanical .wall .ph{margin:0 0 4cqw}.t-botanical.flip .ph,.t-botanical .poster .ph{margin:0 0 4cqw}
+.t-midnight{--paper:#0f1626;--ink:#efe6cf;--mut:#8f8a7a;--acc:#d4af37;--line:#d4af3740;--fh:'Cormorant Garamond',serif;--fb:'Cormorant Garamond',serif;--hw:700;--hst:italic;--hs:10cqw;--cell:#121a2c;--hdcell:#0f1626;--webg:#16203a;--hol:#2a2614;--gridbg:#d4af3733;--ds:3.4cqw;--band:#d4af37;--bandink:#0f1626;--phbg:#1a2236}
+.t-midnight .grid>div{font-size:2.2cqw}.t-midnight .grid{outline:1px solid #d4af3780;outline-offset:1cqw}
+.t-hand{--paper:#fdfaf2;--ink:#22305c;--mut:#7680a3;--acc:#e0533d;--line:#22305c55;--fh:Caveat,cursive;--fb:Caveat,cursive;--hw:700;--hs:12cqw;--ds:3.8cqw;--gap:0;--gridbg:transparent;--gb:0;--hol:#ffe9a8;--hdal:center}
+.t-hand .grid>div{border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);border-radius:2px 40% 3px 30%/40% 3px 30% 2px;font-size:2.6cqw}.t-hand .grid>.hd{font-size:2.8cqw;text-transform:none;letter-spacing:0}.t-hand .grid>.d i{font-size:2.4cqw}
+.t-hand .ph{transform:rotate(-1.2deg);box-shadow:0 .6cqw 1.6cqw #0003;border:2cqw solid #fff}.t-hand .wall .ph{margin:0 0 4cqw}.t-hand.flip .ph{margin:0}.t-hand .poster .ph{margin:0 0 4cqw}
+.t-pop{--paper:#fff;--ink:#141414;--mut:#666;--acc:hsl(var(--h) 80% 50%);--line:#e6e6e6;--fh:'Bebas Neue',sans-serif;--fb:Inter,sans-serif;--fn:'Bebas Neue',sans-serif;--hw:400;--hs:16cqw;--hls:0;--ds:4.6cqw;--dw:400;--mnum:block;--webg:hsl(var(--h) 80% 96%);--hol:hsl(var(--h) 85% 88%)}
+.t-pop .hdr{background:var(--acc);color:#fff;margin:-6cqw -6cqw 3cqw;padding:5cqw 6cqw 2cqw}.t-pop .hdr .yr,.t-pop .hdr .mnum{color:#fff;opacity:.9}
+.t-pop.wall .hdr,.t-pop.flip .hdr{margin:0 0 2.5cqw;padding:2cqw 3cqw 1cqw}.t-pop.flip .hdr{margin-top:3cqw}
+.t-pop .grid>.hd{background:#141414;color:#fff}
+
 @media print{
-  @page{size:A4 var(--orient,portrait);margin:0}
-  body{background:#fff}main{padding:0;max-width:none}.noprint{display:none!important}.cols{display:block}
-  #out{gap:0}.page{border:0;box-shadow:none;max-width:none;width:100vw;height:100vh;aspect-ratio:auto;break-after:page}
-  .page:last-child{break-after:auto}
+  @page{size:A4 portrait;margin:0}
+  html,body{background:#fff}.side,.bar,.noprint,.ph .phx span{display:none!important}.app{display:block}.view{padding:0}
+  #out{gap:0;display:block}.page{box-shadow:none;max-width:none;width:210mm;height:297mm;aspect-ratio:auto;break-after:page;page-break-after:always}
+  .page.land{width:297mm;height:210mm}.page:last-child{break-after:auto}
+  .page.two>.sheet+.sheet,.page.four>.sheet{border-color:#0002}
 }
 </style>
-</head><body><main>
-<h1>Tear<span>off</span></h1>
-<p class="sub noprint">Pick months, add birthdays and holidays, print a clean A4 calendar. Nothing to install, nothing to sign up for.</p>
-<div class="cols">
-<div class="noprint card">
-  <div class="two">
-    <div><label>From</label><input type="month" id="from"></div>
-    <div><label>Months</label><input type="number" id="count" min="1" max="24" value="12"></div>
+</head><body>
+<div class="app">
+<aside class="side">
+  <div class="brand"><svg viewBox="0 0 34 34"><rect x="3" y="6" width="28" height="25" rx="4" fill="#c2410c"/><rect x="3" y="12" width="28" height="19" rx="2" fill="#fffdf9"/><path d="M10 3v6M24 3v6" stroke="#2a2420" stroke-width="2.4" stroke-linecap="round"/><text x="17" y="27.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="13" fill="#2a2420">17</text></svg><h1>Tear<span>off</span></h1></div>
+  <p class="sub">Photo calendars, desk flips, tear-off pads. Print on A4 at home. Free, no sign-up, your photos never leave the browser.</p>
+
+  <div class="sec"><h2><i>1</i>Format</h2><div class="opts" id="formats"></div></div>
+  <div class="sec"><h2><i>2</i>Style</h2><div class="themes" id="themes"></div></div>
+  <div class="sec" id="phsec"><h2><i>3</i>Photos <span class="hint" id="phhint"></span></h2>
+    <button class="btn ghost" id="addph">+ Add photos (pick many at once)</button>
+    <div class="slots" id="slots"></div>
+    <label class="chk" style="margin-top:10px"><input type="checkbox" data-k="caps"> Captions</label>
+    <div class="caps" id="capbox"></div>
+    <label class="l">Photo size <span class="hint">· drag a photo in the preview to reposition it</span></label>
+    <input type="range" min="30" max="70" data-k="phsize">
   </div>
-  <label>Layout</label>
-  <select id="layout"><option value="month">One month per page</option><option value="year">Whole year on one page</option></select>
-  <div class="two">
-    <div><label>Paper</label><select id="orient"><option value="portrait">A4 portrait</option><option value="landscape">A4 landscape</option></select></div>
-    <div><label>Week starts</label><select id="wstart"><option value="1">Monday</option><option value="0">Sunday</option></select></div>
+  <div class="sec"><h2><i>4</i>Dates</h2>
+    <div class="two">
+      <div><label class="l">From</label><input type="month" data-k="from"></div>
+      <div><label class="l">Months</label><input type="number" min="1" max="24" data-k="count"></div>
+    </div>
+    <label class="l">Your days <span class="hint">one per line: <b>12-24 Christmas Eve</b> every year, <b>2027-03-14 Dentist</b> once</span></label>
+    <textarea data-k="ev" placeholder="01-01 New Year 🎉&#10;03-08 Mum's birthday 🎂&#10;2027-02-14 Pay rent early"></textarea>
   </div>
-  <label>Language</label>
-  <select id="lang"></select>
-  <label class="chk"><input type="checkbox" id="wknum"> Week numbers</label>
-  <label class="chk"><input type="checkbox" id="notes" checked> Notes strip (month pages)</label>
-  <label class="chk"><input type="checkbox" id="spill" checked> Show neighbour-month days</label>
-  <label>Dates <span class="hint">one per line: <b>12-24 Christmas Eve</b> repeats yearly, <b>2027-03-14 Dentist</b> once</span></label>
-  <textarea id="ev" placeholder="01-01 New Year&#10;03-08 Mum's birthday&#10;2027-02-14 Pay rent early"></textarea>
-  <button id="print">Print / save PDF</button>
+  <div class="sec"><h2><i>5</i>Details</h2>
+    <div class="two">
+      <div><label class="l">Paper</label><select data-k="orient"><option value="portrait">A4 portrait</option><option value="landscape">A4 landscape</option></select></div>
+      <div><label class="l">Week starts</label><select data-k="wstart"><option value="1">Monday</option><option value="0">Sunday</option></select></div>
+    </div>
+    <label class="l">Language</label><select data-k="lang" id="lang"></select>
+    <label class="chk"><input type="checkbox" data-k="wknum"> Week numbers</label>
+    <label class="chk"><input type="checkbox" data-k="notes"> Notes lines</label>
+    <label class="chk"><input type="checkbox" data-k="spill"> Show neighbour-month days</label>
+    <label class="chk"><input type="checkbox" data-k="holes"> Punch-hole marks (flip &amp; daily)</label>
+  </div>
+</aside>
+<section class="view">
+  <div class="bar"><div><b id="fname"></b> <small id="pcount"></small></div><button class="btn" id="print">Print / save PDF</button></div>
+  <div id="out"></div>
+</section>
 </div>
-<div id="out"></div>
-</div>
-</main>
+<input type="file" id="file" accept="image/*" multiple hidden>
 <script>
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const svg=b=>`<svg viewBox="0 0 30 39"><rect class="o" x="1" y="1" width="28" height="37" rx="1.5"/>${b}</svg>`;
+const FORMATS=[
+ ['wall','Photo wall','Photo up top, month below',svg('<rect class="f" x="1" y="1" width="28" height="18"/><path d="M4 23h22M4 27h22M4 31h22M4 35h22"/>'),1],
+ ['flip','Desk flip','2 cards per sheet, cut & bind',svg('<path class="o" d="M1 19.5h28" stroke-dasharray="2 1.5"/><rect class="f" x="3" y="4" width="11" height="13"/><rect class="f" x="3" y="22" width="11" height="13"/><path d="M17 8h9M17 12h9M17 26h9M17 30h9"/>'),1],
+ ['daily','Tear-off daily','A day per card, huge numbers',svg('<path class="o" d="M15 1v37M1 19.5h28" stroke-dasharray="2 1.5"/><text x="8" y="15" font-size="8" text-anchor="middle" fill="#6d6156" stroke="none" font-weight="800">1</text><text x="22" y="15" font-size="8" text-anchor="middle" fill="#6d6156" stroke="none" font-weight="800">2</text><text x="8" y="33" font-size="8" text-anchor="middle" fill="#6d6156" stroke="none" font-weight="800">3</text><text x="22" y="33" font-size="8" text-anchor="middle" fill="#6d6156" stroke="none" font-weight="800">4</text>'),0],
+ ['month','Planner','Big boxes to write in',svg('<path d="M4 8h22M4 14h22M4 20h22M4 26h22M4 32h22M11 8v24M18 8v24"/>'),0],
+ ['week','Weekly','One week per page',svg('<path d="M4 7h22M4 11.5h22M4 16h22M4 20.5h22M4 25h22M4 29.5h22M4 34h22M10 7v27"/>'),0],
+ ['poster','Year poster','Big photo + all 12 months',svg('<rect class="f" x="1" y="1" width="28" height="16"/><path d="M4 21h5M12 21h5M21 21h5M4 27h5M12 27h5M21 27h5M4 33h5M12 33h5M21 33h5"/>'),1],
+ ['year','Year at a glance','12 months, one sheet',svg('<path d="M4 6h5M12 6h5M21 6h5M4 14h5M12 14h5M21 14h5M4 22h5M12 22h5M21 22h5M4 30h5M12 30h5M21 30h5"/>'),0],
+];
+const THEMES=[['paper','Paper','#fffdf8','#2b2622','#c2410c','Fraunces'],['swiss','Swiss','#fff','#111','#e10600','Inter'],['classic','Classic','#fbf8f1','#1d2a44','#8b1e2d','Playfair Display'],
+ ['nordic','Nordic','#f6f5f0','#3d4a45','#6f9179','Jost'],['pastel','Pastel','#fff3f6','#5a3b4a','#e48aa8','Fredoka'],['retro','Synthwave','#1a1033','#ff4fd8','#29e6ff','Bebas Neue'],
+ ['pop','Pop','#ffcc00','#141414','#141414','Bebas Neue'],['botanical','Botanical','#f7f3ea','#2f3e2e','#5b7f4a','DM Serif Display'],['midnight','Midnight','#0f1626','#efe6cf','#d4af37','Cormorant Garamond'],
+ ['kids','Crayon','#fffdf3','#2d2a6e','#ff5c8a','Fredoka'],['hand','Handwritten','#fdfaf2','#22305c','#e0533d','Caveat'],['mono','Typewriter','#fff','#1a1a1a','#999','Space Mono']];
+$('formats').innerHTML=FORMATS.map(([v,n,d,i])=>`<label class="opt"><input type="radio" name="format" value="${v}" data-k="format">${i}<div><b>${n}</b><small>${d}</small></div></label>`).join('');
+$('themes').innerHTML=THEMES.map(([v,n,bg,ink,acc,f])=>`<label class="th"><input type="radio" name="theme" value="${v}" data-k="theme"><div class="sw" style="background:${bg};color:${ink};font-family:'${f}'"><b>Aa 17</b><u style="background:${acc}"></u></div><span>${n}</span></label>`).join('');
 const LANGS=[['en','English'],['de','Deutsch'],['fr','Français'],['es','Español'],['it','Italiano'],['pt','Português'],['nl','Nederlands'],['pl','Polski'],['cs','Čeština'],['sk','Slovenčina'],['hu','Magyar'],['sv','Svenska'],['da','Dansk'],['nb','Norsk'],['fi','Suomi'],['uk','Українська'],['ru','Русский'],['tr','Türkçe'],['ja','日本語'],['zh','中文']];
 const nav=(navigator.language||'en').slice(0,2);
-$('lang').innerHTML=LANGS.map(([c,n])=>`<option value="${c}"${c===nav?' selected':''}>${n}</option>`).join('');
+$('lang').innerHTML=LANGS.map(([c,n])=>`<option value="${c}">${n}</option>`).join('');
 const now=new Date();
-const ids=['from','count','layout','orient','wstart','lang','wknum','notes','spill','ev'];
-const saved=JSON.parse(localStorage.getItem('tearoff')||'{}');
-if(!saved.from){saved.from=`${now.getFullYear()+(now.getMonth()>=10?1:0)}-${now.getMonth()>=10?'01':String(now.getMonth()+1).padStart(2,'0')}`;if(nav==='en'&&/US|CA/.test(navigator.language))saved.wstart='0'}
-ids.forEach(k=>{const e=$(k);if(saved[k]!==undefined){e.type==='checkbox'?e.checked=saved[k]:e.value=saved[k]}e.addEventListener('input',draw)});
+const old=JSON.parse(localStorage.getItem('tearoff')||'{}');
+const S=Object.assign({from:`${now.getFullYear()+(now.getMonth()>=10?1:0)}-${now.getMonth()>=10?'01':String(now.getMonth()+1).padStart(2,'0')}`,count:12,format:'wall',theme:'paper',orient:'portrait',
+  wstart:/US|CA|BR|JP/.test(navigator.language)?'0':'1',lang:LANGS.some(l=>l[0]===nav)?nav:'en',wknum:false,notes:true,spill:true,holes:true,caps:false,phsize:52,ev:''},
+  old.layout?{from:old.from,count:old.count,format:old.layout==='year'?'year':'month',orient:old.orient,wstart:old.wstart,lang:old.lang,wknum:old.wknum,notes:old.notes,spill:old.spill,ev:old.ev}:{},
+  JSON.parse(localStorage.getItem('tearoff2')||'{}'));
+document.querySelectorAll('[data-k]').forEach(e=>{const k=e.dataset.k;
+  if(e.type==='radio')e.checked=S[k]===e.value;else if(e.type==='checkbox')e.checked=!!S[k];else e.value=S[k];
+  e.addEventListener('input',()=>{S[k]=e.type==='checkbox'?e.checked:e.value;localStorage.setItem('tearoff2',JSON.stringify(S));draw()})});
 $('print').onclick=()=>window.print();
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)}
-function parseEv(txt){const yearly={},once={};for(const raw of txt.split('\n')){const l=raw.trim();let m;
+
+/* ---- photos: IndexedDB, keyed by slot index ---- */
+const P={};
+const dbp=new Promise((res,rej)=>{const r=indexedDB.open('tearoff',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const store=async(mode,fn)=>{const d=await dbp;return new Promise((res,rej)=>{const t=d.transaction('p',mode);fn(t.objectStore('p'));t.oncomplete=res;t.onerror=()=>rej(t.error)})};
+const savePh=i=>store('readwrite',s=>P[i]?s.put({blob:P[i].blob,x:P[i].x,y:P[i].y,cap:P[i].cap},i):s.delete(i));
+async function loadPh(){const d=await dbp;await new Promise(res=>{const c=d.transaction('p').objectStore('p').openCursor();c.onsuccess=()=>{const r=c.result;if(!r)return res();P[r.key]={...r.value,url:URL.createObjectURL(r.value.blob)};r.continue()}})}
+async function shrink(f){const bm=await createImageBitmap(f);const k=Math.min(1,2200/Math.max(bm.width,bm.height));const c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',.88))}
+async function addFiles(files,start){files=[...files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;
+  let slots;const n=nSlots();
+  if(start!=null)slots=files.map((_,j)=>start+j);
+  else{slots=[];for(let i=0;i<24&&slots.length<files.length;i++)if(!P[i]&&(i<n||slots.length))slots.push(i);while(slots.length<files.length)slots.push(slots.length?slots.at(-1)+1:0)}
+  for(let j=0;j<files.length;j++){const i=slots[j];if(i>23)break;const blob=await shrink(files[j]);if(P[i])URL.revokeObjectURL(P[i].url);P[i]={blob,url:URL.createObjectURL(blob),x:50,y:50,cap:P[i]?.cap||''};await savePh(i)}
+  draw()}
+let pickSlot=null;
+$('addph').onclick=()=>{pickSlot=null;$('file').click()};
+$('file').onchange=e=>{addFiles(e.target.files,pickSlot);e.target.value=''};
+const pick=i=>{pickSlot=i;$('file').click()};
+const dropOn=(el,i)=>{el.ondragover=e=>{e.preventDefault();el.classList.add('drag')};el.ondragleave=()=>el.classList.remove('drag');el.ondrop=e=>{e.preventDefault();el.classList.remove('drag');addFiles(e.dataTransfer.files,i)}};
+document.addEventListener('dragover',e=>e.preventDefault());document.addEventListener('drop',e=>{e.preventDefault();if(!e.target.closest('[data-slot]'))addFiles(e.dataTransfer.files,null)});
+
+/* ---- calendar helpers ---- */
+const isoWeek=d=>{const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)};
+function parseEv(txt){const yearly={},once={};for(const raw of (txt||'').split('\n')){const l=raw.trim();let m;
   if(m=l.match(/^(\d{4})-(\d{1,2})-(\d{1,2})\s+(.+)/)){const k=`${+m[1]}-${+m[2]}-${+m[3]}`;(once[k]=once[k]||[]).push(m[4])}
-  else if(m=l.match(/^(\d{1,2})[-./](\d{1,2})\s+(.+)/)){const k=`${+m[1]}-${+m[2]}`;(yearly[k]=yearly[k]||[]).push(m[3])}}
+  else if(m=l.match(/^(\d{1,2})[-./](\d{1,2})\.?\s+(.+)/)){const k=`${+m[1]}-${+m[2]}`;(yearly[k]=yearly[k]||[]).push(m[3])}}
   return d=>[...(yearly[`${d.getMonth()+1}-${d.getDate()}`]||[]),...(once[`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`]||[])]}
+const fmt=()=>FORMATS.find(f=>f[0]===S.format)||FORMATS[0];
+const nMonths=()=>Math.max(1,Math.min(24,+S.count||12));
+const nSlots=()=>S.format==='poster'?Math.ceil(nMonths()/12):fmt()[4]?nMonths():0;
+
 function draw(){
-  const o={};ids.forEach(k=>{const e=$(k);o[k]=e.type==='checkbox'?e.checked:e.value});localStorage.setItem('tearoff',JSON.stringify(o));
-  const lang=o.lang,ws=+o.wstart,land=o.orient==='landscape';
-  document.documentElement.style.setProperty('--orient',o.orient);
-  let st=document.getElementById('pg');if(!st){st=document.createElement('style');st.id='pg';document.head.append(st)}
-  st.textContent=`@media print{@page{size:A4 ${o.orient};margin:0}}`;
-  const [fy,fm]=(o.from||`${now.getFullYear()}-01`).split('-').map(Number);
-  const n=Math.max(1,Math.min(24,+o.count||12));
-  const ev=parseEv(o.ev);
-  const mName=new Intl.DateTimeFormat(lang,{month:'long'}),dName=new Intl.DateTimeFormat(lang,{weekday:'short'}),dNarrow=new Intl.DateTimeFormat(lang,{weekday:'narrow'});
+  const lang=S.lang,ws=+S.wstart,F=S.format,land=S.orient==='landscape'&&!['flip','daily'].includes(F);
+  let st=$('pgsz');if(!st){st=document.createElement('style');st.id='pgsz';document.head.append(st)}
+  st.textContent=`@media print{@page{size:A4 ${land?'landscape':'portrait'};margin:0}}`;
+  const [fy,fm]=(S.from||`${now.getFullYear()}-01`).split('-').map(Number);
+  const n=nMonths(),ev=parseEv(S.ev),T='t-'+S.theme;
+  const mName=new Intl.DateTimeFormat(lang,{month:'long'}),dShort=new Intl.DateTimeFormat(lang,{weekday:'short'}),dLong=new Intl.DateTimeFormat(lang,{weekday:'long'}),dNarrow=new Intl.DateTimeFormat(lang,{weekday:'narrow'}),dMon=new Intl.DateTimeFormat(lang,{day:'numeric',month:'short'});
   const cap=s=>s.charAt(0).toLocaleUpperCase(lang)+s.slice(1);
   const wdays=[...Array(7)].map((_,i)=>new Date(2024,0,7+((i+ws)%7)));
   const months=[...Array(n)].map((_,i)=>new Date(fy,fm-1+i,1));
-  const weeksOf=m=>{const first=new Date(m);first.setDate(1-((m.getDay()-ws+7)%7));const rows=[];let d=new Date(first);
-    do{const r=[];for(let i=0;i<7;i++){r.push(new Date(d));d.setDate(d.getDate()+1)}rows.push(r)}while(d.getMonth()===m.getMonth());return rows};
-  const we=d=>d.getDay()===0||d.getDay()===6;
-  let html='';
-  if(o.layout==='year'){
-    for(let p=0;p<n;p+=12){const chunk=months.slice(p,p+12);
-      const y1=chunk[0].getFullYear(),y2=chunk.at(-1).getFullYear();
-      html+=`<div class="page${land?' land':''}"><h2>${y1===y2?y1:y1+' – '+y2}</h2><div class="year">`+chunk.map(m=>{
-        const rows=weeksOf(m);
-        return `<div class="mini"><h3>${cap(mName.format(m))}${chunk[0].getMonth()&&m.getMonth()===0?' '+m.getFullYear():''}</h3><table><tr>${o.wknum?'<th></th>':''}${wdays.map(w=>`<th>${esc(dNarrow.format(w))}</th>`).join('')}</tr>`+
-        rows.map(r=>`<tr>${o.wknum?`<td style="color:#bbb">${isoWeek(r[(11-ws)%7])}</td>`:''}${r.map(d=>{if(d.getMonth()!==m.getMonth())return'<td></td>';const e=ev(d);return`<td class="${we(d)?'we ':''}${e.length?'hol':''}"${e.length?` title="${esc(e.join(', '))}"`:''}>${d.getDate()}</td>`}).join('')}</tr>`).join('')+'</table></div>'}).join('')+'</div></div>'}
-  }else{
-    const gc=(o.wknum?'5% ':'')+'repeat(7,1fr)';
-    for(const m of months){
-      const rows=weeksOf(m);
-      html+=`<div class="page${land?' land':''}"><h2>${cap(mName.format(m))}<small>${m.getFullYear()}</small></h2><div class="grid" style="--gc:${gc}">`+
-      (o.wknum?'<div class="hd"></div>':'')+wdays.map(w=>`<div class="hd">${esc(dName.format(w))}</div>`).join('')+
-      rows.map(r=>(o.wknum?`<div class="wk">${isoWeek(r[(11-ws)%7])}</div>`:'')+r.map(d=>{
-        const off=d.getMonth()!==m.getMonth();if(off&&!o.spill)return'<div class="d off"></div>';
-        const e=off?[]:ev(d);
-        return `<div class="d${we(d)?' we':''}${off?' off':''}${e.length?' hol':''}"><b>${d.getDate()}</b>${e.map(x=>`<i>${esc(x)}</i>`).join('')}</div>`}).join('')).join('')+
-      `</div>${o.notes?'<div class="notes">&nbsp;</div>':''}</div>`}
-  }
-  $('out').innerHTML=html;
+  const weeksOf=m=>{const d=new Date(m);d.setDate(1-((m.getDay()-ws+7)%7));const rows=[];do{const r=[];for(let i=0;i<7;i++){r.push(new Date(d));d.setDate(d.getDate()+1)}rows.push(r)}while(d.getMonth()===m.getMonth());return rows};
+  const we=d=>d.getDay()===0||d.getDay()===6, wk=r=>isoWeek(r[(11-ws)%7]);
+  const hue=m=>(m.getMonth()*31+345)%360;
+  const sheet=(cls,m,inner)=>`<div class="sheet ${T} ${cls}" style="--h:${hue(m)};--phh:${S.phsize}%">${S.holes&&/flip|day/.test(cls)?'<div class="holes"><i></i><i></i></div>':''}${inner}</div>`;
+  const hdr=(m,yr=true)=>`<div class="hdr"><span class="mnum">${String(m.getMonth()+1).padStart(2,'0')}</span><span class="mn">${esc(cap(mName.format(m)))}</span>${yr?`<span class="yr">${m.getFullYear()}</span>`:''}</div>`;
+  const photo=(i,m,extra='')=>{const p=P[i];return `<div class="ph" data-slot="${i}">${p?`<img src="${p.url}" style="object-position:${p.x}% ${p.y}%" draggable="false">`:`<div class="phx"><em>${extra?'':String(m.getMonth()+1).padStart(2,'0')}</em><span>Click or drop a photo</span></div>`}${S.caps&&p?.cap?`<div class="cap">${esc(p.cap)}</div>`:''}${extra}</div>`};
+  const grid=m=>{const rows=weeksOf(m);
+    return `<div class="grid" style="--gc:${S.wknum?'5% ':''}repeat(7,1fr)">`+(S.wknum?'<div class="hd"></div>':'')+wdays.map(w=>`<div class="hd">${esc(dShort.format(w))}</div>`).join('')+
+    rows.map(r=>(S.wknum?`<div class="wk">${wk(r)}</div>`:'')+r.map(d=>{const off=d.getMonth()!==m.getMonth();if(off&&!S.spill)return'<div class="d off"></div>';const e=off?[]:ev(d);
+      return `<div class="d w${d.getDay()}${we(d)?' we':''}${off?' off':''}${e.length?' hol':''}"><b>${d.getDate()}</b>${e.map(x=>`<i>${esc(x)}</i>`).join('')}</div>`}).join('')).join('')+'</div>'};
+  const mini=m=>{const rows=weeksOf(m);while(rows.length<6)rows.push(null);
+    return `<div class="mini"><h3>${esc(cap(mName.format(m)))}</h3><table><tr>${S.wknum?'<th></th>':''}${wdays.map(w=>`<th>${esc(dNarrow.format(w))}</th>`).join('')}</tr>`+
+    rows.map(r=>r?`<tr>${S.wknum?`<td class="wkn">${wk(r)}</td>`:''}${r.map(d=>{if(d.getMonth()!==m.getMonth())return'<td></td>';const e=ev(d);return`<td class="${we(d)?'we ':''}${e.length?'hol':''}"${e.length?` title="${esc(e.join(', '))}"`:''}>${d.getDate()}</td>`}).join('')}</tr>`:'<tr><td>&nbsp;</td></tr>').join('')+'</table></div>'};
+  const notes=S.notes?'<div class="notes"></div>':'';
+  const page=(inner,cls='')=>`<div class="page${land?' land':''} ${cls}">${inner}</div>`;
+  let pages=[];
+  if(F==='wall')pages=months.map((m,i)=>page(sheet('wall',m,photo(i,m)+`<div class="col">${hdr(m)}${grid(m)}${notes}</div>`)));
+  else if(F==='month')pages=months.map(m=>page(sheet('plan',m,hdr(m)+grid(m)+notes)));
+  else if(F==='flip'){const cards=months.map((m,i)=>sheet('flip',m,photo(i,m)+`<div class="col">${hdr(m)}${grid(m)}</div>`));for(let i=0;i<cards.length;i+=2)pages.push(page(cards[i]+(cards[i+1]||'<div class="sheet"></div>'),'two'))}
+  else if(F==='year'||F==='poster'){for(let p=0;p<n;p+=12){const ch=months.slice(p,p+12),y1=ch[0].getFullYear(),y2=ch.at(-1).getFullYear(),ttl=y1===y2?y1:y1+' – '+y2;
+      const minis=`<div class="year" style="--yc:${land?(F==='poster'?3:4):(F==='poster'?4:3)}">${ch.map(mini).join('')}</div>`;
+      pages.push(page(F==='year'?sheet('yr',ch[0],`<div class="hdr"><span class="mn">${ttl}</span></div>`+minis):sheet('poster',ch[0],photo(p/12,ch[0],`<div class="ttl">${ttl}</div>`)+`<div class="col" style="flex:1;display:flex;min-width:0">${minis}</div>`)))}}
+  else if(F==='week'){const end=new Date(fy,fm-1+n,1),d=new Date(months[0]);d.setDate(1-((d.getDay()-ws+7)%7));
+    while(d<end){const r=[...Array(7)].map((_,i)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+i));
+      pages.push(page(sheet('week',r[3],`<div class="hdr"><span class="mn">${esc(cap(mName.format(r[3])))}</span><span class="yr">${S.wknum?`W${wk(r)} · `:''}${esc(dMon.format(r[0]))} – ${esc(dMon.format(r[6]))}</span></div><div class="rows">`+
+      r.map(x=>`<div class="r${we(x)?' we':''}${x<months[0]||x>=end?' off':''}"><div class="dn"><b>${x.getDate()}</b><small>${esc(dShort.format(x))}</small></div><div class="ln">${ev(x).map(e=>`<i>${esc(e)}</i>`).join('')}</div></div>`).join('')+'</div>'+notes)));d.setDate(d.getDate()+7)}}
+  else if(F==='daily'){const end=new Date(fy,fm-1+n,1),cards=[];
+    for(const d=new Date(months[0]);d<end;d.setDate(d.getDate()+1)){const e=ev(d),y0=new Date(d.getFullYear(),0,1),doy=Math.round((d-y0)/864e5)+1,len=new Date(d.getFullYear(),1,29).getDate()===29?366:365;
+      cards.push(`<div class="sheet ${T} day${we(d)?' we':''}${e.length?' hol':''}" style="--h:${hue(d)}">${S.holes?'<div class="holes"><i></i><i></i></div>':''}<div class="band">${esc(cap(mName.format(d)))}<small>${d.getFullYear()}</small></div><div class="num">${d.getDate()}</div><div class="wd">${esc(cap(dLong.format(d)))}</div><div class="evs">${e.map(x=>`<b>${esc(x)}</b>`).join('')}</div><div class="ft"><span>${S.wknum?'W'+isoWeek(d):''}</span><span>${doy} / ${len}</span></div></div>`)}
+    for(let i=0;i<cards.length;i+=4)pages.push(page(cards.slice(i,i+4).join('')+'<div class="sheet"></div>'.repeat(Math.max(0,4-cards.slice(i,i+4).length)),'four'))}
+  $('out').innerHTML=pages.join('');
+  $('fname').textContent=fmt()[1];$('pcount').textContent=`· ${pages.length} A4 page${pages.length>1?'s':''}${F==='flip'?' · cut along the dashes':F==='daily'?' · cut into 4 cards':''}`;
+  bindPhotos();renderSlots();
 }
-draw();
+function bindPhotos(){document.querySelectorAll('#out .ph[data-slot]').forEach(el=>{const i=+el.dataset.slot;dropOn(el,i);
+  const x=el.querySelector('.phx');if(x)x.onclick=()=>pick(i);
+  const img=el.querySelector('img');if(!img)return;
+  img.ondblclick=()=>pick(i);
+  img.onpointerdown=e=>{e.preventDefault();img.setPointerCapture(e.pointerId);const sx=e.clientX,sy=e.clientY,ox=P[i].x,oy=P[i].y,r=el.getBoundingClientRect();
+    const k=img.naturalWidth/img.naturalHeight>r.width/r.height;img.style.cursor='grabbing';
+    img.onpointermove=ev=>{if(k)P[i].x=Math.max(0,Math.min(100,ox-(ev.clientX-sx)/r.width*120));else P[i].y=Math.max(0,Math.min(100,oy-(ev.clientY-sy)/r.height*120));
+      document.querySelectorAll(`#out .ph[data-slot="${i}"] img`).forEach(m=>m.style.objectPosition=`${P[i].x}% ${P[i].y}%`)};
+    img.onpointerup=()=>{img.onpointermove=null;img.style.cursor='';savePh(i)}}})}
+function renderSlots(){const n=nSlots(),[fy,fm]=S.from.split('-').map(Number);
+  $('phsec').style.opacity=n?1:.55;
+  $('phhint').textContent=n?`· ${S.format==='poster'?'one per poster':'one per month'}`:'· this format has no photos';
+  const lbl=i=>S.format==='poster'?String(new Date(fy,fm-1+i*12,1).getFullYear()):new Intl.DateTimeFormat(S.lang,{month:'short'}).format(new Date(fy,fm-1+i,1));
+  $('slots').innerHTML=[...Array(Math.max(n,1))].map((_,i)=>`<div class="slot${P[i]?' has':''}" data-slot="${i}" style="${P[i]?`background-image:url(${P[i].url})`:''}"><em>${esc(lbl(i))}</em><span class="x" title="Remove">×</span></div>`).join('');
+  $('slots').querySelectorAll('.slot').forEach(el=>{const i=+el.dataset.slot;dropOn(el,i);el.onclick=e=>{if(e.target.classList.contains('x')){URL.revokeObjectURL(P[i].url);delete P[i];savePh(i);draw()}else pick(i)}});
+  const cb=$('capbox');cb.classList.toggle('on',!!S.caps&&n>0);
+  if(S.caps&&!cb.contains(document.activeElement))cb.innerHTML=[...Array(n)].map((_,i)=>P[i]?`<input data-cap="${i}" placeholder="${esc(lbl(i))} caption" value="${esc(P[i].cap||'')}" style="margin-bottom:5px">`:'').join('')||'<span class="hint">Add photos first.</span>';
+  cb.querySelectorAll('[data-cap]').forEach(inp=>inp.oninput=()=>{const i=+inp.dataset.cap;P[i].cap=inp.value;savePh(i);draw()});
+}
+loadPh().catch(()=>{}).finally(draw);
+document.fonts&&document.fonts.ready.then(()=>{});
 </script>
 </body></html>
