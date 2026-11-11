@@ -65,7 +65,8 @@ input[type=checkbox]{width:auto}
   <button data-tool="text" data-tip="Text label · T"><b>T</b>Label</button>
   <div class="sp"></div>
   <button id="bDims" data-tip="Show / hide sizes"><b>↔</b>Sizes</button>
-  <button id="bSnap" data-tip="Grid & 5 cm snap on/off · G"><b>#</b>Grid</button>
+  <select id="unitSel" title="Units" style="font-size:11px;padding:2px 0;width:100%"><option value="m">m</option><option value="cm">cm</option><option value="ft">ft·in</option><option value="in">in</option></select>
+  <button id="bSnap" data-tip="Grid & snap on/off · G"><b>#</b>Grid</button>
   <button id="bFit" data-tip="Fit plan to screen · F"><b>⤢</b>Fit</button>
   <button id="bUndo" data-tip="Undo · Ctrl+Z"><b>↶</b>Undo</button>
   <button id="bRedo" data-tip="Redo · Ctrl+Shift+Z"><b>↷</b>Redo</button>
@@ -112,7 +113,7 @@ input[type=checkbox]{width:auto}
   <div id="pal"></div>
   <h3>Custom item</h3>
   <div id="custom">
-   <div class="grid3"><div><label>Name</label><input id="cName" value="Custom"></div><div><label>W m</label><input id="cW" type="number" step="0.05" value="1"></div><div><label>D m</label><input id="cD" type="number" step="0.05" value="0.6"></div></div>
+   <div class="grid3"><div><label>Name</label><input id="cName" value="Custom"></div><div><label id="lW">W m</label><input id="cW" inputmode="decimal" value="1"></div><div><label id="lD">D m</label><input id="cD" inputmode="decimal" value="0.6"></div></div>
    <div class="grid2" style="margin-top:6px"><button class="big" id="cRect">Add rectangle</button><button class="big" id="cDraw">Draw shape</button></div>
    <p class="note">Draw shape: click corners, type a length + Enter for exact sides, click the first corner to close.</p>
   </div>
@@ -132,7 +133,7 @@ input[type=checkbox]{width:auto}
 </div>
 <script>
 const $=s=>document.querySelector(s), svg=$('#svg'), stage=$('#stage'), hintEl=$('#hint');
-const GRID=0.05, PI=Math.PI, SG=[[-1,-1],[1,-1],[1,1],[-1,1]], INK='#222', SELC='#1a73e8';
+let GRID=0.05;const PI=Math.PI, SG=[[-1,-1],[1,-1],[1,1],[-1,1]], INK='#222', SELC='#1a73e8';
 const PRESETS=[['Door',0.8,0.8,'door','Doors & windows'],['Window',1.2,0.12,'window','Doors & windows'],
  ['Double bed',1.6,2,'bed2','Bedroom'],['Single bed',0.9,2,'bed1','Bedroom'],['Nightstand',0.45,0.4,'nightstand','Bedroom'],['Wardrobe',1.2,0.6,'wardrobe','Bedroom'],['Dresser',1,0.5,'counter','Bedroom'],
  ['Sofa',2,0.9,'sofa','Living'],['Armchair',0.85,0.85,'armchair','Living'],['Coffee table',1.1,0.6,'table','Living'],['TV stand',1.6,0.4,'tv','Living'],['Shelf',0.8,0.3,'shelf','Living'],
@@ -151,7 +152,19 @@ const get=id=>objs.find(o=>o.id===id);
 const clone=o=>JSON.parse(JSON.stringify(o));
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 const r4=v=>Math.round(v*1e4)/1e4;
-const fmt=n=>`${+n.toFixed(2)} m`, fmtA=a=>`${+a.toFixed(2)} m²`;
+const IN=0.0254,FT=0.3048;
+let unit=localStorage.plonkUnit||(/^en-(US|LR|MM)$/.test(navigator.language)?'ft':'m');
+const imp=()=>unit==='ft'||unit==='in', UL=()=>({m:'m',cm:'cm',ft:'ft',in:'in'})[unit], UF=()=>({m:1,cm:0.01,ft:FT,in:IN})[unit];
+function ftin(n,dp=0){const k=10**dp,t=Math.round(Math.abs(n)/IN*k)/k,f=Math.floor(t/12+1e-9),i=+(t-f*12).toFixed(dp);return(n<0?'-':'')+(i?`${f}′ ${i}″`:`${f}′`)}
+function fmt(n){return unit==='m'?`${+n.toFixed(2)} m`:unit==='cm'?`${Math.round(n*100)} cm`:unit==='in'?`${Math.round(n/IN)}″`:ftin(n)}
+const fmtA=a=>imp()?`${+(a/(FT*FT)).toFixed(1)} ft²`:`${+a.toFixed(2)} m²`;
+// value shown in input fields, in the current unit
+function valIn(n){return unit==='ft'?ftin(n,1).replace('′',"'").replace('″','"').replace(' ',''):String(+(n/UF()).toFixed(unit==='m'?3:unit==='cm'?1:2))}
+// any length a person might type: 3.2 · 320cm · 12'6" · 12ft 6in · 150" · sums in the current unit
+function parseLen(raw){let t=String(raw??'').trim().toLowerCase().replace(/,/g,'.').replace(/[′’]/g,"'").replace(/[″”]/g,'"');if(!t)return NaN;
+ let m=t.match(/^(-?[\d.]+)\s*(?:'|ft|feet|foot)\s*(?:([\d.]+)\s*(?:"|in|inch|inches)?)?$/);if(m)return(+m[1])*FT+(+(m[2]||0))*IN;
+ m=t.match(/^([\d.]+)\s*(mm|cm|m|"|in|inch|inches)$/);if(m)return +m[1]*{mm:0.001,cm:0.01,m:1,'"':IN,in:IN,inch:IN,inches:IN}[m[2]];
+ if(/^[\d.+\-*/() ]+$/.test(t))try{const v=Function(`return(${t})`)();if(isFinite(v))return v*UF()}catch(e){}return NaN}
 const snapv=v=>snap?r4(Math.round(v/GRID)*GRID):r4(v);
 const isRoom=o=>o&&o.kind==='room', isItem=o=>o&&o.kind!=='room'&&o.kind!=='wall';
 const styleOf=o=>o.style||STYLE_BY_NAME[o.name]||o.shape||'box';
@@ -239,7 +252,7 @@ const newRoom=(x,y,w,h)=>add({t:'rect',kind:'room',x,y,w,h,rot:0,wall:0.1,name:`
 // ---------- drawing ----------
 const NS='vector-effect="non-scaling-stroke"';
 const DEFS=`<defs><pattern id="hatch" patternUnits="userSpaceOnUse" width="0.05" height="0.05" patternTransform="rotate(45)"><rect width="0.05" height="0.05" fill="#fff"/><path d="M0 0V0.05" stroke="#333" stroke-width="0.009"/></pattern></defs>`;
-function gridSvg(s,x0,y0,x1,y1){const minor=s>120?0.1:s>40?0.5:s>12?1:5,major=minor<1?1:minor*5;let a='',b='';
+function gridSvg(s,x0,y0,x1,y1){const F=imp()?FT:1,M=imp()?[0.5,1,5,10]:[0.1,0.5,1,5],minor=F*(s>120?M[0]:s>40?M[1]:s>12?M[2]:M[3]),major=minor<F-1e-9?F:minor*5;let a='',b='';
  for(let x=Math.floor(x0/minor)*minor;x<=x1;x+=minor){const l=`M${x} ${y0}V${y1}`;Math.abs(x/major-Math.round(x/major))<1e-6?b+=l:a+=l}
  for(let y=Math.floor(y0/minor)*minor;y<=y1;y+=minor){const l=`M${x0} ${y}H${x1}`;Math.abs(y/major-Math.round(y/major))<1e-6?b+=l:a+=l}
  return`<path d="${a}" stroke="#f0f0ee" ${NS}/><path d="${b}" stroke="#e2e2de" ${NS}/>`}
@@ -342,7 +355,7 @@ function tipFor(t){if(!t?.closest)return'';if(t.closest('[data-dim]'))return'dou
  return o.id===sel?'drag = move · Q rotate · Ctrl+D copy · Del · Alt+drag = no magnet':'click to select'}
 function setHover(t){const k=tipFor(t);if(k===hoverKey)return;hoverKey=k;hoverTip='';clearTimeout(hoverT);if(k)hoverT=setTimeout(()=>{hoverTip=k;hint()},450);hint()}
 function hint(){let t='';
- if(tool==='poly'&&draft){const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);t=typed?`${typed} m ⏎`:fmt(Math.hypot(n.x-L[0],n.y-L[1]))}
+ if(tool==='poly'&&draft){const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);t=typed?`${typed}${/[a-z'"]/.test(typed)?'':' '+UL()} ⏎`:fmt(Math.hypot(n.x-L[0],n.y-L[1]))}
  else if(tool==='rect'&&typed)t=`${typed} ⏎`;
  else if(drag&&drag.mode==='move'&&isItem(drag.o)){const r=roomFor(drag.o);t=r?`→ ${r.name}`:'→ no room'}
  else if(tool==='place'){const r=roomNear(snapPt(cursor));t=r?`→ ${r.name}`:''}
@@ -350,22 +363,23 @@ function hint(){let t='';
  hintEl.style.display=t?'block':'none';hintEl.textContent=t;hintEl.style.left=scr.x+16+'px';hintEl.style.top=scr.y+14+'px'}
 const HELP={bgmove:'drag to move the photo · Esc done',bgscale:'click two points on the photo you know the distance between · Esc cancel',select:'double-click a size to type it · drag = move (a room carries its furniture) · drag empty = pan · Q rotate · Del delete · Ctrl+D duplicate · Alt = no magnet',rect:'drag a room · click = 3×3 · or type 4x3 ⏎',poly:'click corners · type a length ⏎ · Shift = free angle · click start to close',text:'click to place a label'};
 function status(){if(warnMsg&&performance.now()<warnT){$('#stL').textContent='⚠ '+warnMsg;$('#stR').textContent='';return}$('#stL').textContent=tool==='place'?`click to place ${preset[0]} · Esc cancel`:tool==='poly'&&draftKind==='furn'?'drawing custom item · '+HELP.poly:HELP[tool];
- $('#stR').textContent=`${cursor.x.toFixed(2)}, ${cursor.y.toFixed(2)} · rooms ${fmtA(total())}`}
+ $('#stR').textContent=`${fmt(cursor.x)}, ${fmt(cursor.y)} · rooms ${fmtA(total())}`}
 let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>localStorage.plonk=JSON.stringify({objs,view}),300)}
 function refresh(){render();inspector()}
 
 // ---------- inspector ----------
 function num(k,lab,v,step=0.05){return`<div><label>${lab}</label><input type="number" step="${step}" data-k="${k}" data-n value="${+(+v).toFixed(3)}"></div>`}
+function len(k,lab,v){return`<div><label>${lab} ${UL()}</label><input inputmode="decimal" data-k="${k}" data-n data-len value="${valIn(+v)}"></div>`}
 function targetRoom(){const o=get(sel);return isRoom(o)?o:o&&get(o.room)||null}
 function palNote(){const r=targetRoom();$('#palNote').innerHTML=r?`Adds into <b>${esc(r.name)}</b>.`:'Click one, then click in the plan. Select a room first to drop it straight in.'}
 function inspector(){const o=get(sel),el=$('#insp');lastSel=sel;palNote();
  if(!o){el.innerHTML=`<div class="mut">Nothing selected.<br>Rooms total: ${fmtA(total())}</div>`;return}
  let h=`<label>Name</label><input data-k="name" value="${esc(o.name)}">`;
- if(o.t==='rect'){h+=`<div class="grid2">${num('w','Width m',o.w)}${num('h','Depth m',o.h)}${num('rot','Rotation °',o.rot||0,15)}`;
-  h+=(isRoom(o)?num('wall','Wall m',o.wall||0,0.05):'')+'</div>'}
- if(o.t==='poly'){h+=`<div class="grid2">${o.kind==='furn'?'':num('wall','Wall m',o.wall??0.1)+`<div><label>Closed room</label><input type="checkbox" data-k="closed" ${o.closed?'checked':''}></div>`}</div><label>Edges m</label><div class="grid2">`;
-  const n=o.pts.length,m=o.closed?n:n-1;for(let i=0;i<m;i++){const a=o.pts[i],b=o.pts[(i+1)%n];h+=`<input type="number" step="0.05" data-e="${i}" value="${+Math.hypot(b[0]-a[0],b[1]-a[1]).toFixed(3)}" title="edge ${i+1}">`}h+='</div>'}
- if(o.t==='text')h+=num('size','Text size m',o.size||0.25,0.05);
+ if(o.t==='rect'){h+=`<div class="grid2">${len('w','Width',o.w)}${len('h','Depth',o.h)}${num('rot','Rotation °',o.rot||0,15)}`;
+  h+=(isRoom(o)?len('wall','Wall',o.wall||0):'')+'</div>'}
+ if(o.t==='poly'){h+=`<div class="grid2">${o.kind==='furn'?'':len('wall','Wall',o.wall??0.1)+`<div><label>Closed room</label><input type="checkbox" data-k="closed" ${o.closed?'checked':''}></div>`}</div><label>Edges ${UL()}</label><div class="grid2">`;
+  const n=o.pts.length,m=o.closed?n:n-1;for(let i=0;i<m;i++){const a=o.pts[i],b=o.pts[(i+1)%n];h+=`<input inputmode="decimal" data-e="${i}" value="${valIn(Math.hypot(b[0]-a[0],b[1]-a[1]))}" title="edge ${i+1}">`}h+='</div>'}
+ if(o.t==='text')h+=len('size','Text size',o.size||0.25);
  if(isRoom(o))h+=`<p class="note">Contains ${kidsOf(o).length} item(s) — they move with the room.</p>`;
  if(isItem(o))h+=`<label>In room</label><select data-k="room"><option value="">— none —</option>${objs.filter(isRoom).map(r=>`<option value="${r.id}" ${o.room===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select>`;
  h+=`<p class="note">Double-click any size on the plan to type it. Typed sizes are fixed <b style="color:#0b57d0">⊢ bold ⊣</b> and hold while you change others; type nothing to unfix.</p>`;
@@ -373,14 +387,14 @@ function inspector(){const o=get(sel),el=$('#insp');lastSel=sel;palNote();
  h+=`<div class="grid2" style="margin-top:8px"><button data-a="dup">Duplicate</button><button data-a="rot">Rotate 90°</button><button data-a="front">To front</button><button data-a="back">To back</button><button data-a="del" style="grid-column:span 2">Delete${isRoom(o)&&kidsOf(o).length?' (with contents)':''}</button></div>`;
  el.innerHTML=h}
 function syncInsp(){if(sel!==lastSel)return inspector();const o=get(sel);if(!o)return;
- document.querySelectorAll('#insp input[data-n]').forEach(i=>{if(i!==document.activeElement&&o[i.dataset.k]!=null)i.value=+(+o[i.dataset.k]).toFixed(3)})}
+ document.querySelectorAll('#insp input[data-n]').forEach(i=>{if(i!==document.activeElement&&o[i.dataset.k]!=null)i.value=i.dataset.len!=null?valIn(+o[i.dataset.k]):+(+o[i.dataset.k]).toFixed(3)})}
 const insp=$('#insp');
 insp.addEventListener('focusin',e=>{if(e.target.matches('input,select'))push()});
 insp.addEventListener('input',e=>{const o=get(sel),i=e.target;if(!o)return;
- if(i.dataset.e!=null){const v=parseFloat(i.value);if(v>0)setLen(o,+i.dataset.e,v)}
+ if(i.dataset.e!=null){const v=parseLen(i.value);if(v>0)setLen(o,+i.dataset.e,v)}
  else if(i.dataset.k==='closed'){o.closed=i.checked;o.kind=o.closed?'room':'wall';if(o.closed&&!o.name.startsWith('Room'))o.name=`Room ${roomN()}`;if(o.closed)adopt(o)}
  else if(i.dataset.k==='room')o.room=i.value||null;
- else if(i.dataset.n!=null){const v=parseFloat(i.value);if(isNaN(v))return;const k=i.dataset.k;
+ else if(i.dataset.n!=null){const v=i.dataset.len!=null?r4(parseLen(i.value)):parseFloat(i.value);if(isNaN(v))return;const k=i.dataset.k;
   if(k==='w'||k==='h'){if(v<=0)return;const cx=o.x+o.w/2,cy=o.y+o.h/2;o[k]=v;(o.locks??={})[k]=v;if(o.rot%360){o.x=cx-o.w/2;o.y=cy-o.h/2}}
   else if(k==='rot'&&isRoom(o)){const K=snapKids(o),c=center(o),d=v-(o.rot||0);o.rot=v;applyKids(K,rotf(c.x,c.y,d),d)}
   else o[k]=v}
@@ -409,9 +423,9 @@ function placeItem(o,at){const r=targetRoom();
  else{const c=at||world({x:stage.clientWidth/2,y:stage.clientHeight/2});o.x=snapv(c.x-o.w/2);o.y=snapv(c.y-o.h/2)}
  push();add(o);if(!at&&r)o.room=r.id;else{magnet(o);assignRoom(o)}setTool('select');inspector()}
 const presetItem=p=>({t:'rect',kind:'furn',w:p[1],h:p[2],rot:0,name:p[0],style:p[3]});
-$('#pal').innerHTML=[...new Set(PRESETS.map(p=>p[4]))].map(sec=>`<div class="sec">${sec}</div>`+PRESETS.map((p,i)=>p[4]===sec?`<button data-p="${i}" title="${p[1]} × ${p[2]} m">${p[0]}</button>`:'').join('')).join('');
+$('#pal').innerHTML=[...new Set(PRESETS.map(p=>p[4]))].map(sec=>`<div class="sec">${sec}</div>`+PRESETS.map((p,i)=>p[4]===sec?`<button data-p="${i}" title="${fmt(p[1])} × ${fmt(p[2])}">${p[0]}</button>`:'').join('')).join('');
 $('#pal').onclick=e=>{const i=e.target.dataset.p;if(i==null)return;const p=PRESETS[+i];targetRoom()?placeItem(presetItem(p)):setTool('place',p)};
-$('#cRect').onclick=()=>{const w=parseFloat($('#cW').value),h=parseFloat($('#cD').value);if(!(w>0&&h>0))return;placeItem({t:'rect',kind:'furn',w,h,rot:0,name:$('#cName').value||'Custom',style:'box'})};
+$('#cRect').onclick=()=>{const w=r4(parseLen($('#cW').value)),h=r4(parseLen($('#cD').value));if(!(w>0&&h>0))return;placeItem({t:'rect',kind:'furn',w,h,rot:0,name:$('#cName').value||'Custom',style:'box'})};
 $('#cDraw').onclick=()=>{setTool('poly');draftKind='furn';render()};
 
 // ---------- input ----------
@@ -432,9 +446,9 @@ function addDraftPoint(p){if(!draft){const q=snapPt(p);draft={pts:[[q.x,q.y]]};r
  if(Math.hypot(q.x-L[0],q.y-L[1])<1e-6)return finishDraft(false);
  P.push([q.x,q.y])}
 function enterTyped(){
- if(tool==='rect'){const m=typed.match(/^([\d.]+)\s*[x*×]\s*([\d.]+)$/i);typed='';
-  if(m){push();const q=snapPt(cursor),o=newRoom(q.x,q.y,+m[1],+m[2]);adopt(o);setTool('select');inspector()}else render();return}
- if(tool==='poly'&&draft){if(!typed)return finishDraft(false);const len=parseFloat(typed);typed='';if(!(len>0))return render();
+ if(tool==='rect'){const m=typed.split(/[x*×]/i).map(parseLen);typed='';
+  if(m.length===2&&m[0]>0&&m[1]>0){push();const q=snapPt(cursor),o=newRoom(q.x,q.y,r4(m[0]),r4(m[1]));adopt(o);setTool('select');inspector()}else render();return}
+ if(tool==='poly'&&draft){if(!typed)return finishDraft(false);const len=parseLen(typed);typed='';if(!(len>0))return render();
   const L=draft.pts[draft.pts.length-1],n=draftNext(cursor);let a=Math.atan2(n.y-L[1],n.x-L[0]);if(n.x===L[0]&&n.y===L[1])a=0;
   draft.pts.push([r4(L[0]+Math.cos(a)*len),r4(L[1]+Math.sin(a)*len)]);render()}}
 
@@ -499,7 +513,7 @@ addEventListener('keydown',e=>{if(e.key==='Shift'){shift=true;if(draft)render()}
  if(ctrl&&L==='d'){e.preventDefault();act('dup');return}
  if(ctrl)return;
  if((tool==='poly'&&draft)||tool==='rect'){
-  if(/^[0-9.,]$/.test(k)||(tool==='rect'&&typed&&/^[x*×]$/i.test(k))){typed+=k===','?'.':k;render();e.preventDefault();return}
+  if(/^[0-9.,'"]$/.test(k)||(tool==='rect'&&typed&&/^[x*×]$/i.test(k))){typed+=k===','?'.':k;render();e.preventDefault();return}
   if(k==='Backspace'&&typed){typed=typed.slice(0,-1);render();return}
   if(k==='Enter'){enterTyped();return}}
  if(k==='Escape'&&($('#help').style.display==='block'||$('#info').style.display==='block')){toggleHelp(false);toggleInfo(false);return}
@@ -508,7 +522,7 @@ addEventListener('keydown',e=>{if(e.key==='Shift'){shift=true;if(draft)render()}
  if(L==='v')setTool('select');else if(L==='r')setTool('rect');else if(L==='w'){draftKind='room';setTool('poly')}else if(L==='t')setTool('text');else if(L==='f')fit();else if(L==='g')$('#bSnap').click();else if(k==='?')toggleHelp();else if(L==='i')toggleInfo();
  else if(L==='q')act('rot');
  else if((k==='Delete'||k==='Backspace')&&sel)act('del');
- else if(k.startsWith('Arrow')&&sel){e.preventDefault();const o=get(sel),st=e.shiftKey?0.5:GRID,dx=k==='ArrowLeft'?-st:k==='ArrowRight'?st:0,dy=k==='ArrowUp'?-st:k==='ArrowDown'?st:0;
+ else if(k.startsWith('Arrow')&&sel){e.preventDefault();const o=get(sel),st=e.shiftKey?(imp()?FT/2:0.5):GRID,dx=k==='ArrowLeft'?-st:k==='ArrowRight'?st:0,dy=k==='ArrowUp'?-st:k==='ArrowDown'?st:0;
   push();const K=isRoom(o)?snapKids(o):[];xform(o,clone(o),trf(dx,dy),0);applyKids(K,trf(dx,dy),0);if(isItem(o))assignRoom(o);render()}});
 
 // ---------- dimension constraints ----------
@@ -544,16 +558,16 @@ function lmSolve(x,B,n,m,dir0,len0,locks,fixed,editI,wl){
    if(fn<f){moved=Math.max(...dx.map(Math.abs))>1e-9;x=xn;r=rn;f=fn;lam=Math.max(lam/4,1e-12);break}lam*=10}
   if(!moved)break}
  return x}
-function solveWarn(bad){if(bad>0.002){warnMsg=`Fixed sizes conflict (off by ${+bad.toFixed(3)} m) — unfix one`;warnT=performance.now()+4000}}
+function solveWarn(bad){if(bad>0.002){warnMsg=`Fixed sizes conflict (off by ${fmt(bad)}) — unfix one`;warnT=performance.now()+4000}}
 function setLen(o,i,v){(o.locks??={})[i]=v;solveWarn(solvePoly(o,{[i]:[...o.pts[i]]},null,i))}
 
 // ---------- inline dimension editor ----------
 const ed=$('#dimEd');
 const edgeLen=(o,i)=>{const P=o.pts,b=P[(i+1)%P.length];return Math.hypot(b[0]-P[i][0],b[1]-P[i][1])};
 function openDimEdit(key,q){const[id,k,i]=key.split(':'),o=get(id);if(!o)return;if(sel!==id){sel=id;refresh()}
- ed.value=+(k==='e'?edgeLen(o,+i):o[k]).toFixed(3);ed.dataset.key=key;ed.style.left=q.x-42+'px';ed.style.top=q.y-15+'px';ed.style.display='block';setTimeout(()=>{ed.focus();ed.select()},0)}
+ ed.value=valIn(k==='e'?edgeLen(o,+i):o[k]);ed.dataset.key=key;ed.style.left=q.x-42+'px';ed.style.top=q.y-15+'px';ed.style.display='block';setTimeout(()=>{ed.focus();ed.select()},0)}
 function closeDimEdit(apply){if(ed.style.display==='none')return;ed.style.display='none';if(!apply)return;
- const raw=String(ed.value).replace(/,/g,'.').replace(/m/g,'').trim();let v=NaN;if(/^[\d.+\-*/() ]+$/.test(raw))try{v=Function(`return(${raw})`)()}catch(e){}
+ const raw=String(ed.value).trim();let v=parseLen(raw);
  const[id,k,i]=ed.dataset.key.split(':'),o=get(id);if(!o)return;
  if(raw===''){if(o.locks){push();delete o.locks[k==='e'?i:k];refresh()}return}
  if(!(v>0))return;push();
@@ -571,7 +585,7 @@ $('#bSvg').onclick=()=>{if(objs.length)dl(new Blob([svgString().str],{type:'imag
 $('#bPng').onclick=()=>{if(!objs.length)return;const{s,bw,bh,str}=svgString(),img=new Image();
  img.onload=()=>{const c=document.createElement('canvas');c.width=Math.round(bw*s);c.height=Math.round(bh*s);c.getContext('2d').drawImage(img,0,0);c.toBlob(b=>dl(b,'floorplan.png'))};
  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(str)};
-$('#bJson').onclick=()=>dl(new Blob([JSON.stringify({plonk:2,objs},null,1)],{type:'application/json'}),'floorplan.json');
+$('#bJson').onclick=()=>dl(new Blob([JSON.stringify({plonk:2,objs,u:unit},null,1)],{type:'application/json'}),'floorplan.json');
 $('#bLoad').onclick=()=>$('#file').click();
 $('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());push();objs=d.objs||[];sel=null;fit();inspector()}catch(err){alert('Not a Plonk file')}e.target.value=''};
 $('#bClear').onclick=()=>{if(objs.length&&!confirm('Start a new empty plan? (Undo still works)'))return;push();objs=[];sel=null;refresh()};
@@ -584,6 +598,10 @@ $('#bHelp').onclick=e=>{e.stopPropagation();toggleHelp()};$('#bHelp').onpointerd
 $('#bSnap').onclick=()=>{snap=!snap;$('#bSnap').classList.toggle('on',snap);render()};
 document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{draftKind='room';setTool(b.dataset.tool)});
 addEventListener('resize',render);
+function setUnit(u){if(!({m:1,cm:1,ft:1,in:1})[u])return;const cw=parseLen($('#cW').value),cd=parseLen($('#cD').value);unit=u;localStorage.plonkUnit=u;
+ GRID=imp()?IN:0.05;$('#unitSel').value=u;$('#lW').textContent='W '+UL();$('#lD').textContent='D '+UL();if(cw>0)$('#cW').value=valIn(cw);if(cd>0)$('#cD').value=valIn(cd);
+ document.querySelectorAll('#pal button').forEach(b=>{const p=PRESETS[+b.dataset.p];b.title=`${fmt(p[1])} × ${fmt(p[2])}`});inspector();render();bgUI&&bg&&bgUI()}
+$('#unitSel').onchange=e=>setUnit(e.target.value);
 
 // ---------- photo underlay ----------
 function bgUI(){const b=$('#bgBox');
@@ -602,8 +620,8 @@ function saveBg(){try{if(bg)localStorage.plonkBg=JSON.stringify(bg);else delete 
 function bgScaleSvg(s){if(tool!=='bgscale'||!bgPts.length)return'';const a=bgPts[0];
  return`<path d="M${a.x} ${a.y}L${cursor.x} ${cursor.y}" stroke="#e8710a" stroke-width="2" ${NS}/><circle cx="${a.x}" cy="${a.y}" r="${4/s}" fill="#e8710a"/>`}
 function bgClick(p){bgPts.push({x:p.x,y:p.y});if(bgPts.length<2)return render();
- const[a,b]=bgPts;bgPts=[];const d=Math.hypot(b.x-a.x,b.y-a.y),t=prompt(`Real length of that line in metres (now ${fmt(d)})`,'');
- const v=parseFloat(String(t||'').replace(',','.'));
+ const[a,b]=bgPts;bgPts=[];const d=Math.hypot(b.x-a.x,b.y-a.y),t=prompt(`Real length of that line (now ${fmt(d)}) — e.g. 3.2, 320cm, 10'6"`,'');
+ const v=parseLen(t);
  if(v>0&&d>1e-6){const f=v/d;bg.x=r4(a.x+(bg.x-a.x)*f);bg.y=r4(a.y+(bg.y-a.y)*f);bg.w=r4(bg.w*f);bg.h=r4(bg.h*f);saveBg()}
  setTool('select');bgUI()}
 $('#bgFile').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const img=new Image(),u=URL.createObjectURL(f);
@@ -620,17 +638,17 @@ if(bg)setBgURL(bg.src);bgUI();
 const b64u={enc:u=>{let s='';for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},
  dec:s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))};
 const pipe=(data,T)=>new Response(new Blob([data]).stream().pipeThrough(T));
-async function packPlan(){return b64u.enc(new Uint8Array(await pipe(JSON.stringify({plonk:2,objs}),new CompressionStream('deflate-raw')).arrayBuffer()))}
+async function packPlan(){return b64u.enc(new Uint8Array(await pipe(JSON.stringify({plonk:2,objs,u:unit}),new CompressionStream('deflate-raw')).arrayBuffer()))}
 async function unpackPlan(t){return JSON.parse(await pipe(b64u.dec(t),new DecompressionStream('deflate-raw')).text())}
 $('#bShare').onclick=async()=>{if(!objs.length)return;const url=location.origin+location.pathname+'#p='+await packPlan(),b=$('#bShare');
  try{await navigator.clipboard.writeText(url);b.textContent='✓ Link copied'+(bg?' (photo not included)':'');setTimeout(()=>b.textContent='🔗 Copy share link',2500)}catch(e){prompt('Copy this link',url)}};
 async function loadFromHash(){const m=location.hash.match(/^#p=([\w-]+)/);if(!m)return;
- try{const d=await unpackPlan(m[1]);if(!Array.isArray(d.objs))throw 0;if(objs.length)push();objs=d.objs;sel=null;fit();inspector()}catch(e){alert('That share link looks broken')}
+ try{const d=await unpackPlan(m[1]);if(!Array.isArray(d.objs))throw 0;if(objs.length)push();objs=d.objs;if(d.u)setUnit(d.u);sel=null;fit();inspector()}catch(e){alert('That share link looks broken')}
  history.replaceState(null,'',location.pathname+location.search)}
 addEventListener('hashchange',loadFromHash);
 // old saves: give loose furniture a room
 objs.forEach(o=>{if(isItem(o)&&o.room===undefined)assignRoom(o)});
 $('#bDims').classList.add('on');$('#bSnap').classList.add('on');
-setTool('select');inspector();loadFromHash();
+setUnit(unit);setTool('select');inspector();loadFromHash();
 </script>
 </body></html>
