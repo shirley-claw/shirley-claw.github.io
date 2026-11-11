@@ -67,15 +67,16 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 #out{display:flex;flex-direction:column;gap:26px;align-items:center}
 .page{width:100%;max-width:620px;aspect-ratio:210/297;background:#fff;box-shadow:0 1px 2px #0002,0 14px 40px -12px #4a35204d;display:flex;flex-direction:column;overflow:hidden;position:relative}
 .page.land{aspect-ratio:297/210;max-width:880px}
-.page.two{display:grid;grid-template-rows:1fr 1fr}
+.page.duo{display:grid;grid-template-rows:1fr 1fr}
 .page.four{display:grid;grid-template:1fr 1fr/1fr 1fr}
-.page.two>.sheet+.sheet,.page.four>.sheet:nth-child(n+3){border-top:1px dashed #0003}
+.page.duo>.sheet+.sheet,.page.four>.sheet:nth-child(n+3){border-top:1px dashed #0003}
 .page.four>.sheet:nth-child(even){border-left:1px dashed #0003}
 
 /* ===== sheet base ===== */
 .sheet{--paper:#fff;--ink:#222;--mut:#888;--acc:#d84315;--line:#ccc;--we:var(--acc);--fh:Inter,sans-serif;--fb:Inter,sans-serif;--fn:var(--fh);--hw:800;
   --gridbg:var(--line);--gap:1px;--cell:var(--paper);--hdcell:var(--paper);--rad:0px;--webg:var(--cell);--hol:color-mix(in srgb,var(--acc) 12%,var(--cell));--off:.25;
-  flex:1;min-height:0;min-width:0;position:relative;container-type:inline-size;background:var(--paper);color:var(--ink);font-family:var(--fb);overflow:hidden;display:flex;flex-direction:column;padding:6cqw}
+  flex:1;min-height:0;min-width:0;position:relative;container-type:inline-size;background:var(--paper);color:var(--ink);font-family:var(--fb);overflow:hidden;display:flex;flex-direction:column}
+.in{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;padding:6cqw;position:relative}
 .hdr{display:flex;align-items:baseline;gap:2.5cqw;margin:0 0 2.6cqw;font-family:var(--fh);font-weight:var(--hw)}
 .hdr .mn{font-size:var(--hs,8.5cqw);line-height:.95;letter-spacing:var(--hls,-.02em);text-transform:var(--htt,none);font-style:var(--hst,normal)}
 .hdr .yr{margin-left:auto;font-size:var(--ys,3.6cqw);color:var(--acc);font-family:var(--fn);font-weight:700}
@@ -95,7 +96,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .ph img{width:100%;height:100%;object-fit:cover;display:block;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 .ph .phx{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;background:var(--phx,linear-gradient(135deg,color-mix(in srgb,var(--acc) 30%,var(--paper)),color-mix(in srgb,var(--acc) 8%,var(--paper))))}
 .ph .phx em{font:var(--hw) 30cqw/1 var(--fh);font-style:normal;color:var(--paper);opacity:.45}
-.ph .phx span{position:absolute;bottom:4%;font:600 12px Inter;color:var(--ink);background:#fffc;padding:4px 10px;border-radius:99px}
+.ph .phx span{position:absolute;bottom:4%;font:600 12px Inter;color:#222;background:#fffd;padding:4px 10px;border-radius:99px}
 .ph.drag{outline:4px solid #c2410c;outline-offset:-4px}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:5cqw 4cqw 2.6cqw;font:var(--capf,italic 500 2.6cqw var(--fh));color:#fff;background:linear-gradient(transparent,#0008);pointer-events:none}
 .holes{position:absolute;top:2.2cqw;left:0;right:0;display:flex;justify-content:center;gap:8cqw;z-index:2}
@@ -103,13 +104,15 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 
 /* wall */
 .wall .ph{margin:-6cqw -6cqw 4cqw;height:var(--phh,52%)}
-.land .wall{flex-direction:row;gap:5cqw}.land .wall .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,50%)}
+.land .wall>.in{flex-direction:row;gap:5cqw}.land .wall .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,50%)}
 .land .wall .col{flex:1;display:flex;flex-direction:column;min-width:0}
 .wall .col{flex:1;display:flex;flex-direction:column;min-height:0}
 /* flip */
-.flip{flex-direction:row;gap:4cqw;padding:5cqw 5cqw 4.5cqw}
+.flip>.in{flex-direction:row;gap:4cqw;padding:5cqw 5cqw 4.5cqw}
 .flip .ph{width:52%;height:auto;margin:-5cqw 0 -4.5cqw -5cqw}
-.flip .col{flex:1;display:flex;flex-direction:column;min-width:0}
+.flip .col{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
+.land .flip>.in{flex-direction:column;gap:0}.land .flip .ph{width:auto;height:var(--phh,48%);margin:-5cqw -5cqw 3cqw}.land .flip .hdr{margin-top:0}
+.page.land.duo{grid-template-rows:none;grid-template-columns:1fr 1fr}.page.land.duo>.sheet+.sheet{border-top:0;border-left:1px dashed #0003}
 .flip .hdr{margin-top:3cqw}.flip .grid>div{font-size:1.5cqw;padding:.6cqw .8cqw}.flip .grid>.d b{font-size:2.6cqw}.flip .grid>.d i{font-size:1.3cqw}.flip .grid>.hd{font-size:1.3cqw}
 /* year & poster */
 .year{flex:1;display:grid;grid-template-columns:repeat(var(--yc,3),1fr);gap:3.2cqw 3.5cqw;align-content:space-evenly}
@@ -119,9 +122,13 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .mini td.we{color:var(--we)}.mini td.hol{background:color-mix(in srgb,var(--acc) 25%,transparent);border-radius:40%}.mini td.wkn{color:var(--mut);font-size:1.3cqw;opacity:.7}
 .poster .ph{margin:-6cqw -6cqw 4cqw;height:var(--phh,48%)}
 .poster .ph .ttl{position:absolute;left:5cqw;bottom:3cqw;font:var(--hw) 13cqw/1 var(--fh);color:#fff;text-shadow:0 2px 20px #0006;pointer-events:none;font-style:var(--hst,normal)}
-.land .poster{flex-direction:row;gap:5cqw}.land .poster .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,45%)}
+.flip .hdr .mn,.flip .hdr .mnum{font-size:6.5cqw}.t-pop.flip .hdr .mn,.t-pop.flip .hdr .mnum{font-size:8cqw}.hdr{flex-wrap:wrap}.hdr .mn{white-space:nowrap}
+.yr .hdr .mn{font-size:min(var(--hs,8.5cqw),10cqw)}.land .yr .hdr .mn{font-size:5.5cqw}.land .year{gap:1.6cqw 3cqw}
+.land .mini h3{font-size:1.75cqw}.land .mini table{font-size:1.2cqw}.land .mini th{font-size:1cqw}.land .mini td{padding:.15cqw 0}.land .mini td.wkn{font-size:.9cqw}
+.poster .phx span{bottom:auto;top:4%}
+.land .poster>.in{flex-direction:row;gap:5cqw}.land .poster .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,45%)}
 /* daily */
-.day{padding:0;text-align:center}
+.day{text-align:center}.day>.in{padding:0}
 .day .band{background:var(--band,var(--acc));color:var(--bandink,#fff);font:var(--hw) 7cqw var(--fh);padding:9cqw 4cqw 3cqw;text-transform:var(--htt,uppercase);letter-spacing:.06em;font-style:var(--hst,normal)}
 .day .band small{display:block;font:600 3.6cqw var(--fb);opacity:.8;letter-spacing:.2em;margin-top:1cqw}
 .day .num{font:var(--dw2,800) 46cqw/1 var(--fn);margin:4cqw 0 0;letter-spacing:-.04em}
@@ -148,11 +155,12 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .t-classic .grid>div{font-size:2.2cqw}
 .t-nordic{--paper:#f6f5f0;--ink:#3d4a45;--mut:#8d9993;--acc:#6f9179;--line:#dfe2db;--fh:Jost,sans-serif;--fb:Jost,sans-serif;--hw:300;--htt:uppercase;--hls:.25em;--hs:6.5cqw;--gap:0;--gridbg:transparent;--gb:0;--dw:300;--ds:3.4cqw;--hol:#e7eee8;--hdal:center;--mls:.2em}
 .t-nordic .grid>.d{text-align:center;border-radius:50%/40%}.t-nordic .grid>.hd{font-weight:500}
+.t-pastel .notes{--line:hsl(var(--h) 40% 85%)}
 .t-pastel{--paper:#fff;--ink:hsl(var(--h) 30% 28%);--mut:hsl(var(--h) 20% 55%);--acc:hsl(var(--h) 60% 58%);--line:transparent;--fh:Fredoka,sans-serif;--fb:Fredoka,sans-serif;--hw:700;--gap:1cqw;--gridbg:transparent;--gb:0;--cell:hsl(var(--h) 75% 95%);--webg:hsl(var(--h) 70% 89%);--hdcell:transparent;--rad:1.6cqw;--hol:hsl(calc(var(--h) + 40) 85% 86%);--offcell:#fafafa;--hdal:center}
 .t-retro{--paper:#1a1033;--ink:#f6e8ff;--mut:#a98bd6;--acc:#ff4fd8;--we:#29e6ff;--line:#ff4fd866;--fh:'Bebas Neue',sans-serif;--fb:'Space Grotesk',sans-serif;--fn:'Space Grotesk',sans-serif;--hw:400;--hs:12cqw;--hls:.02em;--cell:#1d1238;--hdcell:#24164a;--webg:#211544;--hol:#3b1450;--gridbg:#ff4fd855;--phbg:#2a1550;--band:linear-gradient(#ff8a3d,#ff4fd8 60%,#7b2cff);
   background:radial-gradient(120% 60% at 50% 110%,#ff4fd833,transparent 60%),#1a1033}
 .t-retro .hdr .mn,.t-retro .poster .ttl{background:linear-gradient(#ffd23f,#ff4fd8 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.t-retro .ph .phx{background:linear-gradient(#2a0f4f 0 55%,transparent 55%),repeating-linear-gradient(90deg,#ff4fd855 0 1px,transparent 1px 8%),repeating-linear-gradient(#ff4fd855 0 1px,transparent 1px 12%),linear-gradient(#ff4fd8,#ff8a3d 55%,#1a1033 55%)}
+.t-retro .ph .phx{background:radial-gradient(circle at 50% 78%,#ffd23f 0 14%,transparent 14.3%),linear-gradient(#2a0f4f,#7b2cff 45%,#ff4fd8 75%,#ff8a3d)}
 .t-mono{--paper:#fff;--ink:#1a1a1a;--mut:#777;--acc:#1a1a1a;--we:#1a1a1a;--line:#999;--fh:'Space Mono',monospace;--fb:'Space Mono',monospace;--hw:700;--htt:lowercase;--hs:7cqw;--gap:0;--gridbg:transparent;--hol:repeating-linear-gradient(45deg,#eee 0 3px,#fff 3px 6px)}
 .t-mono .grid>div{border:1px dashed #999;margin:-.5px}.t-mono .grid>.d.we b::after{content:"*"}.t-mono .hdr .yr{color:#777}
 .t-kids{--paper:#fffdf3;--ink:#2d2a6e;--mut:#6f6aa8;--acc:#ff5c8a;--we:#ff5c8a;--line:#2d2a6e;--fh:Fredoka,sans-serif;--fb:Fredoka,sans-serif;--hw:700;--hs:10cqw;--gap:.8cqw;--gridbg:transparent;--gb:0;--rad:2cqw;--ds:4cqw;--hdal:center;--hol:#fff0a8}
@@ -163,21 +171,35 @@ input[type=range]{width:100%;accent-color:var(--acc)}
   background:radial-gradient(circle at 100% 0,#5b7f4a1a 0 18%,transparent 18.2%),radial-gradient(circle at 0 100%,#a0563b14 0 14%,transparent 14.2%),#f7f3ea}
 .t-botanical .grid>div{font-size:2.2cqw}.t-botanical .wall .ph{margin:0 0 4cqw}.t-botanical.flip .ph,.t-botanical .poster .ph{margin:0 0 4cqw}
 .t-midnight{--paper:#0f1626;--ink:#efe6cf;--mut:#8f8a7a;--acc:#d4af37;--line:#d4af3740;--fh:'Cormorant Garamond',serif;--fb:'Cormorant Garamond',serif;--hw:700;--hst:italic;--hs:10cqw;--cell:#121a2c;--hdcell:#0f1626;--webg:#16203a;--hol:#2a2614;--gridbg:#d4af3733;--ds:3.4cqw;--band:#d4af37;--bandink:#0f1626;--phbg:#1a2236}
+.t-midnight .ph .phx{background:radial-gradient(circle at 70% 30%,#f5e7b8 0 6%,transparent 6.4%),linear-gradient(#1a2a4a,#0f1626)}.t-midnight .ph .phx em{color:#d4af37;opacity:.35}
 .t-midnight .grid>div{font-size:2.2cqw}.t-midnight .grid{outline:1px solid #d4af3780;outline-offset:1cqw}
 .t-hand{--paper:#fdfaf2;--ink:#22305c;--mut:#7680a3;--acc:#e0533d;--line:#22305c55;--fh:Caveat,cursive;--fb:Caveat,cursive;--hw:700;--hs:12cqw;--ds:3.8cqw;--gap:0;--gridbg:transparent;--gb:0;--hol:#ffe9a8;--hdal:center}
-.t-hand .grid>div{border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);border-radius:2px 40% 3px 30%/40% 3px 30% 2px;font-size:2.6cqw}.t-hand .grid>.hd{font-size:2.8cqw;text-transform:none;letter-spacing:0}.t-hand .grid>.d i{font-size:2.4cqw}
+.t-hand .grid>div{border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);border-radius:2px 40% 3px 30%/40% 3px 30% 2px;font-size:2.6cqw}.t-hand .grid>.hd{border:0!important;font-size:2.8cqw;text-transform:none;letter-spacing:0}.t-hand .grid>.d i{font-size:2.4cqw}
 .t-hand .ph{transform:rotate(-1.2deg);box-shadow:0 .6cqw 1.6cqw #0003;border:2cqw solid #fff}.t-hand .wall .ph{margin:0 0 4cqw}.t-hand.flip .ph{margin:0}.t-hand .poster .ph{margin:0 0 4cqw}
-.t-pop{--paper:#fff;--ink:#141414;--mut:#666;--acc:hsl(var(--h) 80% 50%);--line:#e6e6e6;--fh:'Bebas Neue',sans-serif;--fb:Inter,sans-serif;--fn:'Bebas Neue',sans-serif;--hw:400;--hs:16cqw;--hls:0;--ds:4.6cqw;--dw:400;--mnum:block;--webg:hsl(var(--h) 80% 96%);--hol:hsl(var(--h) 85% 88%)}
+.t-pop{--paper:#fff;--ink:#141414;--mut:#666;--acc:hsl(var(--h) 80% 50%);--line:#e6e6e6;--fh:'Bebas Neue',sans-serif;--fb:Inter,sans-serif;--fn:'Bebas Neue',sans-serif;--hw:400;--hs:12cqw;--hls:0;--ds:4.6cqw;--dw:400;--mnum:block;--webg:hsl(var(--h) 80% 96%);--hol:hsl(var(--h) 85% 88%)}
 .t-pop .hdr{background:var(--acc);color:#fff;margin:-6cqw -6cqw 3cqw;padding:5cqw 6cqw 2cqw}.t-pop .hdr .yr,.t-pop .hdr .mnum{color:#fff;opacity:.9}
 .t-pop.wall .hdr,.t-pop.flip .hdr{margin:0 0 2.5cqw;padding:2cqw 3cqw 1cqw}.t-pop.flip .hdr{margin-top:3cqw}
 .t-pop .grid>.hd{background:#141414;color:#fff}
 
+body.bare .side,body.bare .bar{display:none}body.bare .app{display:block}body.bare .view{padding:10px}
+/* white background: no solid fills to print */
+.sheet.wbg{--paper:#fff;--cell:#fff;--hdcell:#fff;--offcell:#fff;--webg:#fff;--hol:color-mix(in srgb,var(--acc) 10%,#fff);--phbg:#fff;background:#fff!important}
+.wbg .ph .phx{background:#fff;border:1px dashed color-mix(in srgb,var(--acc) 40%,#fff)}.wbg .ph .phx em{color:var(--acc);opacity:.18}
+.wbg.t-retro{--ink:#2a1550;--mut:#8a6bb8;--we:#0aa6c2;--hdink:#8a6bb8}.wbg.t-midnight{--ink:#0f1626;--mut:#7a7466}
+.wbg.t-pop .hdr{background:none;color:var(--ink);border-bottom:1.2cqw solid var(--acc)}.wbg.t-pop .hdr .yr,.wbg.t-pop .hdr .mnum{color:var(--acc)}.wbg.t-pop .grid>.hd{background:#fff;color:var(--ink);border-bottom:2px solid var(--ink)}
+.wbg.t-kids .d{background:#fff!important}.wbg.t-kids .d.we b{color:var(--we)}
+.wbg.day .band{background:none;color:var(--acc);border-bottom:.6cqw solid var(--acc);margin:0 6cqw}.wbg.day .band small{color:var(--ink)}
+.wbg .mini td.hol{background:none;outline:1px solid var(--acc)}
+.paper{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 8px}
+.paper .opt{justify-content:center;font-weight:700;font-size:13px}.paper .opt svg{flex:0 0 auto;height:22px;width:auto}
+.paper-sec .chk{margin:2px 0 0}
 @media print{
   @page{size:A4 portrait;margin:0}
   html,body{background:#fff}.side,.bar,.noprint,.ph .phx span{display:none!important}.app{display:block}.view{padding:0}
-  #out{gap:0;display:block}.page{box-shadow:none;max-width:none;width:210mm;height:297mm;aspect-ratio:auto;break-after:page;page-break-after:always}
-  .page.land{width:297mm;height:210mm}.page:last-child{break-after:auto}
-  .page.two>.sheet+.sheet,.page.four>.sheet{border-color:#0002}
+  #out{gap:0;display:block}.page,.page.land{box-shadow:none;max-width:none;width:100%;height:100vh;aspect-ratio:auto;margin:0;break-after:page;page-break-after:always;break-inside:avoid}
+  html,body,.app,.view,#out{width:100%;margin:0;padding:0}.page:last-child{break-after:auto}
+  .t-retro .hdr .mn,.t-retro .poster .ttl{background:none;color:#ff4fd8}
+  .page.duo>.sheet+.sheet,.page.four>.sheet{border-color:#0002}
 }
 </style>
 </head><body>
@@ -186,6 +208,11 @@ input[type=range]{width:100%;accent-color:var(--acc)}
   <div class="brand"><svg viewBox="0 0 34 34"><rect x="3" y="6" width="28" height="25" rx="4" fill="#c2410c"/><rect x="3" y="12" width="28" height="19" rx="2" fill="#fffdf9"/><path d="M10 3v6M24 3v6" stroke="#2a2420" stroke-width="2.4" stroke-linecap="round"/><text x="17" y="27.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="13" fill="#2a2420">17</text></svg><h1>Tear<span>off</span></h1></div>
   <p class="sub">Photo calendars, desk flips, tear-off pads. Print on A4 at home. Free, no sign-up, your photos never leave the browser.</p>
 
+  <div class="sec paper-sec"><h2>Paper · A4</h2><div class="paper">
+    <label class="opt"><input type="radio" name="orient" value="portrait" data-k="orient"><svg viewBox="0 0 17 22"><rect class="o" x="1" y="1" width="15" height="20" rx="1"/></svg>Portrait</label>
+    <label class="opt"><input type="radio" name="orient" value="landscape" data-k="orient"><svg viewBox="0 0 22 17"><rect class="o" x="1" y="1" width="20" height="15" rx="1"/></svg>Landscape</label></div>
+    <label class="chk"><input type="checkbox" data-k="wbg"> White background <span class="hint">· no solid colour fills, saves ink</span></label>
+    <div class="hint" id="orhint"></div></div>
   <div class="sec"><h2><i>1</i>Format</h2><div class="opts" id="formats"></div></div>
   <div class="sec"><h2><i>2</i>Style</h2><div class="themes" id="themes"></div></div>
   <div class="sec" id="phsec"><h2><i>3</i>Photos <span class="hint" id="phhint"></span></h2>
@@ -206,11 +233,10 @@ input[type=range]{width:100%;accent-color:var(--acc)}
   </div>
   <div class="sec"><h2><i>5</i>Details</h2>
     <div class="two">
-      <div><label class="l">Paper</label><select data-k="orient"><option value="portrait">A4 portrait</option><option value="landscape">A4 landscape</option></select></div>
       <div><label class="l">Week starts</label><select data-k="wstart"><option value="1">Monday</option><option value="0">Sunday</option></select></div>
+      <div><label class="l">Language</label><select data-k="lang" id="lang"></select></div>
     </div>
-    <label class="l">Language</label><select data-k="lang" id="lang"></select>
-    <label class="chk"><input type="checkbox" data-k="wknum"> Week numbers</label>
+        <label class="chk"><input type="checkbox" data-k="wknum"> Week numbers</label>
     <label class="chk"><input type="checkbox" data-k="notes"> Notes lines</label>
     <label class="chk"><input type="checkbox" data-k="spill"> Show neighbour-month days</label>
     <label class="chk"><input type="checkbox" data-k="holes"> Punch-hole marks (flip &amp; daily)</label>
@@ -246,13 +272,15 @@ $('lang').innerHTML=LANGS.map(([c,n])=>`<option value="${c}">${n}</option>`).joi
 const now=new Date();
 const old=JSON.parse(localStorage.getItem('tearoff')||'{}');
 const S=Object.assign({from:`${now.getFullYear()+(now.getMonth()>=10?1:0)}-${now.getMonth()>=10?'01':String(now.getMonth()+1).padStart(2,'0')}`,count:12,format:'wall',theme:'paper',orient:'portrait',
-  wstart:/US|CA|BR|JP/.test(navigator.language)?'0':'1',lang:LANGS.some(l=>l[0]===nav)?nav:'en',wknum:false,notes:true,spill:true,holes:true,caps:false,phsize:52,ev:''},
+  wstart:/US|CA|BR|JP/.test(navigator.language)?'0':'1',lang:LANGS.some(l=>l[0]===nav)?nav:'en',wknum:false,notes:true,spill:true,holes:true,wbg:false,caps:false,phsize:52,ev:''},
   old.layout?{from:old.from,count:old.count,format:old.layout==='year'?'year':'month',orient:old.orient,wstart:old.wstart,lang:old.lang,wknum:old.wknum,notes:old.notes,spill:old.spill,ev:old.ev}:{},
-  JSON.parse(localStorage.getItem('tearoff2')||'{}'));
+  JSON.parse(localStorage.getItem('tearoff2')||'{}'),
+  Object.fromEntries([...new URLSearchParams(location.search)].map(([k,v])=>[k,v==='true'?true:v==='false'?false:v])));
 document.querySelectorAll('[data-k]').forEach(e=>{const k=e.dataset.k;
   if(e.type==='radio')e.checked=S[k]===e.value;else if(e.type==='checkbox')e.checked=!!S[k];else e.value=S[k];
   e.addEventListener('input',()=>{S[k]=e.type==='checkbox'?e.checked:e.value;localStorage.setItem('tearoff2',JSON.stringify(S));draw()})});
 $('print').onclick=()=>window.print();
+if(new URLSearchParams(location.search).has('bare'))document.body.classList.add('bare');
 
 /* ---- photos: IndexedDB, keyed by slot index ---- */
 const P={};
@@ -285,7 +313,7 @@ const nMonths=()=>Math.max(1,Math.min(24,+S.count||12));
 const nSlots=()=>S.format==='poster'?Math.ceil(nMonths()/12):fmt()[4]?nMonths():0;
 
 function draw(){
-  const lang=S.lang,ws=+S.wstart,F=S.format,land=S.orient==='landscape'&&!['flip','daily'].includes(F);
+  const lang=S.lang,ws=+S.wstart,F=S.format,land=S.orient==='landscape'&&F!=='daily';
   let st=$('pgsz');if(!st){st=document.createElement('style');st.id='pgsz';document.head.append(st)}
   st.textContent=`@media print{@page{size:A4 ${land?'landscape':'portrait'};margin:0}}`;
   const [fy,fm]=(S.from||`${now.getFullYear()}-01`).split('-').map(Number);
@@ -297,7 +325,9 @@ function draw(){
   const weeksOf=m=>{const d=new Date(m);d.setDate(1-((m.getDay()-ws+7)%7));const rows=[];do{const r=[];for(let i=0;i<7;i++){r.push(new Date(d));d.setDate(d.getDate()+1)}rows.push(r)}while(d.getMonth()===m.getMonth());return rows};
   const we=d=>d.getDay()===0||d.getDay()===6, wk=r=>isoWeek(r[(11-ws)%7]);
   const hue=m=>(m.getMonth()*31+345)%360;
-  const sheet=(cls,m,inner)=>`<div class="sheet ${T} ${cls}" style="--h:${hue(m)};--phh:${S.phsize}%">${S.holes&&/flip|day/.test(cls)?'<div class="holes"><i></i><i></i></div>':''}${inner}</div>`;
+  const W=S.wbg?' wbg':'';
+  $('orhint').textContent=F==='daily'&&S.orient==='landscape'?'Tear-off daily always prints portrait (4 cards per sheet).':'';
+  const sheet=(cls,m,inner)=>`<div class="sheet ${T}${W} ${cls}" style="--h:${hue(m)};--phh:${S.phsize}%">${S.holes&&/flip|day/.test(cls)?'<div class="holes"><i></i><i></i></div>':''}<div class="in">${inner}</div></div>`;
   const hdr=(m,yr=true)=>`<div class="hdr"><span class="mnum">${String(m.getMonth()+1).padStart(2,'0')}</span><span class="mn">${esc(cap(mName.format(m)))}</span>${yr?`<span class="yr">${m.getFullYear()}</span>`:''}</div>`;
   const photo=(i,m,extra='')=>{const p=P[i];return `<div class="ph" data-slot="${i}">${p?`<img src="${p.url}" style="object-position:${p.x}% ${p.y}%" draggable="false">`:`<div class="phx"><em>${extra?'':String(m.getMonth()+1).padStart(2,'0')}</em><span>Click or drop a photo</span></div>`}${S.caps&&p?.cap?`<div class="cap">${esc(p.cap)}</div>`:''}${extra}</div>`};
   const grid=m=>{const rows=weeksOf(m);
@@ -312,7 +342,7 @@ function draw(){
   let pages=[];
   if(F==='wall')pages=months.map((m,i)=>page(sheet('wall',m,photo(i,m)+`<div class="col">${hdr(m)}${grid(m)}${notes}</div>`)));
   else if(F==='month')pages=months.map(m=>page(sheet('plan',m,hdr(m)+grid(m)+notes)));
-  else if(F==='flip'){const cards=months.map((m,i)=>sheet('flip',m,photo(i,m)+`<div class="col">${hdr(m)}${grid(m)}</div>`));for(let i=0;i<cards.length;i+=2)pages.push(page(cards[i]+(cards[i+1]||'<div class="sheet"></div>'),'two'))}
+  else if(F==='flip'){const cards=months.map((m,i)=>sheet('flip',m,photo(i,m)+`<div class="col">${hdr(m)}${grid(m)}</div>`));for(let i=0;i<cards.length;i+=2)pages.push(page(cards[i]+(cards[i+1]||'<div class="sheet"></div>'),'duo'))}
   else if(F==='year'||F==='poster'){for(let p=0;p<n;p+=12){const ch=months.slice(p,p+12),y1=ch[0].getFullYear(),y2=ch.at(-1).getFullYear(),ttl=y1===y2?y1:y1+' – '+y2;
       const minis=`<div class="year" style="--yc:${land?(F==='poster'?3:4):(F==='poster'?4:3)}">${ch.map(mini).join('')}</div>`;
       pages.push(page(F==='year'?sheet('yr',ch[0],`<div class="hdr"><span class="mn">${ttl}</span></div>`+minis):sheet('poster',ch[0],photo(p/12,ch[0],`<div class="ttl">${ttl}</div>`)+`<div class="col" style="flex:1;display:flex;min-width:0">${minis}</div>`)))}}
@@ -322,7 +352,7 @@ function draw(){
       r.map(x=>`<div class="r${we(x)?' we':''}${x<months[0]||x>=end?' off':''}"><div class="dn"><b>${x.getDate()}</b><small>${esc(dShort.format(x))}</small></div><div class="ln">${ev(x).map(e=>`<i>${esc(e)}</i>`).join('')}</div></div>`).join('')+'</div>'+notes)));d.setDate(d.getDate()+7)}}
   else if(F==='daily'){const end=new Date(fy,fm-1+n,1),cards=[];
     for(const d=new Date(months[0]);d<end;d.setDate(d.getDate()+1)){const e=ev(d),y0=new Date(d.getFullYear(),0,1),doy=Math.round((d-y0)/864e5)+1,len=new Date(d.getFullYear(),1,29).getDate()===29?366:365;
-      cards.push(`<div class="sheet ${T} day${we(d)?' we':''}${e.length?' hol':''}" style="--h:${hue(d)}">${S.holes?'<div class="holes"><i></i><i></i></div>':''}<div class="band">${esc(cap(mName.format(d)))}<small>${d.getFullYear()}</small></div><div class="num">${d.getDate()}</div><div class="wd">${esc(cap(dLong.format(d)))}</div><div class="evs">${e.map(x=>`<b>${esc(x)}</b>`).join('')}</div><div class="ft"><span>${S.wknum?'W'+isoWeek(d):''}</span><span>${doy} / ${len}</span></div></div>`)}
+      cards.push(`<div class="sheet ${T}${W} day${we(d)?' we':''}${e.length?' hol':''}" style="--h:${hue(d)}">${S.holes?'<div class="holes"><i></i><i></i></div>':''}<div class="in"><div class="band">${esc(cap(mName.format(d)))}<small>${d.getFullYear()}</small></div><div class="num">${d.getDate()}</div><div class="wd">${esc(cap(dLong.format(d)))}</div><div class="evs">${e.map(x=>`<b>${esc(x)}</b>`).join('')}</div><div class="ft"><span>${S.wknum?'W'+isoWeek(d):''}</span><span>${doy} / ${len}</span></div></div></div>`)}
     for(let i=0;i<cards.length;i+=4)pages.push(page(cards.slice(i,i+4).join('')+'<div class="sheet"></div>'.repeat(Math.max(0,4-cards.slice(i,i+4).length)),'four'))}
   $('out').innerHTML=pages.join('');
   $('fname').textContent=fmt()[1];$('pcount').textContent=`· ${pages.length} A4 page${pages.length>1?'s':''}${F==='flip'?' · cut along the dashes':F==='daily'?' · cut into 4 cards':''}`;
