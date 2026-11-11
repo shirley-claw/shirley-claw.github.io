@@ -17,8 +17,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Shirley Claw", "item": "https://shirley-claw.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Tearoff", "item": "https://shirley-claw.github.io/tearoff/"}]}</script>
 <!-- seo:end -->
 
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=DM+Serif+Display:ital@0;1&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Fredoka:wght@500;700&family=Inter:wght@400;600;800&family=Jost:wght@300;500&family=Playfair+Display:ital,wght@0,700;1,700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="fonts/fonts.css" rel="stylesheet">
 <style>
 :root{--desk:#ebe5db;--card:#fffdf9;--line:#ddd5c8;--fg:#2a2420;--mut:#857a6e;--acc:#c2410c}
 *{box-sizing:border-box}html,body{margin:0;background:var(--desk);color:var(--fg);font:14px/1.45 Inter,system-ui,sans-serif}
@@ -75,7 +74,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 /* ===== sheet base ===== */
 .sheet{--paper:#fff;--ink:#222;--mut:#888;--acc:#d84315;--line:#ccc;--we:var(--acc);--fh:Inter,sans-serif;--fb:Inter,sans-serif;--fn:var(--fh);--hw:800;
   --gridbg:var(--line);--gap:1px;--cell:var(--paper);--hdcell:var(--paper);--rad:0px;--webg:var(--cell);--hol:color-mix(in srgb,var(--acc) 12%,var(--cell));--off:.25;
-  flex:1;min-height:0;min-width:0;position:relative;container-type:inline-size;background:var(--paper);color:var(--ink);font-family:var(--fb);overflow:hidden;display:flex;flex-direction:column}
+  flex:1;min-height:0;min-width:0;position:relative;container-type:inline-size;background:var(--paper);color:var(--ink);font-family:var(--fb);font-variant-numeric:lining-nums;overflow:hidden;display:flex;flex-direction:column}
 .in{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;padding:6cqw;position:relative}
 .hdr{display:flex;align-items:baseline;gap:2.5cqw;margin:0 0 2.6cqw;font-family:var(--fh);font-weight:var(--hw)}
 .hdr .mn{font-size:var(--hs,8.5cqw);line-height:.95;letter-spacing:var(--hls,-.02em);text-transform:var(--htt,none);font-style:var(--hst,normal)}
@@ -95,7 +94,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .ph{position:relative;overflow:hidden;background:var(--phbg,color-mix(in srgb,var(--acc) 18%,var(--paper)));border-radius:var(--phr,0);flex:0 0 auto}
 .ph img{width:100%;height:100%;object-fit:cover;display:block;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 .ph .phx{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;background:var(--phx,linear-gradient(135deg,color-mix(in srgb,var(--acc) 30%,var(--paper)),color-mix(in srgb,var(--acc) 8%,var(--paper))))}
-.ph .phx em{font:var(--hw) 30cqw/1 var(--fh);font-style:normal;color:var(--paper);opacity:.45}
+.ph .phx em{font:var(--hw) 30cqw/1 var(--fn);font-style:normal;color:var(--paper);opacity:.45}
 .ph .phx span{position:absolute;bottom:4%;font:600 12px Inter;color:#222;background:#fffd;padding:4px 10px;border-radius:99px}
 .ph.drag{outline:4px solid #c2410c;outline-offset:-4px}
 .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:5cqw 4cqw 2.6cqw;font:var(--capf,italic 500 2.6cqw var(--fh));color:#fff;background:linear-gradient(transparent,#0008);pointer-events:none}
@@ -115,26 +114,29 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .page.land.duo{grid-template-rows:none;grid-template-columns:1fr 1fr}.page.land.duo>.sheet+.sheet{border-top:0;border-left:1px dashed #0003}
 .flip .hdr{margin-top:3cqw}.flip .grid>div{font-size:1.5cqw;padding:.6cqw .8cqw}.flip .grid>.d b{font-size:2.6cqw}.flip .grid>.d i{font-size:1.3cqw}.flip .grid>.hd{font-size:1.3cqw}
 /* year & poster */
-.year{flex:1;display:grid;grid-template-columns:repeat(var(--yc,3),1fr);gap:3.2cqw 3.5cqw;align-content:space-evenly}
-.mini h3{margin:0 0 .9cqw;font:var(--hw) 2.5cqw var(--fh);text-transform:var(--htt,none);font-style:var(--hst,normal);letter-spacing:var(--mls,0);color:var(--ink)}
-.mini table{width:100%;border-collapse:collapse;font:1.75cqw var(--fb);text-align:center;table-layout:fixed}
-.mini th{color:var(--mut);font-weight:600;font-size:1.45cqw;padding-bottom:.3cqw}.mini td{padding:.28cqw 0;font-family:var(--fn)}
-.mini td.we{color:var(--we)}.mini td.hol{background:color-mix(in srgb,var(--acc) 25%,transparent);border-radius:40%}.mini td.wkn{color:var(--mut);font-size:1.3cqw;opacity:.7}
-.poster .ph{margin:-6cqw -6cqw 4cqw;height:var(--phh,48%)}
+.year{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--yc,3),1fr);gap:3.2cqw 3.5cqw;align-content:space-evenly;--ms:2.35cqw}
+.poster .year{--ms:1.75cqw;gap:2cqw 3cqw}.land .year{--ms:1.3cqw}.land .poster .year{--ms:1.05cqw}
+.mini h3{margin:0 0 .9cqw;font:var(--hw) calc(var(--ms,1.75cqw)*1.4) var(--fh);text-transform:var(--htt,none);font-style:var(--hst,normal);letter-spacing:var(--mls,0);color:var(--ink)}
+.mini table{width:100%;border-collapse:collapse;font:500 var(--ms,1.75cqw) var(--fb);text-align:center;table-layout:fixed}
+.mini th{color:var(--mut);font-weight:600;font-size:calc(var(--ms,1.75cqw)*.8);padding-bottom:.3cqw}.mini td{padding:.28cqw 0;font-family:var(--fn)}
+.mini td.we{color:var(--we)}.mini td.cur{background:var(--acc);color:var(--paper);border-radius:40%;font-weight:700}.wbg .mini td.cur{background:none;outline:1.5px solid var(--acc);color:var(--acc)}.mini td.hol{background:color-mix(in srgb,var(--acc) 25%,transparent);border-radius:40%}.mini td.wkn{color:var(--mut);font-size:1.3cqw;opacity:.7}
+.poster .ph{margin:-6cqw -6cqw 4cqw;height:calc(var(--phh,52%) * .72)}
 .poster .ph .ttl{position:absolute;left:5cqw;bottom:3cqw;font:var(--hw) 13cqw/1 var(--fh);color:#fff;text-shadow:0 2px 20px #0006;pointer-events:none;font-style:var(--hst,normal)}
 .flip .hdr .mn,.flip .hdr .mnum{font-size:6.5cqw}.t-pop.flip .hdr .mn,.t-pop.flip .hdr .mnum{font-size:8cqw}.hdr{flex-wrap:wrap}.hdr .mn{white-space:nowrap}
 .yr .hdr .mn{font-size:min(var(--hs,8.5cqw),10cqw)}.land .yr .hdr .mn{font-size:5.5cqw}.land .year{gap:1.6cqw 3cqw}
-.land .mini h3{font-size:1.75cqw}.land .mini table{font-size:1.2cqw}.land .mini th{font-size:1cqw}.land .mini td{padding:.15cqw 0}.land .mini td.wkn{font-size:.9cqw}
+.land .mini td{padding:.15cqw 0}
 .poster .phx span{bottom:auto;top:4%}
-.land .poster>.in{flex-direction:row;gap:5cqw}.land .poster .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:var(--phh,45%)}
+.land .poster>.in{flex-direction:row;gap:5cqw}.land .poster .ph{margin:-6cqw 0 -6cqw -6cqw;height:auto;width:calc(var(--phh,52%) * .8)}
 /* daily */
 .day{text-align:center}.day>.in{padding:0}
 .day .band{background:var(--band,var(--acc));color:var(--bandink,#fff);font:var(--hw) 7cqw var(--fh);padding:9cqw 4cqw 3cqw;text-transform:var(--htt,uppercase);letter-spacing:.06em;font-style:var(--hst,normal)}
 .day .band small{display:block;font:600 3.6cqw var(--fb);opacity:.8;letter-spacing:.2em;margin-top:1cqw}
-.day .num{font:var(--dw2,800) 46cqw/1 var(--fn);margin:4cqw 0 0;letter-spacing:-.04em}
+.day .num{font:var(--dw2,800) 48cqw/1.12 var(--fn);margin:3cqw 0 0;letter-spacing:-.04em}
+.day .mini{flex:0 0 auto;width:60%;margin:0 auto 2cqw;--ms:2.7cqw}.day .mini h3{display:none}
+.day .lines{flex:0 0 auto;margin:0 8cqw 2cqw;height:9.2cqw;background:repeating-linear-gradient(transparent 0 calc(4.6cqw - 1px),var(--line) calc(4.6cqw - 1px) 4.6cqw)}
 .day.we .num,.day.hol .num{color:var(--we)}
 .day .wd{font:700 6cqw var(--fh);text-transform:var(--htt,none);font-style:var(--hst,normal)}
-.day .evs{flex:1;padding:3cqw 7cqw;font-size:4.4cqw;display:flex;flex-direction:column;gap:1cqw;justify-content:center}
+.day .evs{flex:1 1 0;min-height:0;padding:1cqw 7cqw;font-size:4.6cqw;display:flex;flex-direction:column;gap:1cqw;justify-content:center}
 .day .evs b{font-weight:700;color:var(--acc)}
 .day .ft{display:flex;justify-content:space-between;font-size:3cqw;color:var(--mut);padding:0 6cqw 5cqw}
 /* week */
@@ -150,9 +152,9 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .t-swiss{--paper:#fff;--ink:#111;--mut:#111;--acc:#e10600;--line:#111;--fh:Inter,sans-serif;--fb:Inter,sans-serif;--hw:800;--hs:11cqw;--hls:-.05em;--mnum:block;--gap:0;--gridbg:transparent;--gb:0;--ds:4.2cqw;--dw:800;--webg:#fff;--hol:#ffe8e6}
 .t-swiss .grid>div{border-top:1.5px solid #111}.t-swiss .grid>.hd{border-top:4px solid #111;color:#111}
 .t-swiss .hdr{flex-direction:row-reverse;justify-content:flex-end}.t-swiss .hdr .yr{color:#111}
-.t-classic{--paper:#fbf8f1;--ink:#1d2a44;--mut:#6a7389;--acc:#8b1e2d;--line:#c9c2b0;--fh:'Playfair Display',serif;--fb:'Cormorant Garamond',serif;--fn:'Cormorant Garamond',serif;--hw:700;--hst:italic;--hdal:center;--ds:3.4cqw;--hs:9cqw}
+.t-classic{--paper:#fbf8f1;--ink:#1d2a44;--mut:#6a7389;--acc:#8b1e2d;--line:#c9c2b0;--fh:'Playfair Display',serif;--fb:'Cormorant Garamond',serif;--fn:'Playfair Display',serif;--hw:700;--hst:italic;--hdal:center;--ds:3.4cqw;--hs:9cqw}
 .t-classic .grid{outline:1px solid var(--ink);outline-offset:.8cqw}.t-classic .hdr{justify-content:center;flex-direction:column;align-items:center;gap:.5cqw}.t-classic .hdr .yr{margin:0;letter-spacing:.4em;font-size:2.6cqw}
-.t-classic .grid>div{font-size:2.2cqw}
+.t-classic .grid>div{font-size:2.2cqw}.t-classic .year,.t-midnight .year{--ms:2.05cqw}.t-classic .poster .year,.t-midnight .poster .year{--ms:1.55cqw}.t-classic .mini td,.t-midnight .mini td,.t-botanical .mini td{font-weight:700}
 .t-nordic{--paper:#f6f5f0;--ink:#3d4a45;--mut:#8d9993;--acc:#6f9179;--line:#dfe2db;--fh:Jost,sans-serif;--fb:Jost,sans-serif;--hw:300;--htt:uppercase;--hls:.25em;--hs:6.5cqw;--gap:0;--gridbg:transparent;--gb:0;--dw:300;--ds:3.4cqw;--hol:#e7eee8;--hdal:center;--mls:.2em}
 .t-nordic .grid>.d{text-align:center;border-radius:50%/40%}.t-nordic .grid>.hd{font-weight:500}
 .t-pastel .notes{--line:hsl(var(--h) 40% 85%)}
@@ -160,7 +162,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .t-retro{--paper:#1a1033;--ink:#f6e8ff;--mut:#a98bd6;--acc:#ff4fd8;--we:#29e6ff;--line:#ff4fd866;--fh:'Bebas Neue',sans-serif;--fb:'Space Grotesk',sans-serif;--fn:'Space Grotesk',sans-serif;--hw:400;--hs:12cqw;--hls:.02em;--cell:#1d1238;--hdcell:#24164a;--webg:#211544;--hol:#3b1450;--gridbg:#ff4fd855;--phbg:#2a1550;--band:linear-gradient(#ff8a3d,#ff4fd8 60%,#7b2cff);
   background:radial-gradient(120% 60% at 50% 110%,#ff4fd833,transparent 60%),#1a1033}
 .t-retro .hdr .mn,.t-retro .poster .ttl{background:linear-gradient(#ffd23f,#ff4fd8 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.t-retro .ph .phx{background:radial-gradient(circle at 50% 78%,#ffd23f 0 14%,transparent 14.3%),linear-gradient(#2a0f4f,#7b2cff 45%,#ff4fd8 75%,#ff8a3d)}
+.t-retro .ph .phx{background:radial-gradient(circle at 50% 96%,#ffd23f 0 17%,transparent 17.3%),linear-gradient(#2a0f4f,#7b2cff 45%,#ff4fd8 75%,#ff8a3d)}
 .t-mono{--paper:#fff;--ink:#1a1a1a;--mut:#777;--acc:#1a1a1a;--we:#1a1a1a;--line:#999;--fh:'Space Mono',monospace;--fb:'Space Mono',monospace;--hw:700;--htt:lowercase;--hs:7cqw;--gap:0;--gridbg:transparent;--hol:repeating-linear-gradient(45deg,#eee 0 3px,#fff 3px 6px)}
 .t-mono .grid>div{border:1px dashed #999;margin:-.5px}.t-mono .grid>.d.we b::after{content:"*"}.t-mono .hdr .yr{color:#777}
 .t-kids{--paper:#fffdf3;--ink:#2d2a6e;--mut:#6f6aa8;--acc:#ff5c8a;--we:#ff5c8a;--line:#2d2a6e;--fh:Fredoka,sans-serif;--fb:Fredoka,sans-serif;--hw:700;--hs:10cqw;--gap:.8cqw;--gridbg:transparent;--gb:0;--rad:2cqw;--ds:4cqw;--hdal:center;--hol:#fff0a8}
@@ -170,8 +172,8 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .t-botanical{--paper:#f7f3ea;--ink:#2f3e2e;--mut:#7c8b72;--acc:#5b7f4a;--we:#a0563b;--line:#d5d0bf;--fh:'DM Serif Display',serif;--fb:'Cormorant Garamond',serif;--fn:'DM Serif Display',serif;--hw:400;--hst:italic;--ds:3.4cqw;--dw:400;--hol:#e6ecd9;--phr:50% 50% 1cqw 1cqw / 22% 22% 1cqw 1cqw;
   background:radial-gradient(circle at 100% 0,#5b7f4a1a 0 18%,transparent 18.2%),radial-gradient(circle at 0 100%,#a0563b14 0 14%,transparent 14.2%),#f7f3ea}
 .t-botanical .grid>div{font-size:2.2cqw}.t-botanical .wall .ph{margin:0 0 4cqw}.t-botanical.flip .ph,.t-botanical .poster .ph{margin:0 0 4cqw}
-.t-midnight{--paper:#0f1626;--ink:#efe6cf;--mut:#8f8a7a;--acc:#d4af37;--line:#d4af3740;--fh:'Cormorant Garamond',serif;--fb:'Cormorant Garamond',serif;--hw:700;--hst:italic;--hs:10cqw;--cell:#121a2c;--hdcell:#0f1626;--webg:#16203a;--hol:#2a2614;--gridbg:#d4af3733;--ds:3.4cqw;--band:#d4af37;--bandink:#0f1626;--phbg:#1a2236}
-.t-midnight .ph .phx{background:radial-gradient(circle at 70% 30%,#f5e7b8 0 6%,transparent 6.4%),linear-gradient(#1a2a4a,#0f1626)}.t-midnight .ph .phx em{color:#d4af37;opacity:.35}
+.t-midnight{--paper:#0f1626;--ink:#efe6cf;--mut:#8f8a7a;--acc:#d4af37;--line:#d4af3740;--fh:'Cormorant Garamond',serif;--fb:'Cormorant Garamond',serif;--fn:'Playfair Display',serif;--hw:700;--hst:italic;--hs:10cqw;--cell:#121a2c;--hdcell:#0f1626;--webg:#16203a;--hol:#2a2614;--gridbg:#d4af3733;--ds:3.4cqw;--band:#d4af37;--bandink:#0f1626;--phbg:#1a2236}
+.t-midnight .ph .phx{background:radial-gradient(circle at 84% 22%,#f5e7b8 0 5%,transparent 6.4%),linear-gradient(#1a2a4a,#0f1626)}.t-midnight .ph .phx em{color:#d4af37;opacity:.35}
 .t-midnight .grid>div{font-size:2.2cqw}.t-midnight .grid{outline:1px solid #d4af3780;outline-offset:1cqw}
 .t-hand{--paper:#fdfaf2;--ink:#22305c;--mut:#7680a3;--acc:#e0533d;--line:#22305c55;--fh:Caveat,cursive;--fb:Caveat,cursive;--hw:700;--hs:12cqw;--ds:3.8cqw;--gap:0;--gridbg:transparent;--gb:0;--hol:#ffe9a8;--hdal:center}
 .t-hand .grid>div{border-right:1.5px solid var(--line);border-bottom:1.5px solid var(--line);border-radius:2px 40% 3px 30%/40% 3px 30% 2px;font-size:2.6cqw}.t-hand .grid>.hd{border:0!important;font-size:2.8cqw;text-transform:none;letter-spacing:0}.t-hand .grid>.d i{font-size:2.4cqw}
@@ -337,6 +339,7 @@ function draw(){
   const mini=m=>{const rows=weeksOf(m);while(rows.length<6)rows.push(null);
     return `<div class="mini"><h3>${esc(cap(mName.format(m)))}</h3><table><tr>${S.wknum?'<th></th>':''}${wdays.map(w=>`<th>${esc(dNarrow.format(w))}</th>`).join('')}</tr>`+
     rows.map(r=>r?`<tr>${S.wknum?`<td class="wkn">${wk(r)}</td>`:''}${r.map(d=>{if(d.getMonth()!==m.getMonth())return'<td></td>';const e=ev(d);return`<td class="${we(d)?'we ':''}${e.length?'hol':''}"${e.length?` title="${esc(e.join(', '))}"`:''}>${d.getDate()}</td>`}).join('')}</tr>`:'<tr><td>&nbsp;</td></tr>').join('')+'</table></div>'};
+  const miniDay=d=>{const m=new Date(d.getFullYear(),d.getMonth(),1),rows=weeksOf(m);return `<div class="mini"><table><tr>${wdays.map(w=>`<th>${esc(dNarrow.format(w))}</th>`).join('')}</tr>`+rows.map(r=>`<tr>${r.map(x=>x.getMonth()!==m.getMonth()?'<td></td>':`<td class="${we(x)?'we ':''}${+x===+d?'cur':''}">${x.getDate()}</td>`).join('')}</tr>`).join('')+'</table></div>'};
   const notes=S.notes?'<div class="notes"></div>':'';
   const page=(inner,cls='')=>`<div class="page${land?' land':''} ${cls}">${inner}</div>`;
   let pages=[];
@@ -348,11 +351,12 @@ function draw(){
       pages.push(page(F==='year'?sheet('yr',ch[0],`<div class="hdr"><span class="mn">${ttl}</span></div>`+minis):sheet('poster',ch[0],photo(p/12,ch[0],`<div class="ttl">${ttl}</div>`)+`<div class="col" style="flex:1;display:flex;min-width:0">${minis}</div>`)))}}
   else if(F==='week'){const end=new Date(fy,fm-1+n,1),d=new Date(months[0]);d.setDate(1-((d.getDay()-ws+7)%7));
     while(d<end){const r=[...Array(7)].map((_,i)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+i));
-      pages.push(page(sheet('week',r[3],`<div class="hdr"><span class="mn">${esc(cap(mName.format(r[3])))}</span><span class="yr">${S.wknum?`W${wk(r)} · `:''}${esc(dMon.format(r[0]))} – ${esc(dMon.format(r[6]))}</span></div><div class="rows">`+
+      const lm=r.find(x=>x>=months[0]&&x<end)||r[3];
+      pages.push(page(sheet('week',lm,`<div class="hdr"><span class="mn">${esc(cap(mName.format(lm)))}</span><span class="yr">${S.wknum?`W${wk(r)} · `:''}${esc(dMon.format(r[0]))} – ${esc(dMon.format(r[6]))}</span></div><div class="rows">`+
       r.map(x=>`<div class="r${we(x)?' we':''}${x<months[0]||x>=end?' off':''}"><div class="dn"><b>${x.getDate()}</b><small>${esc(dShort.format(x))}</small></div><div class="ln">${ev(x).map(e=>`<i>${esc(e)}</i>`).join('')}</div></div>`).join('')+'</div>'+notes)));d.setDate(d.getDate()+7)}}
   else if(F==='daily'){const end=new Date(fy,fm-1+n,1),cards=[];
     for(const d=new Date(months[0]);d<end;d.setDate(d.getDate()+1)){const e=ev(d),y0=new Date(d.getFullYear(),0,1),doy=Math.round((d-y0)/864e5)+1,len=new Date(d.getFullYear(),1,29).getDate()===29?366:365;
-      cards.push(`<div class="sheet ${T}${W} day${we(d)?' we':''}${e.length?' hol':''}" style="--h:${hue(d)}">${S.holes?'<div class="holes"><i></i><i></i></div>':''}<div class="in"><div class="band">${esc(cap(mName.format(d)))}<small>${d.getFullYear()}</small></div><div class="num">${d.getDate()}</div><div class="wd">${esc(cap(dLong.format(d)))}</div><div class="evs">${e.map(x=>`<b>${esc(x)}</b>`).join('')}</div><div class="ft"><span>${S.wknum?'W'+isoWeek(d):''}</span><span>${doy} / ${len}</span></div></div></div>`)}
+      cards.push(`<div class="sheet ${T}${W} day${we(d)?' we':''}${e.length?' hol':''}" style="--h:${hue(d)}">${S.holes?'<div class="holes"><i></i><i></i></div>':''}<div class="in"><div class="band">${esc(cap(mName.format(d)))}<small>${d.getFullYear()}</small></div><div class="num">${d.getDate()}</div><div class="wd">${esc(cap(dLong.format(d)))}</div><div class="evs">${e.map(x=>`<b>${esc(x)}</b>`).join('')}</div>${S.notes?'<div class="lines"></div>':''}${miniDay(d)}<div class="ft"><span>${S.wknum?'W'+isoWeek(d):''}</span><span>${doy} / ${len}</span></div></div></div>`)}
     for(let i=0;i<cards.length;i+=4)pages.push(page(cards.slice(i,i+4).join('')+'<div class="sheet"></div>'.repeat(Math.max(0,4-cards.slice(i,i+4).length)),'four'))}
   $('out').innerHTML=pages.join('');
   $('fname').textContent=fmt()[1];$('pcount').textContent=`· ${pages.length} A4 page${pages.length>1?'s':''}${F==='flip'?' · cut along the dashes':F==='daily'?' · cut into 4 cards':''}`;
