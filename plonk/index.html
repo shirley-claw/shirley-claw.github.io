@@ -474,7 +474,7 @@ stage.addEventListener('pointerdown',e=>{hoverKey='';hoverTip='';clearTimeout(ho
  const dimEl=e.target.closest?.('[data-dim]');
  if(dimEl&&tool==='select'){const k=dimEl.dataset.dim,now=performance.now();if(lastDim.k===k&&now-lastDim.t<500){lastDim={};e.preventDefault();openDimEdit(k,q);return}lastDim={k,t:now}}
  if(tool==='select'){const h=e.target.dataset?.h,o=get(sel);
-  if(h!=null&&o){drag={mode:h==='rot'?'rot':'handle',h,o,orig:clone(o),kids:isRoom(o)?snapKids(o):[],before};return}
+  if(h!=null&&o){drag={mode:h==='rot'?'rot':'handle',h,o,p0:p,orig:clone(o),kids:isRoom(o)?snapKids(o):[],before};return}
   const id=e.target.closest?.('[data-id]')?.dataset.id;
   if(id){sel=id;const o=get(id);drag={mode:'move',p0:p,o,orig:clone(o),kids:isRoom(o)?snapKids(o):[],before};render();return}
   sel=null;drag={mode:'pan',q0:q,v0:{...view}};refresh();return}
@@ -497,7 +497,7 @@ stage.addEventListener('pointermove',e=>{const q=rel(e);if(pointers.has(e.pointe
   applyKids(d.kids,trf(mx,my),0)}
  else if(d.mode==='newrect'){const s=snapPt(p,{skip:d.o.id}),o=d.o;o.x=Math.min(d.x0,s.x);o.y=Math.min(d.y0,s.y);o.w=r4(Math.abs(s.x-d.x0));o.h=r4(Math.abs(s.y-d.y0))}
  else if(d.mode==='handle'){const o=d.o;if(o.t==='poly'){const s=polyHandleSnap(o,+d.h,p);o.pts[+d.h]=[s.x,s.y];if(hasLocks(o))solveWarn(solvePoly(o,{[d.h]:[s.x,s.y]},d.orig.pts))}else resizeRect(o,d.orig,+d.h,snapPt(p,{skip:o.id}))}
- else if(d.mode==='rot'){const o=d.o,c=center(d.orig);let a=Math.atan2(p.y-c.y,p.x-c.x)*180/PI+90;if(!e.shiftKey)a=Math.round(a/15)*15;o.rot=((Math.round(a)%360)+360)%360;
+ else if(d.mode==='rot'){const o=d.o,c=center(d.orig),ang=q=>Math.atan2(q.y-c.y,q.x-c.x)*180/PI;let a=(d.orig.rot||0)+ang(p)-ang(d.p0);if(!e.shiftKey)a=Math.round(a/15)*15;o.rot=((Math.round(a)%360)+360)%360;
   const da=o.rot-(d.orig.rot||0);applyKids(d.kids,rotf(c.x,c.y,da),da)}
  render()});
 function resizeRect(o,O,i,p){const[sx,sy]=SG[i],a=(O.rot||0)*PI/180,c=Math.cos(a),s=Math.sin(a),cx=O.x+O.w/2,cy=O.y+O.h/2;
