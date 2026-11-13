@@ -79,6 +79,7 @@ input[type=checkbox]{width:auto}
   <ol>
    <li>Press <b>R</b> and type <b>4x3</b> Enter: a 4 × 3 m room appears. Drag more rooms next to it; they snap together and share a wall.</li>
    <li>Odd-shaped room? Press <b>W</b>, click the corners and type each wall length followed by Enter.</li>
+   <li>Your flat is the mirror image of the listing plan? Select a room and press <b>Mirror ↔</b>, or mirror the whole plan with nothing selected.</li>
    <li>Select a room, then pick furniture: it drops inside and from then on moves with the room. Doors and windows sit in the wall.</li>
    <li>Double-click any size to set it exactly. Sizes you type stay fixed while you change the others, like in CAD software.</li>
    <li>Export a PNG or SVG to share or print, or save a .json file to continue later.</li>
@@ -99,7 +100,7 @@ input[type=checkbox]{width:auto}
    <dt>Can I print my floor plan?</dt><dd>Export a PNG or SVG; both print cleanly in black and white.</dd>
    <dt>Where are my plans saved?</dt><dd>In this browser's local storage. Use “Save .json” to keep a copy or move it to another computer.</dd>
   </dl>
-  <p class="note">Ideas or bugs? Tell us on <a href="https://github.com/shirley-claw/shirley-claw.github.io/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+  <p class="note">More free tools at <a href="https://shirley-claw.github.io/" target="_blank" rel="noopener">shirley-claw.github.io</a>. Ideas or bugs? Tell us on <a href="https://github.com/shirley-claw/shirley-claw.github.io/issues" target="_blank" rel="noopener">GitHub</a>.</p>
  </article>
  <div id="help"><h4>Tools</h4><table><tr><td>V</td><td>select &amp; move</td></tr><tr><td>R</td><td>room — drag, click for 3×3, or type <b>4x3</b> ⏎</td></tr><tr><td>W</td><td>walls / any shape — click corners, type a length ⏎</td></tr><tr><td>T</td><td>text label</td></tr></table>
  <h4>Drawing walls</h4><table><tr><td>3.2 ⏎</td><td>next wall exactly 3.2 m long</td></tr><tr><td>Shift</td><td>free angle (no snapping)</td></tr><tr><td>click start</td><td>close into a room</td></tr><tr><td>⏎ / Esc</td><td>finish as open wall</td></tr></table>
@@ -303,11 +304,12 @@ function detail(st,x,y,w,h){const D=`fill="none" stroke="${INK}" stroke-width="0
  case'washer':return C(cx,cy+h*.06,m*.33)+C(cx,cy+h*.06,m*.22,`fill="none" stroke="#999" stroke-width="0.6" ${NS}`)+L(x,y+h*.16,x+w,y+h*.16)+C(x+w*.8,y+h*.08,m*.035);
  }return''}
 function itemSvg(o,s,isSel,kid){const dt=get(o.room)?.wall??0.1,{x,y,w,h}=o,cx=x+w/2,cy=y+h/2,st=styleOf(o),col=kid?SELC:INK,B=`stroke="${col}" stroke-width="1.4" ${NS}`;
- let g=`<g data-id="${o.id}" transform="${rotT(o)}">`;
+ let g=`<g data-id="${o.id}" transform="${rotT(o)}">`+(o.fx?`<g transform="translate(${2*cx} 0) scale(-1 1)">`:'');
  if(st==='door')g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent"/><path d="M${x} ${y+h}L${x} ${y}" ${B} fill="none"/><path d="M${x} ${y}A${w} ${h} 0 0 1 ${x+w} ${y+h}" fill="none" stroke="${col}" stroke-width="0.8" stroke-dasharray="4 3" ${NS}/><rect x="${x}" y="${y+h-0.004}" width="${w}" height="${dt+0.008}" fill="#fff"/><path d="M${x} ${y+h}v${dt}M${x+w} ${y+h}v${dt}" stroke="${col}" stroke-width="1.6" ${NS}/>`;
  else if(st==='window')g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#fff" ${B}/><path d="M${x} ${y+h/3}H${x+w}M${x} ${y+2*h/3}H${x+w}" stroke="${col}" stroke-width="0.8" ${NS}/>`;
  else if(st==='round')g+=`<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="#fff" ${B}/><ellipse cx="${cx}" cy="${cy}" rx="${Math.max(w/2-0.05,0)}" ry="${Math.max(h/2-0.05,0)}" fill="none" stroke="#999" stroke-width="0.6" ${NS}/>`;
  else g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(w,h)*.04}" fill="#fff" ${B}/>`+detail(st,x,y,w,h);
+ if(o.fx)g+='</g>';
  if(st==='box'&&o.name&&w*s>o.name.length*6.5&&h*s>14)g+=`<text x="${cx}" y="${cy}" font-size="${10/s}" text-anchor="middle" dominant-baseline="middle" fill="#555">${esc(o.name)}</text>`;
  if(isSel){const off=9/s;g+=dimText(cx,y-off,0,fmt(w),s,`${o.id}:w`,o.locks?.w!=null)+dimText(x-off,cy,-90,fmt(h),s,`${o.id}:h`,o.locks?.h!=null)}
  return g+'</g>'}
@@ -373,7 +375,7 @@ function len(k,lab,v){return`<div><label>${lab} ${UL()}</label><input inputmode=
 function targetRoom(){const o=get(sel);return isRoom(o)?o:o&&get(o.room)||null}
 function palNote(){const r=targetRoom();$('#palNote').innerHTML=r?`Adds into <b>${esc(r.name)}</b>.`:'Click one, then click in the plan. Select a room first to drop it straight in.'}
 function inspector(){const o=get(sel),el=$('#insp');lastSel=sel;palNote();
- if(!o){el.innerHTML=`<div class="mut">Nothing selected.<br>Rooms total: ${fmtA(total())}</div>`;return}
+ if(!o){el.innerHTML=`<div class="mut">Nothing selected.<br>Rooms total: ${fmtA(total())}</div>`+(objs.length?`<div class="grid2" style="margin-top:8px"><button onclick="mirrorAll(true)">Mirror plan ↔</button><button onclick="mirrorAll(false)">Mirror plan ↕</button></div>`:'');return}
  let h=`<label>Name</label><input data-k="name" value="${esc(o.name)}">`;
  if(o.t==='rect'){h+=`<div class="grid2">${len('w','Width',o.w)}${len('h','Depth',o.h)}${num('rot','Rotation °',o.rot||0,15)}`;
   h+=(isRoom(o)?len('wall','Wall',o.wall||0):'')+'</div>'}
@@ -384,7 +386,7 @@ function inspector(){const o=get(sel),el=$('#insp');lastSel=sel;palNote();
  if(isItem(o))h+=`<label>In room</label><select data-k="room"><option value="">— none —</option>${objs.filter(isRoom).map(r=>`<option value="${r.id}" ${o.room===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select>`;
  h+=`<p class="note">Double-click any size on the plan to type it. Typed sizes are fixed <b style="color:#0b57d0">⊢ bold ⊣</b> and hold while you change others; type nothing to unfix.</p>`;
  if(hasLocks(o))h+=`<button data-a="unlock" style="width:100%">Unfix all sizes</button>`;
- h+=`<div class="grid2" style="margin-top:8px"><button data-a="dup">Duplicate</button><button data-a="rot">Rotate 90°</button><button data-a="front">To front</button><button data-a="back">To back</button><button data-a="del" style="grid-column:span 2">Delete${isRoom(o)&&kidsOf(o).length?' (with contents)':''}</button></div>`;
+ h+=`<div class="grid2" style="margin-top:8px"><button data-a="dup">Duplicate</button><button data-a="rot">Rotate 90°</button><button data-a="fx">Mirror ↔</button><button data-a="fy">Mirror ↕</button><button data-a="front">To front</button><button data-a="back">To back</button><button data-a="del" style="grid-column:span 2">Delete${isRoom(o)&&kidsOf(o).length?' (with contents)':''}</button></div>`;
  el.innerHTML=h}
 function syncInsp(){if(sel!==lastSel)return inspector();const o=get(sel);if(!o)return;
  document.querySelectorAll('#insp input[data-n]').forEach(i=>{if(i!==document.activeElement&&o[i.dataset.k]!=null)i.value=i.dataset.len!=null?valIn(+o[i.dataset.k]):+(+o[i.dataset.k]).toFixed(3)})}
@@ -403,7 +405,15 @@ insp.addEventListener('click',e=>{const a=e.target.dataset.a;if(a)act(a)});
 function setEdge(o,i,len){const P=o.pts,n=P.length,j=(i+1)%n,dx=P[j][0]-P[i][0],dy=P[j][1]-P[i][1],L=Math.hypot(dx,dy);if(L<1e-9)return;
  const ddx=dx/L*(len-L),ddy=dy/L*(len-L);if(j===0){P[i]=[r4(P[i][0]-ddx),r4(P[i][1]-ddy)];return}
  for(let k=j;k<n;k++)P[k]=[r4(P[k][0]+ddx),r4(P[k][1]+ddy)]}
+// mirror things across the vertical (h=true) or horizontal axis through their middle; items keep a local flip so door swings follow
+function mirror(list,h){if(!list.length)return;let a=[1/0,1/0,-1/0,-1/0];for(const o of list)for(const[x,y]of vertsOf(o))a=[Math.min(a[0],x),Math.min(a[1],y),Math.max(a[2],x),Math.max(a[3],y)];
+ const m=h?a[0]+a[2]:a[1]+a[3],f=([x,y])=>h?[r4(m-x),y]:[x,r4(m-y)];
+ for(const o of list){if(o.t==='poly')o.pts=o.pts.map(f);
+  else if(o.t==='text'){[o.x,o.y]=f([o.x,o.y])}
+  else{const[cx,cy]=f([o.x+o.w/2,o.y+o.h/2]);o.x=r4(cx-o.w/2);o.y=r4(cy-o.h/2);o.rot=(((h?0:180)-(o.rot||0))%360+360)%360;if(isItem(o))o.fx=!o.fx}}}
+function mirrorAll(h){if(!objs.length)return;push();mirror(objs,h);refresh()}
 function act(a){const o=get(sel);if(!o)return;push();const i=objs.indexOf(o);
+ if(a==='fx'||a==='fy')mirror(isRoom(o)?[o,...kidsOf(o)]:[o],a==='fx');
  if(a==='del'){const kill=new Set([o.id,...(isRoom(o)?kidsOf(o).map(k=>k.id):[])]);objs=objs.filter(q=>!kill.has(q.id));sel=null}
  if(a==='dup'){const off=trf(.3,.3),dupOne=(q,room)=>{const c=clone(q);c.id=uid();xform(c,q,off);if(room!==undefined)c.room=room;return c};
   const c=dupOne(o);if(isRoom(o))c.name+=' copy';objs.splice(i+1,0,c);if(isRoom(o))kidsOf(o).forEach(k=>objs.push(dupOne(k,c.id)));sel=c.id}
