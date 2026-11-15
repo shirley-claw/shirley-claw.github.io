@@ -105,9 +105,9 @@
     throw new Error('Nedočkal som sa: ' + what);
   }
   async function navigate(action) {
-    const w = fr.contentWindow; try { w.__zd = 1; } catch (e) { }
+    const old = fr.contentDocument;
     action();
-    await until(() => { const cw = fr.contentWindow; return cw.__zd !== 1 && cw.document.readyState === 'complete'; }, 45000, 'načítanie stránky');
+    await until(() => { const d = fr.contentDocument; return d && d !== old && d.readyState === 'complete' && d.location.href !== 'about:blank'; }, 45000, 'načítanie stránky');
     await sleep(300);
   }
   const pageText = () => norm(doc().body && doc().body.innerText);
@@ -167,10 +167,10 @@
     await setSelect('discountType-0', st.discount);
     const cont = () => [...doc().querySelectorAll('a')].filter(x => norm(x.textContent) === 'Pokračovať' && x.offsetParent).pop();
     await until(cont, 15000, 'Pokračovať');
-    const w = fr.contentWindow; w.__zd = 1;
+    const old = doc();
     cont().click();
-    await until(() => soldOut() || (fr.contentWindow.__zd !== 1 && /Celková suma/.test(pageText())) ||
-      (fr.contentWindow.__zd === 1 && doc().querySelector('.ui-messages-error, .alert-danger')?.textContent.trim()), 45000, 'ponuka lístkov');
+    await until(() => soldOut() || (doc() !== old && /Celková suma/.test(pageText())) ||
+      (doc() === old && doc().querySelector('.ui-messages-error, .alert-danger')?.textContent.trim()), 45000, 'ponuka lístkov');
     await sleep(300);
     if (soldOut()) return { status: 'soldout' };
     const m = pageText().match(/Celková suma\s*([\d.,]+)\s*€/);
