@@ -102,6 +102,25 @@
       "color": "#d84315",
       "added": "2026-11-10",
       "badge": false
+    },
+    {
+      "slug": "zadarmo",
+      "section": "useful",
+      "title": "Zadarmo vlakom",
+      "seoTitle": "Zadarmo vlakom — kde ešte je bezplatný študentský lístok ZSSK",
+      "tagline": "Free student train ticket sold out? Find which parts of the trip are still 0 €.",
+      "description": "Bezplatné lístky ZSSK pre študentov vypredané? Zadarmo vlakom prejde tvoj vlak úsek po úseku a ukáže, kde ešte je lístok za 0 €, aby si zaplatil len zvyšok. Zadarmo, bez prihlásenia, beží priamo na predaj.zssk.sk.",
+      "keywords": [
+        "bezplatný lístok zssk",
+        "zssk študent zadarmo",
+        "vypredané bezplatné lístky",
+        "vlak zadarmo študenti",
+        "zssk 100% zľava"
+      ],
+      "category": "TravelApplication",
+      "color": "#1a9c4a",
+      "added": "2026-11-15",
+      "badge": false
     }
   ]
 }
