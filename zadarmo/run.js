@@ -172,11 +172,15 @@
     await setSelect('ageCategory-0', st.age);
     await setSelect('discountType-0', st.discount);
     const cont = () => [...doc().querySelectorAll('a')].filter(x => norm(x.textContent) === 'Pokračovať' && x.offsetParent).pop();
+    const errBox = () => [...doc().querySelectorAll('#errorMessageContainer .error-box, .error-box')].find(e => e.offsetParent && norm(e.textContent));
     await until(cont, 15000, 'Pokračovať');
+    await navigate(() => cont().click());
+    await until(() => soldOut() || errBox() || (/Celková suma/.test(pageText()) && cont()), 45000, 'ponuka lístkov');
+    if (soldOut()) return { status: 'soldout' };
+    if (errBox()) return { status: 'error', msg: norm(errBox().textContent).slice(0, 160) };
     const m = pageText().match(/Celková suma\s*([\d.,]+)\s*€/);
     const price = m ? parseFloat(m[1].replace(',', '.')) : null;
     // ZSSK only reveals a sold-out 100%ZzC quota when you continue past the offer page
-    const errBox = () => [...doc().querySelectorAll('#errorMessageContainer .error-box, .error-box')].find(e => e.offsetParent && norm(e.textContent));
     const old = doc();
     cont().click();
     await until(() => soldOut() || errBox() || (doc() !== old && doc().body && doc().readyState !== 'loading' && doc().location.pathname !== '/offer'), 45000, 'krok po ponuke');
