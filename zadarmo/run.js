@@ -71,6 +71,7 @@
       <div class="row"><div><label>Vek</label><select id="age">${AGES.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
       <div><label>Zľava</label><select id="discount">${DISCOUNTS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div></div>
       <button id="go">Nájsť vlaky</button>
+      <div class="muted" style="margin-top:8px">Počas kontroly nenakupuj na ZSSK v inom okne, kontrola na chvíľu používa ten istý košík.</div>
       <div class="log" id="log">${msg ? esc(msg) : ''}</div><div id="list"></div>`;
     for (const k of ['from', 'to', 'date', 'time', 'age', 'discount']) {
       const el = root.getElementById(k); el.value = st[k];
@@ -172,16 +173,37 @@
     await setSelect('discountType-0', st.discount);
     const cont = () => [...doc().querySelectorAll('a')].filter(x => norm(x.textContent) === 'Pokračovať' && x.offsetParent).pop();
     await until(cont, 15000, 'Pokračovať');
+    const m = pageText().match(/Celková suma\s*([\d.,]+)\s*€/);
+    const price = m ? parseFloat(m[1].replace(',', '.')) : null;
+    // ZSSK only reveals a sold-out 100%ZzC quota when you continue past the offer page
+    const errBox = () => [...doc().querySelectorAll('#errorMessageContainer .error-box, .error-box')].find(e => e.offsetParent && norm(e.textContent));
     const old = doc();
     cont().click();
-    await until(() => soldOut() || (doc() !== old && /Celková suma/.test(pageText())) ||
-      (doc() === old && doc().querySelector('.ui-messages-error, .alert-danger')?.textContent.trim()), 45000, 'ponuka lístkov');
-    await sleep(300);
+    await until(() => soldOut() || errBox() || (doc() !== old && doc().body && doc().readyState !== 'loading' && doc().location.pathname !== '/offer'), 45000, 'krok po ponuke');
+    await sleep(500);
     if (soldOut()) return { status: 'soldout' };
-    const m = pageText().match(/Celková suma\s*([\d.,]+)\s*€/);
-    if (!m) return { status: 'error', msg: norm(doc().querySelector('.ui-messages-error, .alert-danger')?.textContent).slice(0, 140) || 'neznáma odpoveď' };
-    const price = parseFloat(m[1].replace(',', '.'));
-    return price === 0 ? { status: 'free', price } : { status: 'paid', price };
+    if (errBox()) return { status: 'error', msg: norm(errBox().textContent).slice(0, 160) };
+    if (doc().location.pathname === '/cart') await removeFromCart(a, b, train);
+    return { status: 'free', price };
+  }
+
+  // Continuing past the offer on a train without compulsory reservation puts the ticket in the cart
+  // (holding a free seat for 15 min). Take ours straight back out so nobody else loses it.
+  async function removeFromCart(a, b, train) {
+    for (let k = 0; k < 4; k++) {
+      const btn = [...doc().querySelectorAll('[id$=":deleteButton"]')].find(x => {
+        for (let p = x, i = 0; p && i < 10; p = p.parentElement, i++) {
+          const t = p.textContent;
+          if (t.includes(train) && t.includes(a.name) && t.includes(b.name)) return true;
+        }
+        return false;
+      });
+      if (!btn) return;
+      const old = doc();
+      btn.click();
+      await until(() => doc() !== old && doc().body && doc().readyState !== 'loading', 30000, 'odstránenie z košíka');
+      await sleep(500);
+    }
   }
 
   // ---------- flow ----------
@@ -222,7 +244,7 @@
       root.getElementById('stops').innerHTML = S.map((s, i) => `<li class="stop"><b>${esc(s.time)}</b>${esc(s.name)}</li>` +
         (i < n ? `<li class="leg ${leg[i]}"></li>` : '')).join('');
       root.getElementById('plan').innerHTML = tickets.length ? '<b>Čo kúpiť:</b>' + tickets.map(t =>
-        `<div class="tk ${t.free ? 'free' : 'paid'}">${t.free ? 'Zadarmo' : 'Platený' + (t.price ? ` (${t.price.toFixed(2)} €)` : '')}: ${esc(S[t.a].name)} → ${esc(S[t.b].name)}</div>`).join('') : '';
+        `<div class="tk ${t.free ? 'free' : 'paid'}">${t.free ? 'Zadarmo' + (t.price ? ` (+${t.price.toFixed(2)} € miestenka)` : '') : 'Vypredané, kúp platený študentský'}: ${esc(S[t.a].name)} → ${esc(S[t.b].name)}</div>`).join('') : '';
     };
     draw();
     const cache = {};
@@ -246,20 +268,20 @@
       let i = 0;
       while (i < n) {
         const full = await isFree(i, n);
-        if (full.status === 'free') { for (let x = i; x < n; x++) leg[x] = 'free'; tickets.push({ a: i, b: n, free: true }); i = n; break; }
+        if (full.status === 'free') { for (let x = i; x < n; x++) leg[x] = 'free'; tickets.push({ a: i, b: n, free: true, price: full.price }); i = n; break; }
         // binary search the farthest stop j with a free ticket i→j
         let lo = i, hi = n; // i→lo free (lo=i trivially), i→hi not free
         while (hi - lo > 1) {
           const mid = (lo + hi) >> 1;
           if ((await isFree(i, mid)).status === 'free') lo = mid; else hi = mid;
         }
-        if (lo > i) { for (let x = i; x < lo; x++) leg[x] = 'free'; tickets.push({ a: i, b: lo, free: true }); i = lo; }
+        if (lo > i) { for (let x = i; x < lo; x++) leg[x] = 'free'; tickets.push({ a: i, b: lo, free: true, price: cache[i + '-' + lo].price }); i = lo; }
         else {
-          const r = cache[i + '-' + (i + 1)] || await isFree(i, i + 1);
+          if (!cache[i + '-' + (i + 1)]) await isFree(i, i + 1);
           leg[i] = 'paid';
           const prev = tickets[tickets.length - 1];
-          if (prev && !prev.free && prev.b === i) { prev.b = i + 1; prev.price = null; }
-          else tickets.push({ a: i, b: i + 1, free: false, price: r.price || null });
+          if (prev && !prev.free && prev.b === i) prev.b = i + 1;
+          else tickets.push({ a: i, b: i + 1, free: false });
           i++;
         }
         draw();
@@ -267,7 +289,7 @@
       draw();
       const allFree = tickets.length === 1 && tickets[0].free;
       log(allFree ? 'Celý úsek je ešte zadarmo 🎉 Kúp ho normálne na ZSSK.' :
-        `Hotovo (${calls} kontrol). Zelené úseky kúp ako bezplatné lístky, červené zaplať. Lístky si kúp na ZSSK — táto stránka nič nekupuje.`);
+        `Hotovo (${calls} kontrol). Zelené úseky kúp ako bezplatné lístky, na červené platený študentský. Kúpiš ich na ZSSK, táto stránka nič nekupuje.`);
     } catch (e) { draw(); log((stop ? '' : 'Chyba: ') + e.message); }
   }
 
