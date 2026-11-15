@@ -24,8 +24,16 @@
   body{margin:0;background:#fff;color:#111;font:17px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
   main{max-width:640px;margin:0 auto;padding:28px 18px 60px}
   h1{font-size:30px;margin:0 0 4px} .sub{color:#555;margin:0 0 22px}
-  .bm{display:inline-block;padding:12px 18px;border-radius:10px;background:#1a9c4a;color:#fff;font-weight:600;text-decoration:none;cursor:grab}
-  button{font:inherit;padding:11px 16px;border-radius:10px;border:0;background:#eee;cursor:pointer;margin-left:8px}
+  .bm{display:inline-block;padding:6px 14px;border-radius:8px;background:#1a9c4a;color:#fff;font-weight:600;text-decoration:none;cursor:grab}
+  button{font:inherit;padding:11px 16px;border-radius:10px;border:0;background:#eee;color:#111;cursor:pointer}
+  .hint{background:#f4f8f5;border-radius:10px;padding:10px 12px;font-size:15px;margin:10px 0 0}
+  .setup{border:2px solid #1a9c4a;border-radius:14px;padding:4px 14px 14px;margin-top:22px}
+  .setup h2{margin-top:12px}
+  .tabs{display:flex;gap:6px;margin:8px 0 12px} .tabs button{flex:1;padding:8px;font-size:15px}
+  .tabs button.on{background:#111;color:#fff}
+  .setup ol{margin:12px 0} .setup ol:not(.on){display:none}
+  .copy{width:100%;background:#111;color:#fff;font-weight:600}
+  .done{width:100%;background:#e6f6ec;color:#11602f;font-weight:600}
   ol{padding-left:22px} li{margin:6px 0}
   h2{font-size:19px;margin:28px 0 6px}
   .demo{display:flex;flex-direction:column;gap:0;margin:16px 0;font-size:15px}
@@ -44,26 +52,42 @@
 <p class="sub">Bezplatné študentské lístky na tvoj vlak sú vypredané? Zisti, na ktorých úsekoch ešte sú za 0 € a zaplať len zvyšok.</p>
 
 <form id="f">
-  <div class="row"><label>Odkiaľ<input name="from" required placeholder="Bratislava"></label><label>Kam<input name="to" required placeholder="Košice"></label></div>
+  <div class="row"><label>Odkiaľ<input name="from" required placeholder="Bratislava" autocapitalize="words"></label><label>Kam<input name="to" required placeholder="Košice" autocapitalize="words"></label></div>
   <div class="row"><label>Dátum<input name="date" type="date" required></label><label>Čas<input name="time" type="time" required></label></div>
   <button class="go">Skontrolovať</button>
 </form>
-<p class="muted">Otvorí sa ZSSK. Tam ťukni na záložku <b>zadarmo</b> a najbližší vlak sa skontroluje sám. Záložku si nastavíš raz:</p>
-<p><a class="bm" id="bm" href="#">zadarmo</a><button id="copy">Kopírovať kód</button></p>
+<p class="hint">Otvorí sa ZSSK. Tam ťukni do adresného riadku, napíš <b>zadarmo</b> a vyber záložku ⭐. Zvyšok spraví sama.</p>
 
-<h2>Záložka na počítači</h2>
-<ol>
-  <li>Potiahni zelené tlačidlo hore do lišty so záložkami.</li>
-  <li>Vyplň formulár hore a stlač <b>Skontrolovať</b>, na stránke ZSSK klikni na záložku.</li>
-  <li>Zelené úseky sú ešte zadarmo, červené vypredané (tam kúp platený študentský).</li>
-</ol>
+<section class="setup" id="setup">
+  <h2>Prvýkrát? Nastav si záložku (raz, 30 sekúnd)</h2>
+  <div class="tabs"><button data-t="android">Android</button><button data-t="ios">iPhone</button><button data-t="pc">Počítač</button></div>
+  <button class="copy" id="copy">1. Skopírovať kód záložky</button>
+  <ol data-p="android">
+    <li>Ťukni na <b>⋮</b> vpravo hore a potom na <b>☆</b>. Uloží sa táto stránka.</li>
+    <li>Dole vyskočí <b>Upraviť</b>, ťukni naň. (Alebo ⋮ → Záložky → podrž novú záložku → Upraviť.)</li>
+    <li>Názov prepíš na <b>zadarmo</b>. Adresu celú vymaž a vlož skopírovaný kód. Ulož.</li>
+  </ol>
+  <ol data-p="ios">
+    <li>Ťukni na <b>Zdieľať</b> (štvorček so šípkou) → <b>Pridať záložku</b> → Uložiť.</li>
+    <li>Otvor záložky (ikonka knižky) → <b>Upraviť</b> → ťukni na novú záložku.</li>
+    <li>Názov prepíš na <b>zadarmo</b>. Adresu celú vymaž a vlož skopírovaný kód. Hotovo.</li>
+  </ol>
+  <ol data-p="pc">
+    <li>Potiahni toto tlačidlo do lišty so záložkami: <a class="bm" id="bm" href="#">zadarmo</a></li>
+    <li>Na stránke ZSSK potom stačí kliknúť na záložku.</li>
+  </ol>
+  <button class="done" id="done">Hotovo, záložku mám ✓</button>
+</section>
+<p class="muted"><a href="#" id="again" hidden>Nastaviť záložku znova</a></p>
 
-<h2>Záložka na mobile (Chrome)</h2>
-<ol>
-  <li>Klikni na <b>Kopírovať kód</b>.</li>
-  <li>Pridaj si ľubovoľnú stránku do záložiek, potom záložku uprav: názov <b>zadarmo</b>, do adresy vlož skopírovaný kód.</li>
-  <li>Vyplň formulár hore a stlač <b>Skontrolovať</b>. Na stránke ZSSK napíš do adresného riadku <b>zadarmo</b> a ťukni na záložku.</li>
-</ol>
+<h2>Výsledok vyzerá takto</h2>
+<div class="demo">
+  <span><b>06:16</b>Bratislava hl.st.</span><i></i>
+  <span><b>08:31</b>Žilina</span><i class="r"></i>
+  <span><b>10:31</b>Poprad-Tatry</span><i></i>
+  <span><b>12:03</b>Košice</span>
+</div>
+<p class="muted">Zelené úseky sú ešte zadarmo, červené vypredané (tam kúp platený študentský lístok).</p>
 
 <h2>Ako to funguje</h2>
 <p>Aplikácia prejde nákupný formulár ZSSK pre rôzne úseky tvojho vlaku (cestujúci Žiak/študent 100%ZzC) a pozrie sa, kde ZSSK ešte pustí bezplatný lístok ďalej a kde hlási „vypredané“. Skúšobný lístok, ktorý pritom skončí v košíku, hneď zase vyhodí, aby nikomu neblokoval miesto. Najdlhší bezplatný kus hľadá binárne, takže aj pri dlhej trase stačí pár kontrol. Jedna kontrola trvá okolo 10 sekúnd. Nič nekupuje a nič neposiela inam, lístky si potom kúpiš na ZSSK sám.</p>
@@ -84,11 +108,26 @@
   };
   const bm = document.getElementById('bm');
   bm.href = code;
-  bm.onclick = e => { e.preventDefault(); alert('Túto záložku potiahni do lišty so záložkami. Spúšťa sa na stránke predaj.zssk.sk.'); };
-  document.getElementById('copy').onclick = async () => {
-    try { await navigator.clipboard.writeText(code); } catch (e) { prompt('Skopíruj:', code); return; }
-    document.getElementById('copy').textContent = 'Skopírované ✓';
+  bm.onclick = e => { e.preventDefault(); alert('Túto záložku potiahni do lišty so záložkami.'); };
+  const copy = document.getElementById('copy');
+  copy.onclick = async () => {
+    try { await navigator.clipboard.writeText(code); copy.textContent = 'Skopírované ✓ teraz krok 2'; }
+    catch (e) { prompt('Skopíruj tento kód:', code); }
   };
+  const tabs = [...document.querySelectorAll('.tabs button')];
+  const pick = t => {
+    tabs.forEach(b => b.classList.toggle('on', b.dataset.t === t));
+    document.querySelectorAll('.setup ol').forEach(o => o.classList.toggle('on', o.dataset.p === t));
+    copy.hidden = t === 'pc';
+  };
+  tabs.forEach(b => b.onclick = () => pick(b.dataset.t));
+  const ua = navigator.userAgent;
+  pick(/iPhone|iPad|iPod/.test(ua) ? 'ios' : /Android/.test(ua) ? 'android' : 'pc');
+  const setup = document.getElementById('setup'), again = document.getElementById('again');
+  const showSetup = on => { setup.hidden = !on; again.hidden = on; };
+  showSetup(!localStorage.getItem('zadarmo-bm'));
+  document.getElementById('done').onclick = () => { localStorage.setItem('zadarmo-bm', '1'); showSetup(false); };
+  again.onclick = e => { e.preventDefault(); localStorage.removeItem('zadarmo-bm'); showSetup(true); };
 </script>
 </body>
 </html>

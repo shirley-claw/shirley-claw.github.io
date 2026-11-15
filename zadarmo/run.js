@@ -29,7 +29,7 @@
   root.innerHTML = `<style>
     :host{all:initial}
     .wrap{position:fixed;inset:0;background:#fff;color:#111;font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:auto}
-    .in{max-width:640px;margin:0 auto;padding:16px 16px 60px}
+    .in{max-width:640px;margin:0 auto;padding:52px 16px 60px}
     h1{font-size:22px;margin:4px 0 2px} .sub{color:#666;font-size:14px;margin-bottom:14px}
     label{display:block;font-size:13px;color:#555;margin:10px 0 3px}
     input,select{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#111}
