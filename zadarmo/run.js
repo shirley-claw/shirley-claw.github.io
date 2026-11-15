@@ -10,12 +10,16 @@
   const norm = s => (s || '').replace(/\s+/g, ' ').trim();
   const saved = JSON.parse(localStorage.getItem('zadarmo') || '{}');
   const save = () => localStorage.setItem('zadarmo', JSON.stringify(st));
-  const today = new Date();
+  const now = new Date(), pad = n => String(n).padStart(2, '0');
+  const hp = new URLSearchParams(location.hash.slice(1));   // #from=..&to=..&date=..&time=.. from the landing page
   const st = {
-    from: saved.from || '', to: saved.to || '',
-    date: today.toISOString().slice(0, 10), time: saved.time || '07:00',
+    from: hp.get('from') || saved.from || '', to: hp.get('to') || saved.to || '',
+    date: hp.get('date') || `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+    time: hp.get('time') || `${pad(now.getHours())}:${pad(now.getMinutes())}`,
     age: saved.age || '204', discount: saved.discount || '628',
   };
+  const autoRun = !!(hp.get('from') && hp.get('to'));
+  if (autoRun) history.replaceState(null, '', location.pathname);
 
   // ---------- UI ----------
   const host = document.createElement('div');
@@ -67,12 +71,13 @@
       <div><label>Kam</label><input id="to" list="sl" autocomplete="off"></div></div>
       <datalist id="sl"></datalist>
       <div class="row"><div><label>Dátum</label><input id="date" type="date"></div>
-      <div><label>Odchod od</label><input id="time" type="time"></div></div>
+      <div><label>Čas</label><input id="time" type="time"></div></div>
+      <details style="margin-top:8px"><summary class="muted">Vek a zľava</summary>
       <div class="row"><div><label>Vek</label><select id="age">${AGES.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div>
-      <div><label>Zľava</label><select id="discount">${DISCOUNTS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div></div>
-      <button id="go">Nájsť vlaky</button>
+      <div><label>Zľava</label><select id="discount">${DISCOUNTS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('')}</select></div></div></details>
+      <button id="go">Skontrolovať</button>
       <div class="muted" style="margin-top:8px">Počas kontroly nenakupuj na ZSSK v inom okne, kontrola na chvíľu používa ten istý košík.</div>
-      <div class="log" id="log">${msg ? esc(msg) : ''}</div><div id="list"></div>`;
+      <div class="log" id="log">${msg ? esc(msg) : ''}</div>`;
     for (const k of ['from', 'to', 'date', 'time', 'age', 'discount']) {
       const el = root.getElementById(k); el.value = st[k];
       el.oninput = el.onchange = () => { st[k] = el.value; save(); };
@@ -211,30 +216,33 @@
   }
 
   // ---------- flow ----------
-  let conns = [];
+  // Station names must be ZSSK's exact ones; take the best autocomplete hit for whatever was typed.
+  const fold = x => norm(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  async function resolveStation(name) {
+    try {
+      const list = JSON.parse(await (await fetch('/autocompleteStations/' + encodeURIComponent(name))).text());
+      return list.find(x => fold(x) === fold(name)) || list[0] || name;
+    } catch (e) { return name; }
+  }
+
   async function findTrains() {
     if (!st.from || !st.to) return log('Vyplň Odkiaľ a Kam.');
     const btn = root.getElementById('go'); btn.disabled = true;
-    log('Hľadám vlaky…');
+    log('Hľadám najbližší vlak…');
     try {
-      conns = await search(st.from, st.to, st.time);
-      const list = root.getElementById('list');
-      if (!conns.length) { log('ZSSK nič nenašla. Skontroluj názvy staníc (vyber z ponuky).'); return; }
-      log('Vyber vlak:');
-      list.innerHTML = conns.map((c, i) => {
-        const l = c.legs[0], last = c.legs[c.legs.length - 1];
-        const ok = c.legs.length === 1;
-        return `<div class="conn ${ok ? '' : 'off'}" data-i="${i}"><div><b>${esc(l.dep)}</b> ${esc(l.from)} → <b>${esc(last.arr)}</b> ${esc(last.to)}</div>
-          <div class="muted">${ok ? esc(l.train) : 's prestupom'}</div></div>`;
-      }).join('');
-      list.querySelectorAll('.conn:not(.off)').forEach(el => el.onclick = () => analyze(conns[+el.dataset.i]));
+      const [from, to] = await Promise.all([resolveStation(st.from), resolveStation(st.to)]);
+      const conns = await search(from, to, st.time);
+      // results start at the chosen time, so the first direct one is the closest departure
+      const c = conns.find(c => c.legs.length === 1);
+      if (!c) { log(conns.length ? 'Najbližšie spojenia sú len s prestupom, skús iný čas.' : 'ZSSK nič nenašla. Skontroluj stanice.'); return; }
+      analyze(c);
     } catch (e) { log('Chyba: ' + e.message); }
-    finally { btn.disabled = false; }
+    finally { if (btn.isConnected) btn.disabled = false; }
   }
 
   async function analyze(c) {
     const train = c.legs[0].train;
-    app.innerHTML = `<h1>${esc(train)}</h1><div class="sub">${esc(c.legs[0].from)} → ${esc(c.legs[0].to)}, ${esc(fmtDate(st.date))}</div>
+    app.innerHTML = `<h1>${esc(c.legs[0].from)} → ${esc(c.legs[0].to)}</h1><div class="sub">${esc(train)}, odchod ${esc(c.legs[0].dep)}, ${esc(fmtDate(st.date))}</div>
       <div class="log" id="log">Načítavam stanice…</div><ul class="stops" id="stops"></ul><div class="plan" id="plan"></div>
       <button class="ghost" id="back">Späť</button>`;
     root.getElementById('back').onclick = () => { stop = true; formView(); };
@@ -298,4 +306,5 @@
   }
 
   formView();
+  if (autoRun) findTrains();
 })();

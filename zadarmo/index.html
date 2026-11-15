@@ -33,6 +33,9 @@
   .demo i{margin-left:22px;border-left:5px solid #1a9c4a;height:18px} .demo i.r{border-color:#d33}
   code{background:#f3f3f3;padding:1px 5px;border-radius:4px;font-size:14px;word-break:break-all}
   .muted{color:#777;font-size:14px}
+  form{margin:0 0 6px} .row{display:flex;gap:10px} .row label{flex:1;display:block;font-size:13px;color:#555;margin:0 0 10px}
+  form input{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:17px;color:#111;padding:11px;border:1px solid #ccc;border-radius:10px;margin-top:3px;background:#fff}
+  button.go{margin:4px 0 0;width:100%;background:#1a9c4a;color:#fff;font-weight:600;padding:13px}
 </style>
 </head>
 <body>
@@ -40,28 +43,26 @@
 <h1>Zadarmo vlakom</h1>
 <p class="sub">Bezplatné študentské lístky na tvoj vlak sú vypredané? Zisti, na ktorých úsekoch ešte sú za 0 € a zaplať len zvyšok.</p>
 
-<p><a class="bm" id="bm" href="#">Zadarmo vlakom</a><button id="copy">Kopírovať kód</button></p>
-<p class="muted">Toto je záložka (bookmarklet). Beží priamo na stránke ZSSK v tvojom prehliadači, takže netreba nič inštalovať ani sa prihlasovať.</p>
+<form id="f">
+  <div class="row"><label>Odkiaľ<input name="from" required placeholder="Bratislava"></label><label>Kam<input name="to" required placeholder="Košice"></label></div>
+  <div class="row"><label>Dátum<input name="date" type="date" required></label><label>Čas<input name="time" type="time" required></label></div>
+  <button class="go">Skontrolovať</button>
+</form>
+<p class="muted">Otvorí sa ZSSK. Tam ťukni na záložku <b>zadarmo</b> a najbližší vlak sa skontroluje sám. Záložku si nastavíš raz:</p>
+<p><a class="bm" id="bm" href="#">zadarmo</a><button id="copy">Kopírovať kód</button></p>
 
-<div class="demo">
-  <span><b>06:16</b>Bratislava hl.st.</span><i></i>
-  <span><b>08:31</b>Žilina</span><i class="r"></i>
-  <span><b>10:31</b>Poprad-Tatry</span><i></i>
-  <span><b>12:03</b>Košice</span>
-</div>
-
-<h2>Na počítači</h2>
+<h2>Záložka na počítači</h2>
 <ol>
   <li>Potiahni zelené tlačidlo hore do lišty so záložkami.</li>
-  <li>Otvor <a href="https://predaj.zssk.sk/search">predaj.zssk.sk</a> a klikni na záložku.</li>
-  <li>Zadaj odkiaľ, kam a kedy, vyber vlak a počkaj. Zelené úseky sú ešte zadarmo, červené vypredané (tam kúp platený študentský).</li>
+  <li>Vyplň formulár hore a stlač <b>Skontrolovať</b>, na stránke ZSSK klikni na záložku.</li>
+  <li>Zelené úseky sú ešte zadarmo, červené vypredané (tam kúp platený študentský).</li>
 </ol>
 
-<h2>Na mobile (Chrome)</h2>
+<h2>Záložka na mobile (Chrome)</h2>
 <ol>
   <li>Klikni na <b>Kopírovať kód</b>.</li>
   <li>Pridaj si ľubovoľnú stránku do záložiek, potom záložku uprav: názov <b>zadarmo</b>, do adresy vlož skopírovaný kód.</li>
-  <li>Otvor <a href="https://predaj.zssk.sk/search">predaj.zssk.sk</a>, do adresného riadku napíš <b>zadarmo</b> a ťukni na záložku.</li>
+  <li>Vyplň formulár hore a stlač <b>Skontrolovať</b>. Na stránke ZSSK napíš do adresného riadku <b>zadarmo</b> a ťukni na záložku.</li>
 </ol>
 
 <h2>Ako to funguje</h2>
@@ -70,9 +71,20 @@
 </main>
 <script>
   const code = "javascript:(function(){if(location.host!='predaj.zssk.sk'){location='https://predaj.zssk.sk/search';return}var s=document.createElement('script');s.src='https://shirley-claw.github.io/zadarmo/run.js?'+Date.now();document.body.appendChild(s)})()";
+  const f = document.getElementById('f'), now = new Date(), pad = n => String(n).padStart(2, '0');
+  const last = JSON.parse(localStorage.getItem('zadarmo-form') || '{}');
+  f.from.value = last.from || ''; f.to.value = last.to || '';
+  f.date.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  f.time.value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  f.onsubmit = e => {
+    e.preventDefault();
+    const q = { from: f.from.value.trim(), to: f.to.value.trim(), date: f.date.value, time: f.time.value };
+    localStorage.setItem('zadarmo-form', JSON.stringify({ from: q.from, to: q.to }));
+    location.href = 'https://predaj.zssk.sk/search#' + new URLSearchParams(q);
+  };
   const bm = document.getElementById('bm');
   bm.href = code;
-  bm.onclick = e => { e.preventDefault(); alert('Túto záložku potiahni do lišty so záložkami a spusti ju na stránke predaj.zssk.sk.'); };
+  bm.onclick = e => { e.preventDefault(); alert('Túto záložku potiahni do lišty so záložkami. Spúšťa sa na stránke predaj.zssk.sk.'); };
   document.getElementById('copy').onclick = async () => {
     try { await navigator.clipboard.writeText(code); } catch (e) { prompt('Skopíruj:', code); return; }
     document.getElementById('copy').textContent = 'Skopírované ✓';
