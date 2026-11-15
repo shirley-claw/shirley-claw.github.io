@@ -107,7 +107,7 @@
   async function navigate(action) {
     const old = fr.contentDocument;
     action();
-    await until(() => { const d = fr.contentDocument; return d && d !== old && d.readyState === 'complete' && d.location.href !== 'about:blank'; }, 45000, 'načítanie stránky');
+    await until(() => { const d = fr.contentDocument; return d && d !== old && d.readyState !== 'loading' && d.location.href !== 'about:blank' && d.body; }, 45000, 'načítanie stránky');
     await sleep(300);
   }
   const pageText = () => norm(doc().body && doc().body.innerText);
@@ -125,7 +125,7 @@
     doc().querySelectorAll('.connection-group').forEach(g => g.dataset.zdold = '1');
     const before = doc();
     f.querySelector('[name=actionSearchConnectionButton]').click();
-    await until(() => doc() && doc().readyState === 'complete' &&
+    await until(() => doc() && doc().readyState !== 'loading' &&
       (doc().querySelector('.connection-group:not([data-zdold])') || (doc() !== before && /nenašl|Nebolo nájdené|neexistuje/i.test(pageText()))), 40000, 'výsledky');
     await sleep(300);
     return [...doc().querySelectorAll('.connection-group')].map(g => {
@@ -237,7 +237,7 @@
         let r = await check(S[a], S[b], train);
         if (r.status === 'error') { await sleep(1500); r = await check(S[a], S[b], train); }
         if (r.status === 'error') throw new Error(`${S[a].name} → ${S[b].name}: ${r.msg}`);
-        cache[k] = r;
+        cache[k] = r; (window.__zadarmo.log = window.__zadarmo.log || []).push([S[a].name, S[b].name, r]);
         for (let x = a; x < b; x++) if (leg[x] === 'wip') leg[x] = '';
       }
       return cache[k];
