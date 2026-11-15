@@ -121,8 +121,13 @@
     f.departDate.value = fmtDate(st.date); f.departTime.value = time;
     const ret = f.querySelector('[name=returnTicket]'); if (ret) ret.checked = false;
     const direct = f.querySelector('[name=TrainSearchFormDirect]'); if (direct) direct.checked = true;
-    await navigate(() => f.querySelector('[name=actionSearchConnectionButton]').click());
-    await until(() => doc().querySelector('.connection-group') || /nenašl|Nebolo nájdené|chyb/i.test(pageText()), 40000, 'výsledky');
+    // results arrive by navigation or by JSF partial update; mark old results so we wait for fresh ones
+    doc().querySelectorAll('.connection-group').forEach(g => g.dataset.zdold = '1');
+    const before = doc();
+    f.querySelector('[name=actionSearchConnectionButton]').click();
+    await until(() => doc() && doc().readyState === 'complete' &&
+      (doc().querySelector('.connection-group:not([data-zdold])') || (doc() !== before && /nenašl|Nebolo nájdené|neexistuje/i.test(pageText()))), 40000, 'výsledky');
+    await sleep(300);
     return [...doc().querySelectorAll('.connection-group')].map(g => {
       const legs = [...g.querySelectorAll('.connectionItem .table-timetable')].map(t => {
         const th = [...t.querySelectorAll('th')].map(x => norm(x.textContent));
